@@ -6,15 +6,17 @@ One hundred finished-ready container homes on ¼-acre lots: kitchen, toilet, sho
 
 ## Live site
 
-**https://kdk-casa100-belize.vercel.app**
+**https://casa100-belize.vercel.app**
 
 | Page | Path |
 | --- | --- |
-| Letter | [/letter](https://kdk-casa100-belize.vercel.app/letter) |
-| 3D plat | [/site](https://kdk-casa100-belize.vercel.app/site) |
-| Catalog + floor plans | [/catalog](https://kdk-casa100-belize.vercel.app/catalog) |
-| BOQ | [/boq](https://kdk-casa100-belize.vercel.app/boq) |
-| vs Moonlight Bay | [/compare](https://kdk-casa100-belize.vercel.app/compare) |
+| Letter | [/letter](https://casa100-belize.vercel.app/letter) |
+| 3D plat | [/site](https://casa100-belize.vercel.app/site) |
+| Catalog + floor plans | [/catalog](https://casa100-belize.vercel.app/catalog) |
+| BOQ | [/boq](https://casa100-belize.vercel.app/boq) |
+| vs Moonlight Bay | [/compare](https://casa100-belize.vercel.app/compare) |
+
+Repo: [github.com/garyedison/kdk-casa100-belize](https://github.com/garyedison/kdk-casa100-belize)
 
 ## Labour (EST. Sep 2026 — hours TBD)
 
