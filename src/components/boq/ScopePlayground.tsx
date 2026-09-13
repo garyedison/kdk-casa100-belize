@@ -1,4 +1,5 @@
 import { Eye, EyeOff, RotateCcw } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { MixControls } from "@/components/site/MixControls";
 import { computeTotals } from "@/lib/data/boq";
@@ -130,6 +131,30 @@ export function ScopePlayground() {
             </ul>
           </div>
         ) : null}
+        {presetId === "village" ? (
+          <div className="mt-4 rounded-lg border border-kdk/30 bg-paper-2 px-4 py-4 text-sm">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-kdk">
+              Full village = unfurnished
+            </p>
+            <ul className="mt-2 list-disc space-y-1 pl-5 text-ink-soft">
+              <li>
+                <strong className="text-ink">Unfurnished</strong> means no furniture in the 100 homes
+                — no beds, sofas, dining sets, or linens. Take Furnished village for FF&E.
+              </li>
+              <li>
+                The village itself is not empty: roads, power, water, WWTP, and civic extras (gate,
+                plaza, trees) are on.
+              </li>
+              <li>
+                See the plaza rendering and inclusion list on{" "}
+                <Link to="/civic" className="text-kdk underline-offset-4 hover:underline">
+                  Plaza
+                </Link>
+                .
+              </li>
+            </ul>
+          </div>
+        ) : null}
       </section>
 
       <section>
@@ -222,7 +247,11 @@ export function ScopePlayground() {
                   <li>
                     <strong className="text-ink">Civic extras</strong> (gate, plaza, trees) are
                     optional. They are not water, not roads, not power, not the sewage plant. On in
-                    Full village; off in Village utilities.
+                    Full village; off in Village utilities.{" "}
+                    <Link to="/civic" className="text-kdk underline-offset-4 hover:underline">
+                      Plaza rendering and what it includes
+                    </Link>
+                    .
                   </li>
                 </ul>
               </div>

@@ -464,7 +464,7 @@ export const LINES: BoqLine[] = [
     rate: 185_000,
     lump: true,
     status: "EST.",
-    note: "RTOAC atrium/civic analog. One shared pavilion at the crossroads. Civic extra — not village utilities.",
+    note: "Open-air single-storey pavilion at the crossroads, gravel plaza, benches, civic green. Conceptual rendering on /civic. Not a two-storey hall. Civic extra — not village utilities.",
   },
   {
     item: "09.06",

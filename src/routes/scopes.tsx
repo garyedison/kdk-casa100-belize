@@ -20,7 +20,11 @@ function ScopesPage() {
           air on that tab are pending confirmation. Village roads, village power, potable water, and
           the WWTP (wastewater treatment plant — shared sewage plant) are not in Homes only; they
           switch on at Village utilities or Full village. Civic extras (gate, plaza, trees) are
-          optional on top. Working draft, not a contract.
+          optional on top. Full village is unfurnished: no furniture in the homes.{" "}
+          <Link to="/civic" className="text-kdk underline-offset-4 hover:underline">
+            Plaza rendering
+          </Link>
+          . Working draft, not a contract.
         </p>
         <p className="mt-3 text-sm">
           <Link to="/boq" className="text-kdk underline-offset-4 hover:underline">

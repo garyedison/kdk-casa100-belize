@@ -10,6 +10,7 @@ const NAV = [
   { to: "/", label: "Overview" },
   { to: "/site", label: "Site map" },
   { to: "/catalog", label: "Catalog" },
+  { to: "/civic", label: "Plaza" },
   { to: "/scopes", label: "Scopes" },
   { to: "/boq", label: "BOQ" },
   { to: "/compare", label: "vs Moonlight Bay" },

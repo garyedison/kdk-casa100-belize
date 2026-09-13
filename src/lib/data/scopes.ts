@@ -289,15 +289,16 @@ export const PRESETS: Preset[] = [
   },
   {
     id: "village",
-    label: "Full village",
+    label: "Full village — unfurnished",
+    kicker: "UNFURNISHED",
     blurb:
-      "Village utilities plus civic extras (gate, plaza, trees). Roads, power, water, WWTP included. Unfurnished.",
+      "No furniture in the 100 homes (no beds, sofas, dining, linens). Roads, village power, water, WWTP, plus civic extras (gate, plaza, trees). Take Furnished village to add FF&E.",
     scopes: SCOPE_IDS.filter((id) => id !== "ffe"),
   },
   {
     id: "furnished",
     label: "Furnished village",
-    blurb: "Full village plus FF&E.",
+    blurb: "Full unfurnished village plus furniture (beds, seating, dining, linens).",
     scopes: [...SCOPE_IDS],
   },
 ];

@@ -106,23 +106,36 @@ export function HouseByStyle({ id }: { id: StyleId }) {
 export function Pavilion() {
   return (
     <group>
-      <mesh position={[0, 0.1, 0]}>
-        <cylinderGeometry args={[8.5, 8.5, 0.18, 20]} />
+      <mesh position={[0, 0.08, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <circleGeometry args={[14, 28]} />
         <meshLambertMaterial color="#C9C2A8" />
+      </mesh>
+      <mesh position={[0, 0.12, 0]}>
+        <cylinderGeometry args={[6.2, 6.2, 0.18, 12]} />
+        <meshLambertMaterial color="#E8E2D4" />
       </mesh>
       {[0, 1, 2, 3, 4, 5].map((i) => {
         const a = (i / 6) * Math.PI * 2;
         return (
-          <mesh key={i} position={[Math.cos(a) * 5.2, 1.5, Math.sin(a) * 5.2]}>
-            <cylinderGeometry args={[0.16, 0.16, 3.0, 6]} />
+          <mesh key={i} position={[Math.cos(a) * 5.0, 1.55, Math.sin(a) * 5.0]}>
+            <cylinderGeometry args={[0.18, 0.18, 3.1, 8]} />
             <meshLambertMaterial color="#E8E2D4" />
           </mesh>
         );
       })}
-      <mesh position={[0, 3.2, 0]}>
-        <cylinderGeometry args={[0.2, 6.6, 1.2, 6]} />
+      <mesh position={[0, 3.25, 0]}>
+        <cylinderGeometry args={[0.25, 6.4, 1.15, 6]} />
         <meshLambertMaterial color="#2A2C28" />
       </mesh>
+      {[0, 1, 2, 3].map((i) => {
+        const a = (i / 4) * Math.PI * 2 + 0.4;
+        return (
+          <mesh key={`b${i}`} position={[Math.cos(a) * 8.2, 0.32, Math.sin(a) * 8.2]} rotation={[0, -a, 0]}>
+            <boxGeometry args={[1.6, 0.28, 0.42]} />
+            <meshLambertMaterial color="#6B5344" />
+          </mesh>
+        );
+      })}
     </group>
   );
 }

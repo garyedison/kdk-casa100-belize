@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BoqRouteImport } from './routes/boq'
 import { Route as CatalogRouteImport } from './routes/catalog'
+import { Route as CivicRouteImport } from './routes/civic'
 import { Route as CompareRouteImport } from './routes/compare'
 import { Route as LetterRouteImport } from './routes/letter'
 import { Route as ScopesRouteImport } from './routes/scopes'
@@ -30,6 +31,11 @@ const BoqRoute = BoqRouteImport.update({
 const CatalogRoute = CatalogRouteImport.update({
   id: '/catalog',
   path: '/catalog',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CivicRoute = CivicRouteImport.update({
+  id: '/civic',
+  path: '/civic',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CompareRoute = CompareRouteImport.update({
@@ -57,6 +63,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/boq': typeof BoqRoute
   '/catalog': typeof CatalogRoute
+  '/civic': typeof CivicRoute
   '/compare': typeof CompareRoute
   '/letter': typeof LetterRoute
   '/scopes': typeof ScopesRoute
@@ -66,6 +73,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/boq': typeof BoqRoute
   '/catalog': typeof CatalogRoute
+  '/civic': typeof CivicRoute
   '/compare': typeof CompareRoute
   '/letter': typeof LetterRoute
   '/scopes': typeof ScopesRoute
@@ -76,6 +84,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/boq': typeof BoqRoute
   '/catalog': typeof CatalogRoute
+  '/civic': typeof CivicRoute
   '/compare': typeof CompareRoute
   '/letter': typeof LetterRoute
   '/scopes': typeof ScopesRoute
@@ -84,14 +93,30 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/boq' | '/catalog' | '/compare' | '/letter' | '/scopes' | '/site'
+    | '/'
+    | '/boq'
+    | '/catalog'
+    | '/civic'
+    | '/compare'
+    | '/letter'
+    | '/scopes'
+    | '/site'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/boq' | '/catalog' | '/compare' | '/letter' | '/scopes' | '/site'
+  to:
+    | '/'
+    | '/boq'
+    | '/catalog'
+    | '/civic'
+    | '/compare'
+    | '/letter'
+    | '/scopes'
+    | '/site'
   id:
     | '__root__'
     | '/'
     | '/boq'
     | '/catalog'
+    | '/civic'
     | '/compare'
     | '/letter'
     | '/scopes'
@@ -102,6 +127,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BoqRoute: typeof BoqRoute
   CatalogRoute: typeof CatalogRoute
+  CivicRoute: typeof CivicRoute
   CompareRoute: typeof CompareRoute
   LetterRoute: typeof LetterRoute
   ScopesRoute: typeof ScopesRoute
@@ -129,6 +155,13 @@ declare module '@tanstack/react-router' {
       path: '/catalog'
       fullPath: '/catalog'
       preLoaderRoute: typeof CatalogRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/civic': {
+      id: '/civic'
+      path: '/civic'
+      fullPath: '/civic'
+      preLoaderRoute: typeof CivicRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/compare': {
@@ -166,6 +199,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BoqRoute: BoqRoute,
   CatalogRoute: CatalogRoute,
+  CivicRoute: CivicRoute,
   CompareRoute: CompareRoute,
   LetterRoute: LetterRoute,
   ScopesRoute: ScopesRoute,
