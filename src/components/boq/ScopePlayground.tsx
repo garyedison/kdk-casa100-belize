@@ -5,6 +5,7 @@ import { MixControls } from "@/components/site/MixControls";
 import { computeTotals } from "@/lib/data/boq";
 import {
   PRESETS,
+  PRICE_LENS,
   SCOPE_GROUPS,
   SCOPES,
   pricingCopy,
@@ -58,6 +59,35 @@ export function ScopePlayground() {
             <Mini k="On-costs" v={usd(totals.contingency + totals.pm)} />
             <Mini k="Hidden / off" v={usd(totals.hiddenWorks)} />
           </dl>
+          <p className="mt-4 text-[11px] uppercase tracking-[0.14em] text-kdk-fg/70">
+            Civil = roads, power, water, sewage · Civic = plaza, gate, trees
+          </p>
+          <div className="mt-2 grid gap-3 sm:grid-cols-2">
+            <div className="rounded-md bg-kdk-fg/10 px-3 py-3 text-sm">
+              <p className="text-[11px] uppercase tracking-wide text-kdk-fg/70">In this price</p>
+              <ul className="mt-1 space-y-0.5 text-kdk-fg/90">
+                {PRICE_LENS.filter((x) => !offScopes.includes(x.id)).length ? (
+                  PRICE_LENS.filter((x) => !offScopes.includes(x.id)).map((x) => (
+                    <li key={x.id}>• {x.label}</li>
+                  ))
+                ) : (
+                  <li>Homes campaign only — no civil, no civic, no furniture</li>
+                )}
+              </ul>
+            </div>
+            <div className="rounded-md bg-kdk-fg/10 px-3 py-3 text-sm">
+              <p className="text-[11px] uppercase tracking-wide text-kdk-fg/70">Not in this price</p>
+              <ul className="mt-1 space-y-0.5 text-kdk-fg/90">
+                {PRICE_LENS.filter((x) => offScopes.includes(x.id)).length ? (
+                  PRICE_LENS.filter((x) => offScopes.includes(x.id)).map((x) => (
+                    <li key={x.id}>• {x.label}</li>
+                  ))
+                ) : (
+                  <li>Nothing extra is off — civil, civic, and furniture are all in this number</li>
+                )}
+              </ul>
+            </div>
+          </div>
         </div>
         <MixControls />
       </div>

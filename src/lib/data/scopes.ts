@@ -214,6 +214,15 @@ export const HOUSE_CAMPAIGN: ScopeId[] = [
 
 export const CIVIL_SCOPES: ScopeId[] = ["roads", "village_elec", "village_wet", "civic"];
 
+/** Plain-language extras so a reviewer can read a price and know what is in it. */
+export const PRICE_LENS: { id: ScopeId; kind: "civil" | "civic" | "ffe"; label: string }[] = [
+  { id: "roads", kind: "civil", label: "Village roads (gravel avenues + drainage)" },
+  { id: "village_elec", kind: "civil", label: "Village power to the lots + street lights" },
+  { id: "village_wet", kind: "civil", label: "Potable water + WWTP (shared sewage plant)" },
+  { id: "civic", kind: "civic", label: "Civic extras — plaza, pavilion, gatehouse, trees" },
+  { id: "ffe", kind: "ffe", label: "Furniture (beds, sofas, dining, linens)" },
+];
+
 export const ITEM_SCOPE: Record<string, ScopeId> = Object.fromEntries(
   SCOPES.flatMap((s) => s.items.map((item) => [item, s.id])),
 ) as Record<string, ScopeId>;
