@@ -34,7 +34,7 @@ export const SCOPES: ScopeDef[] = [
     id: "homes",
     label: "Factory container homes",
     short: "Homes",
-    blurb: "PT220348-1 / PT211222 / PT230206 — kitchen, toilet, shower. Unfurnished.",
+    blurb: "PT220348-1 / PT211222 / PT230206. FOB China on Homes only. Kitchen / bath / split air pending confirmation.",
     items: ["01.01", "06.01", "07.04"],
   },
   {
@@ -162,14 +162,19 @@ export type Preset = {
   label: string;
   blurb: string;
   scopes: ScopeId[];
+  kicker?: string;
+  pending?: string;
 };
 
 export const PRESETS: Preset[] = [
   {
     id: "homes",
-    label: "Homes only — FOB China",
+    label: "Homes only — FOB China port",
+    kicker: "FOB CHINA PORT",
     blurb:
-      "Factory boxes at distributor net. Government (or its forwarder) takes the units at the China port and pays its own ocean and Belize inland.",
+      "Pickup at the China port. No ocean freight. No Belize inland. Government (or its forwarder) takes the boxes at the port and pays its own shipping.",
+    pending:
+      "Kitchen, bath (toilet + shower), and split air — to confirm. Not yet decided whether they travel with Homes only or are added later.",
     scopes: ["homes", "distributor"],
   },
   {

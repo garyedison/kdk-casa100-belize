@@ -61,7 +61,7 @@ export const LINES: BoqLine[] = [
     item: "01.01",
     division: "Factory modules",
     divisionNo: "01",
-    description: "Container home unit — factory fitted, unfurnished (kitchen, toilet, shower)",
+    description: "Container home unit — factory list, unfurnished (FOB China port)",
     unit: "home",
     perHome: per(1),
     rate: rates(
@@ -70,7 +70,7 @@ export const LINES: BoqLine[] = [
       STYLES.br3.factoryList,
     ),
     status: "QUOTED",
-    note: "Factory list 7 Sep 2026. PT220348-1 / PT211222 / PT230206.",
+    note: "Factory list 7 Sep 2026. PT220348-1 / PT211222 / PT230206. Homes only is FOB China port — no ocean, no inland. Kitchen, bath, and split air: pending confirmation whether they are in this line or added later.",
   },
   {
     item: "01.02",
@@ -155,7 +155,7 @@ export const LINES: BoqLine[] = [
     perHome: per(1),
     rate: rates(1_200, 1_800, 2_400),
     status: "EST.",
-    note: "12k / 18k / 24k BTU. Included in every CASA 100 unit — not in Moonlight Bay base.",
+    note: "12k / 18k / 24k BTU. In house MEP today — not in Homes only (FOB China). Pending confirmation whether split air travels with the factory box.",
   },
   {
     item: "04.02",
@@ -282,7 +282,7 @@ export const LINES: BoqLine[] = [
     perHome: per(1),
     rate: 0,
     status: "INCL.",
-    note: "In 01.01 factory unit. Shown for scope completeness.",
+    note: "Shown for scope. Pending confirmation whether toilet, shower, and kitchen sink travel with Homes only (FOB China) or are added later. Split air is 04.01 — also pending for Homes only.",
   },
   {
     item: "06.02",

@@ -33,7 +33,9 @@ export function ScopePlayground() {
       <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_300px]">
         <div className="rounded-xl bg-kdk px-5 py-5 text-kdk-fg shadow-card">
           <p className="text-[11px] uppercase tracking-[0.16em] text-kdk-fg/70">
-            Selected all-in · 100 homes · unfurnished
+            {presetId === "homes"
+              ? "Homes only · FOB China port · no ocean · no inland"
+              : "Selected all-in · 100 homes · unfurnished"}
           </p>
           <p className="mt-1 font-display text-4xl font-semibold tabular tracking-tight md:text-5xl">
             {usd(totals.unfurnishedAllIn)}
@@ -83,13 +85,50 @@ export function ScopePlayground() {
                 )}
               >
                 <span className="block font-display text-lg font-semibold">{p.label}</span>
+                {p.kicker ? (
+                  <span
+                    className={cn(
+                      "mt-1 inline-block rounded px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em]",
+                      active ? "bg-kdk-fg/15 text-kdk-fg" : "bg-kdk/10 text-kdk",
+                    )}
+                  >
+                    {p.kicker}
+                  </span>
+                ) : null}
                 <span className={cn("mt-1 block text-sm", active ? "text-kdk-fg/80" : "text-ink-soft")}>
                   {p.blurb}
                 </span>
+                {p.pending ? (
+                  <span className={cn("mt-2 block text-xs", active ? "text-kdk-fg/75" : "text-muted")}>
+                    {p.pending}
+                  </span>
+                ) : null}
               </button>
             );
           })}
         </div>
+        {presetId === "homes" ? (
+          <div className="mt-4 rounded-lg border border-kdk/30 bg-paper-2 px-4 py-4 text-sm">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-kdk">
+              Homes only = FOB China port
+            </p>
+            <ul className="mt-2 list-disc space-y-1 pl-5 text-ink-soft">
+              <li>
+                <strong className="text-ink">Not included:</strong> ocean freight, Belize inland,
+                duties, slabs, set, solar, village works.
+              </li>
+              <li>
+                The Government (or its forwarder) picks up at the{" "}
+                <strong className="text-ink">China port</strong> and pays its own shipping.
+              </li>
+              <li>
+                <strong className="text-ink">To confirm:</strong> kitchen, bath (toilet + shower), and
+                split air — whether they travel with Homes only or are added later. Price not
+                changed until that is decided.
+              </li>
+            </ul>
+          </div>
+        ) : null}
       </section>
 
       <section>
