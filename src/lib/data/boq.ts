@@ -85,7 +85,7 @@ export const LINES: BoqLine[] = [
       -STYLES.br3.factoryList * VOLUME_DISCOUNT,
     ),
     status: "EST.",
-    note: "KDK 100-home distributor net, not a two-home discount. A Belizean reseller may sell to the Government at list; that 10% is their margin on the homes only.",
+    note: "If the Government buys from KDK Hong Kong, this 10% is the campaign net. If it buys from a licensed Belizean distributor, KDK still invoices that company at net and the 10% is the Belizean seller’s margin on the homes only.",
   },
   {
     item: "02.01",

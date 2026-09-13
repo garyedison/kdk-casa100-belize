@@ -93,11 +93,13 @@ function LetterPage() {
             </p>
             <p>
               The package is sized for a government campaign, not a two-home waterfront enquiry. Factory
-              list is dated 7 September 2026. A 10% distributor net is applied to the three factory
-              models on the 100-home order (not a two-home discount). Officials can hide scopes on
-              the attached playground to see a homes-only floor, pads-and-set, house MEP, or the
-              full village. Solar kit prices are equipment only. Container-on-pad labour (11.01) is
-              estimated at
+              list is dated 7 September 2026. Each of the three models is offered at a 10% distributor
+              net on the 100-home order. The Government may contract KDK Technology Ltd (Hong Kong)
+              directly at that net, or contract a licensed Belizean distributor who buys from KDK at
+              net and sells to the Government at list — so a Belizean entity is the seller and keeps
+              the 10% on the homes. Officials can hide scopes on the attached playground to see a
+              homes-only floor, pads-and-set, house MEP, or the full village. Solar kit prices are
+              equipment only. Container-on-pad labour (11.01) is estimated at
               US$12.80/hr mixed — 80% Belizean structure crew. Solar install (11.02) is estimated at
               US$19.40/hr mixed — 70% Belizean electricians. Hours are still to be filled. KDK
               recommends Belizean crews as the standing workforce for 12 months or longer; Chinese

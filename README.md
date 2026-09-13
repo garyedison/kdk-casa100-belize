@@ -1,6 +1,6 @@
 # CASA 100 — Belize modular village
 
-Working proposal from **KDK Technology Ltd** to **Mr. Ian Courtenay**, Senior Investment & E-Governance Officer, Office of the Prime Minister, Belmopan.
+Working proposal from **KDK Technology Ltd** (Hong Kong) to **Mr. Ian Courtenay**, Senior Investment & E-Governance Officer, Office of the Prime Minister, Belmopan.
 
 One hundred finished-ready container homes on ¼-acre lots: kitchen, toilet, shower, split air, rooftop solar (panels + grid-tie inverter, **no battery**). Unfurnished base; FF&E optional.
 
@@ -11,12 +11,20 @@ One hundred finished-ready container homes on ¼-acre lots: kitchen, toilet, sho
 | Page | Path |
 | --- | --- |
 | Letter | [/letter](https://casa100-belize.vercel.app/letter) |
+| Scope playground | [/scopes](https://casa100-belize.vercel.app/scopes) |
 | 3D plat | [/site](https://casa100-belize.vercel.app/site) |
 | Catalog + floor plans | [/catalog](https://casa100-belize.vercel.app/catalog) |
 | BOQ | [/boq](https://casa100-belize.vercel.app/boq) |
 | vs Moonlight Bay | [/compare](https://casa100-belize.vercel.app/compare) |
 
 Repo: [github.com/garyedison/kdk-casa100-belize](https://github.com/garyedison/kdk-casa100-belize)
+
+## Who sells to the Government
+
+Each of the three models is **10% off factory list** on a 100-home order.
+
+- **Buy from KDK Hong Kong** — Government contracts KDK Technology Ltd. KDK invoices at distributor net.
+- **Buy from a licensed Belizean distributor** — Government contracts a Belizean company. That company buys from KDK at net and sells to the Government at list. The 10% is the Belizean seller’s margin on the **homes only**.
 
 ## Labour (EST. Sep 2026 — hours TBD)
 

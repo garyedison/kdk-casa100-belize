@@ -41,7 +41,7 @@ export const SCOPES: ScopeDef[] = [
     id: "distributor",
     label: "Distributor net (−10%)",
     short: "−10% net",
-    blurb: "100-home KDK net: 10% off factory list. Not a two-home discount.",
+    blurb: "If the Government buys from KDK Hong Kong: 10% off list. If it buys from a licensed Belizean distributor: that company keeps the 10%.",
     items: ["01.02"],
   },
   {
@@ -234,19 +234,20 @@ export function offScopesForPreset(presetId: string): ScopeId[] {
 export function pricingCopy(mode: PricingMode) {
   if (mode === "list") {
     return {
-      label: "Factory list",
-      blurb: "No 10% off. KDK invoices the Government at the 7 Sep 2026 list.",
+      label: "Factory list (no 10%)",
+      blurb: "Diagnostic only — neither KDK nor a Belizean distributor takes the 10%.",
     };
   }
   if (mode === "gov_via_partner") {
     return {
-      label: "Gov. price via local distributor",
+      label: "Buy from a licensed Belizean distributor",
       blurb:
-        "Government pays factory list. KDK invoices a Belizean reseller at net (−10%). The 10% is the reseller’s margin on the homes only — not on civil or MEP.",
+        "The Government contracts a Belizean company, not KDK Hong Kong. That distributor buys from KDK at net (−10%) and sells to the Government at factory list. The 10% is their margin on the homes only — not on slabs, MEP, or village works.",
     };
   }
   return {
-    label: "KDK distributor net",
-    blurb: "KDK invoices at factory list less 10% on the three models. 100-home campaign only.",
+    label: "Buy from KDK Hong Kong",
+    blurb:
+      "The Government contracts KDK Technology Ltd directly. KDK invoices at factory list less 10% on the three models. 100-home campaign only.",
   };
 }

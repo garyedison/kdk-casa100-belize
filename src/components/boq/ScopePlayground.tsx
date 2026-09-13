@@ -12,7 +12,7 @@ import {
 import { useVillage } from "@/lib/store";
 import { cn, usd } from "@/lib/utils";
 
-const MODES: PricingMode[] = ["kdk_net", "gov_via_partner", "list"];
+const MODES: PricingMode[] = ["kdk_net", "gov_via_partner"];
 
 export function ScopePlayground() {
   const mix = useVillage((s) => s.mix);
@@ -93,15 +93,15 @@ export function ScopePlayground() {
       </section>
 
       <section>
-        <p className="text-[11px] uppercase tracking-wide text-muted">Home pricing</p>
-        <h2 className="font-display text-2xl font-semibold">The 10% — distributor net</h2>
+        <p className="text-[11px] uppercase tracking-wide text-muted">Who sells to the Government</p>
+        <h2 className="font-display text-2xl font-semibold">Hong Kong KDK, or a licensed Belizean distributor</h2>
         <p className="mt-1 max-w-3xl text-sm text-ink-soft">
-          Yes: each of the three models is 10% off factory list on a 100-home order. That is KDK’s
-          distributor net, not a Moonlight Bay two-home discount. A Belizean company that resells to
-          the Government may add that 10% back (Government pays list; KDK still invoices net). The
-          10% is on the homes only — not on slabs, MEP, or village works.
+          Each of the three models is 10% off factory list on a 100-home order. That 10% is how a
+          licensed Belizean company can be the seller to the Government — if the Government prefers
+          to buy from a Belizean entity rather than from KDK Technology Ltd (Hong Kong). The 10% is
+          on the homes only, not on slabs, MEP, or village works.
         </p>
-        <div className="mt-4 grid gap-3 md:grid-cols-3">
+        <div className="mt-4 grid gap-3 md:grid-cols-2">
           {MODES.map((m) => {
             const copy = pricingCopy(m);
             const active = pricingMode === m;
@@ -115,7 +115,7 @@ export function ScopePlayground() {
                   active ? "bg-kdk-deep text-kdk-fg" : "bg-paper hover:bg-paper-2",
                 )}
               >
-                <span className="block font-medium">{copy.label}</span>
+                <span className="block font-display text-lg font-semibold">{copy.label}</span>
                 <span className={cn("mt-1 block text-sm", active ? "text-kdk-fg/80" : "text-ink-soft")}>
                   {copy.blurb}
                 </span>
@@ -125,18 +125,29 @@ export function ScopePlayground() {
         </div>
         <dl className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           <Stat k="Factory list (homes)" v={usd(totals.factoryList)} />
-          <Stat k="KDK net (list − 10%)" v={usd(totals.kdkNetHomes)} />
-          <Stat k="Local 10% margin" v={usd(totals.partnerMargin)} />
+          <Stat k="KDK invoices (net)" v={usd(totals.kdkNetHomes)} />
+          <Stat k="Belizean distributor 10%" v={usd(totals.partnerMargin)} />
           <Stat
-            k={pricingMode === "gov_via_partner" ? "Government pays (homes at list)" : "This view’s all-in"}
+            k={
+              pricingMode === "gov_via_partner"
+                ? "Government pays the Belizean seller"
+                : "Government pays KDK Hong Kong"
+            }
             v={usd(totals.unfurnishedAllIn)}
           />
         </dl>
-        {pricingMode === "gov_via_partner" && (
+        {pricingMode === "gov_via_partner" ? (
           <p className="mt-3 rounded-md bg-paper-2 px-4 py-3 text-sm text-ink-soft">
-            KDK would still invoice the reseller {usd(totals.kdkInvoice)} for the same switched-on
-            scopes (homes at net). The Government’s purchase at list is {usd(totals.govPay)}.
-            Difference {usd(totals.govPay - totals.kdkInvoice)} stays with the local company.
+            Contract path: Government ↔ licensed Belizean distributor ↔ KDK Hong Kong. KDK invoices
+            the distributor {usd(totals.kdkInvoice)} (homes at net, same switched-on scopes). The
+            Government pays the Belizean seller {usd(totals.govPay)}. The difference{" "}
+            {usd(totals.govPay - totals.kdkInvoice)} is the distributor’s 10% on the homes.
+          </p>
+        ) : (
+          <p className="mt-3 rounded-md bg-paper-2 px-4 py-3 text-sm text-ink-soft">
+            Contract path: Government ↔ KDK Technology Ltd (Hong Kong). The Government pays KDK the
+            distributor net. No Belizean seller is in the chain, so that 10% is a campaign discount
+            rather than a local margin.
           </p>
         )}
       </section>
