@@ -10,6 +10,7 @@ const NAV = [
   { to: "/", label: "Overview" },
   { to: "/site", label: "Site map" },
   { to: "/catalog", label: "Catalog" },
+  { to: "/scopes", label: "Scopes" },
   { to: "/boq", label: "BOQ" },
   { to: "/compare", label: "vs Moonlight Bay" },
 ] as const;
@@ -17,7 +18,10 @@ const NAV = [
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const mix = useVillage((s) => s.mix);
-  const totals = computeTotals(mix);
+  const offScopes = useVillage((s) => s.offScopes);
+  const offItems = useVillage((s) => s.offItems);
+  const pricingMode = useVillage((s) => s.pricingMode);
+  const totals = computeTotals(mix, { offScopes, offItems, pricingMode });
   const ok = mixTotal(mix) === 100;
 
   return (
@@ -61,7 +65,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <span className="font-display text-lg font-semibold tabular leading-none">
               {usd(totals.unfurnishedAllIn)}
             </span>
-            <span className="text-[11px] text-muted">unfurnished</span>
+            <span className="text-[11px] text-muted">this scope</span>
           </div>
         </div>
         <nav className="flex gap-1 overflow-x-auto border-t border-line px-3 py-2 md:hidden">
@@ -91,8 +95,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <footer className="border-t border-line px-4 py-8 text-center text-xs text-muted print:hidden">
         Prepared by KDK Technology Ltd for Mr. Ian Courtenay, Senior Investment & E-Governance
         Officer, Office of the Prime Minister, Sir Edney Cain Building, Belmopan. Working draft for
-        government review — not a contract. USD. Factory list 7 Sep 2026. Container-on-pad and solar
-        install labour left TBD for rates next week.
+        government review — not a contract. USD. Factory list 7 Sep 2026. Distributor net is 10% off
+        the three models on a 100-home order. Pad-set and solar install hours TBD.
       </footer>
     </div>
   );

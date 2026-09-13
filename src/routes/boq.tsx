@@ -32,7 +32,11 @@ function amtLabel(line: PricedLine, id: StyleId) {
 
 function BoqPage() {
   const mix = useVillage((s) => s.mix);
-  const totals = computeTotals(mix);
+  const offScopes = useVillage((s) => s.offScopes);
+  const offItems = useVillage((s) => s.offItems);
+  const pricingMode = useVillage((s) => s.pricingMode);
+  const toggleItem = useVillage((s) => s.toggleItem);
+  const totals = computeTotals(mix, { offScopes, offItems, pricingMode });
   const ids: StyleId[] = ["br1", "br2", "br3"];
 
   return (
@@ -45,12 +49,13 @@ function BoqPage() {
           Government village BOQ
         </h1>
         <p className="mt-2 max-w-3xl text-ink-soft">
-          Not the Moonlight Bay two-home enquiry. This is a 100-home campaign: volume factory,
-          convoy freight, shared crane, village electrical and plumbing (scopes taken from the
-          RTOAC priced model, rewritten for greenfield housing), split air and rooftop solar PV
-          with inverter on every unit. Unfurnished base; FF&E is a separate division. Pad-set and
-          solar install hours are still blank; researched EST. rates and the Belizean/Chinese mix sit
-          on those lines so the Government can see local jobs for 12 months or longer.
+          Hide a line to drop it from the all-in. The header total updates. For package-level
+          play — homes only, pads & set, house MEP — use the{" "}
+          <Link to="/scopes" className="text-kdk underline-offset-4 hover:underline">
+            scope playground
+          </Link>
+          . Pad-set and solar hours are still TBD; 10% off the three models is KDK’s distributor
+          net on a 100-home order.
         </p>
 
         <div className="mt-6 grid gap-4 lg:grid-cols-[minmax(0,1fr)_300px]">
@@ -61,8 +66,8 @@ function BoqPage() {
             <Stat k="All-in unfurnished" v={usd(totals.unfurnishedAllIn)} />
             <Stat k="FF&E upgrade" v={usd(totals.ffe)} />
             <Stat k="Furnished all-in" v={usd(totals.furnishedAllIn)} />
-            <Stat k="Labour hours" v="TBD" />
-            <Stat k="Belizean jobs" v={`${EMPLOYMENT.campaignSpan}`} />
+            <Stat k="Hidden works" v={usd(totals.hiddenWorks)} />
+            <Stat k="vs full village" v={`−${usd(totals.savingsVsFull)}`} />
           </div>
           <MixControls />
         </div>
@@ -398,6 +403,7 @@ function BoqPage() {
                 ))}
                 <th className="px-3 py-3 font-medium">Project</th>
                 <th className="px-3 py-3 font-medium">Status</th>
+                <th className="px-3 py-3 font-medium">In price</th>
               </tr>
             </thead>
             <tbody>
@@ -413,11 +419,14 @@ function BoqPage() {
                           line.status === "EXCL." && "bg-tbd/10",
                           line.tbd && line.status !== "EXCL." && "bg-tbd/10",
                           line.ffe && "bg-reef/8",
+                          !line.included && "bg-tbd/10 text-muted",
                         )}
                       >
                         <td className="px-3 py-2 font-mono text-xs tabular">{line.item}</td>
                         <td className="px-3 py-2">
-                          <span className="block">{line.description}</span>
+                          <span className={cn("block", !line.included && "line-through")}>
+                            {line.description}
+                          </span>
                           {line.note && (
                             <span className="block text-[11px] text-muted">{line.note}</span>
                           )}
@@ -440,13 +449,35 @@ function BoqPage() {
                           </td>
                         ))}
                         <td className="px-3 py-2 font-medium tabular">
-                          {line.status === "EXCL." ? "excl." : line.tbd ? "TBD" : usd(line.projectAmount)}
+                          {line.status === "EXCL."
+                            ? "excl."
+                            : line.tbd
+                              ? "TBD"
+                              : line.included
+                                ? usd(line.projectAmount)
+                                : "hidden"}
                           <span className="block text-[11px] font-normal text-muted">
                             {line.lump ? `qty ${num(line.projectQty)}` : ""}
+                            {!line.included && line.fullAmount
+                              ? ` was ${usd(line.fullAmount)}`
+                              : ""}
                           </span>
                         </td>
                         <td className="px-3 py-2">
                           <StatusChip status={line.status} />
+                        </td>
+                        <td className="px-3 py-2">
+                          {line.status === "EXCL." ? (
+                            <span className="text-[11px] text-muted">n/a</span>
+                          ) : (
+                            <button
+                              type="button"
+                              onClick={() => toggleItem(line.item)}
+                              className="min-h-11 rounded-sm px-3 text-sm text-kdk hover:bg-paper-2"
+                            >
+                              {line.included ? "Hide" : "Show"}
+                            </button>
+                          )}
                         </td>
                       </tr>
                     ))}
@@ -465,6 +496,7 @@ function BoqPage() {
                 ))}
                 <td className="px-3 py-3 font-medium tabular">{usd(totals.unfurnishedWorks)}</td>
                 <td />
+                <td />
               </tr>
               <tr className="border-t border-line bg-paper-2">
                 <td className="px-3 py-2" colSpan={6}>
@@ -473,12 +505,14 @@ function BoqPage() {
                 </td>
                 <td className="px-3 py-2 tabular">{usd(totals.contingency)}</td>
                 <td />
+                <td />
               </tr>
               <tr className="border-t border-line bg-paper-2">
                 <td className="px-3 py-2" colSpan={6}>
                   Project management {PM_RATE * 100}%
                 </td>
                 <td className="px-3 py-2 tabular">{usd(totals.pm)}</td>
+                <td />
                 <td />
               </tr>
               <tr className="border-t-2 border-kdk bg-kdk text-kdk-fg">
@@ -493,6 +527,7 @@ function BoqPage() {
                 ))}
                 <td className="px-3 py-3 font-medium tabular">{usd(totals.unfurnishedAllIn)}</td>
                 <td />
+                <td />
               </tr>
               <tr className="border-t border-line">
                 <td className="px-3 py-3" colSpan={3}>
@@ -504,6 +539,7 @@ function BoqPage() {
                   </td>
                 ))}
                 <td className="px-3 py-3 tabular">{usd(totals.ffe)}</td>
+                <td />
                 <td />
               </tr>
             </tbody>
@@ -546,6 +582,7 @@ function DivisionBlock({
         <td className="px-3 py-2 tabular text-sm">
           {tbd && amount === 0 && ffe === 0 ? "TBD" : usd(amount + ffe)}
         </td>
+        <td />
         <td />
       </tr>
       {children}

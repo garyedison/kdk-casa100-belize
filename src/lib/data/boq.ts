@@ -5,6 +5,7 @@ import {
   VOLUME_DISCOUNT,
 } from "./homes";
 import { CAMPAIGN_RATES } from "./labour";
+import { ITEM_SCOPE, SCOPE_IDS, type PricingMode, type ScopeId } from "./scopes";
 
 export type Status = "QUOTED" | "EST." | "TBD" | "INCL." | "EXCL.";
 
@@ -75,7 +76,7 @@ export const LINES: BoqLine[] = [
     item: "01.02",
     division: "Factory modules",
     divisionNo: "01",
-    description: `Volume campaign discount (${VOLUME_DISCOUNT * 100}% on 100-home order)`,
+    description: `Distributor net — ${VOLUME_DISCOUNT * 100}% off factory list (100-home campaign)`,
     unit: "home",
     perHome: per(1),
     rate: rates(
@@ -84,7 +85,7 @@ export const LINES: BoqLine[] = [
       -STYLES.br3.factoryList * VOLUME_DISCOUNT,
     ),
     status: "EST.",
-    note: "Not offered on the 2-home Moonlight Bay enquiry. Confirm with factory at PO.",
+    note: "KDK 100-home distributor net, not a two-home discount. A Belizean reseller may sell to the Government at list; that 10% is their margin on the homes only.",
   },
   {
     item: "02.01",
@@ -588,37 +589,89 @@ export type PricedLine = BoqLine & {
   amount: Record<StyleId, number>;
   projectQty: number;
   projectAmount: number;
+  fullAmount: number;
+  included: boolean;
+  scopeId?: ScopeId;
 };
+
+export type PriceOptions = {
+  offScopes?: Iterable<ScopeId>;
+  offItems?: Iterable<string>;
+  pricingMode?: PricingMode;
+};
+
+function asSet<T extends string>(v?: Iterable<T>): Set<T> {
+  return new Set(v);
+}
+
+export function lineIncluded(
+  item: string,
+  opts: { offScopes: Set<ScopeId>; offItems: Set<string>; pricingMode: PricingMode },
+): boolean {
+  if (opts.offItems.has(item)) return false;
+  const scope = ITEM_SCOPE[item];
+  if (scope && opts.offScopes.has(scope)) return false;
+  if (item === "01.02") {
+    if (opts.pricingMode === "list" || opts.pricingMode === "gov_via_partner") return false;
+    if (opts.offScopes.has("homes")) return false;
+    if (opts.offItems.has("01.01")) return false;
+  }
+  if (item === "01.01" && opts.offScopes.has("homes")) return false;
+  return true;
+}
 
 function rateOf(line: BoqLine, id: StyleId) {
   return typeof line.rate === "number" ? line.rate : line.rate[id];
 }
 
-export function priceLines(mix: Mix): PricedLine[] {
+export function priceLines(mix: Mix, options: PriceOptions = {}): PricedLine[] {
   const ids: StyleId[] = ["br1", "br2", "br3"];
+  const offScopes = asSet(options.offScopes);
+  const offItems = asSet(options.offItems);
+  const pricingMode: PricingMode = options.pricingMode ?? "kdk_net";
+  const flags = { offScopes, offItems, pricingMode };
+
   return LINES.map((line) => {
     const qty = { br1: 0, br2: 0, br3: 0 } as Record<StyleId, number>;
     const amount = { br1: 0, br2: 0, br3: 0 } as Record<StyleId, number>;
     let projectQty = 0;
-    let projectAmount = 0;
+    let fullAmount = 0;
 
     if (line.lump) {
       const q = LUMP_QTY[line.item] ?? 1;
       projectQty = q;
       const r = rateOf(line, "br2");
-      projectAmount = line.tbd ? 0 : q * r;
+      fullAmount = line.tbd ? 0 : q * r;
     } else {
       for (const id of ids) {
         const q = line.perHome[id] * mix[id];
         const r = rateOf(line, id);
         qty[id] = q;
-        amount[id] = line.tbd ? 0 : q * r;
+        const a = line.tbd ? 0 : q * r;
+        amount[id] = a;
         projectQty += q;
-        projectAmount += amount[id];
+        fullAmount += a;
       }
     }
 
-    return { ...line, qty, amount, projectQty, projectAmount };
+    const included = lineIncluded(line.item, flags);
+    if (!included) {
+      amount.br1 = 0;
+      amount.br2 = 0;
+      amount.br3 = 0;
+    }
+    const projectAmount = included ? fullAmount : 0;
+
+    return {
+      ...line,
+      qty,
+      amount,
+      projectQty,
+      projectAmount,
+      fullAmount,
+      included,
+      scopeId: ITEM_SCOPE[line.item],
+    };
   });
 }
 
@@ -651,14 +704,34 @@ export type Totals = {
   solarProject: SolarKit;
   siteSharePerHome: number;
   homeCount: number;
+  hiddenWorks: number;
+  fullUnfurnishedAllIn: number;
+  savingsVsFull: number;
+  factoryList: number;
+  distributorCredit: number;
+  kdkNetHomes: number;
+  partnerMargin: number;
+  kdkInvoice: number;
+  govPay: number;
+  byScope: { id: ScopeId; amount: number; fullAmount: number; on: boolean }[];
 };
 
 const CONTINGENCY = 0.08;
 const PM = 0.055;
 
-export function computeTotals(mix: Mix): Totals {
-  const lines = priceLines(mix);
+function oncostsOf(works: number, on: boolean) {
+  if (!on) return { contingency: 0, pm: 0, allIn: works };
+  const contingency = works * CONTINGENCY;
+  const pm = (works + contingency) * PM;
+  return { contingency, pm, allIn: works + contingency + pm };
+}
+
+export function computeTotals(mix: Mix, options: PriceOptions = {}): Totals {
+  const offScopes = asSet(options.offScopes);
+  const pricingMode: PricingMode = options.pricingMode ?? "kdk_net";
+  const lines = priceLines(mix, options);
   const homeCount = mix.br1 + mix.br2 + mix.br3 || 1;
+  const oncostsOn = !offScopes.has("oncosts");
 
   const unfurnishedWorks = lines
     .filter((l) => !l.ffe && !l.tbd)
@@ -666,11 +739,33 @@ export function computeTotals(mix: Mix): Totals {
   const ffe = lines
     .filter((l) => l.ffe && !l.tbd)
     .reduce((s, l) => s + l.projectAmount, 0);
+  const hiddenWorks = lines
+    .filter((l) => !l.included && !l.ffe && !l.tbd)
+    .reduce((s, l) => s + l.fullAmount, 0);
 
-  const contingency = unfurnishedWorks * CONTINGENCY;
-  const pm = (unfurnishedWorks + contingency) * PM;
-  const unfurnishedAllIn = unfurnishedWorks + contingency + pm;
+  const { contingency, pm, allIn: unfurnishedAllIn } = oncostsOf(unfurnishedWorks, oncostsOn);
   const furnishedAllIn = unfurnishedAllIn + ffe;
+
+  const fullLines = priceLines(mix, { pricingMode: "kdk_net" });
+  const fullWorks = fullLines
+    .filter((l) => !l.ffe && !l.tbd)
+    .reduce((s, l) => s + l.fullAmount, 0);
+  const fullUnfurnishedAllIn = oncostsOf(fullWorks, true).allIn;
+  const savingsVsFull = Math.max(0, fullUnfurnishedAllIn - unfurnishedAllIn);
+
+  const factoryLine = lines.find((l) => l.item === "01.01");
+  const factoryList = factoryLine?.fullAmount ?? 0;
+  const homesOn = Boolean(factoryLine?.included);
+  const distributorCredit = homesOn ? factoryList * VOLUME_DISCOUNT : 0;
+  const kdkNetHomes = homesOn ? factoryList - distributorCredit : 0;
+  const partnerMargin = homesOn ? factoryList * VOLUME_DISCOUNT : 0;
+
+  const otherWorks = lines
+    .filter((l) => !l.ffe && !l.tbd && l.item !== "01.01" && l.item !== "01.02")
+    .reduce((s, l) => s + l.projectAmount, 0);
+
+  const kdkInvoice = oncostsOf(kdkNetHomes + otherWorks, oncostsOn).allIn;
+  const govPay = oncostsOf((homesOn ? factoryList : 0) + otherWorks, oncostsOn).allIn;
 
   const byDivision = DIVISIONS.map((d) => {
     const subset = lines.filter((l) => l.divisionNo === d.no);
@@ -696,7 +791,7 @@ export function computeTotals(mix: Mix): Totals {
   const perStyleFfe = { br1: 0, br2: 0, br3: 0 } as Record<StyleId, number>;
   const ids: StyleId[] = ["br1", "br2", "br3"];
   for (const line of lines) {
-    if (line.lump || line.tbd) continue;
+    if (line.lump || line.tbd || !line.included) continue;
     for (const id of ids) {
       const r = rateOf(line, id) * line.perHome[id];
       if (line.ffe) perStyleFfe[id] += r;
@@ -707,6 +802,10 @@ export function computeTotals(mix: Mix): Totals {
   for (const id of ids) {
     const house = perStyleHouse[id];
     const withSite = house + siteSharePerHome;
+    if (!oncostsOn) {
+      perStyleVillage[id] = withSite;
+      continue;
+    }
     const c = withSite * CONTINGENCY;
     const p = (withSite + c) * PM;
     perStyleVillage[id] = withSite + c + p;
@@ -718,9 +817,9 @@ export function computeTotals(mix: Mix): Totals {
     mount: lines.find((l) => l.item === "04.04"),
   };
   const kitOf = (id: StyleId): SolarKit => {
-    const pv = solarItems.pv ? rateOf(solarItems.pv, id) : 0;
-    const inverter = solarItems.inverter ? rateOf(solarItems.inverter, id) : 0;
-    const mount = solarItems.mount ? rateOf(solarItems.mount, id) : 0;
+    const pv = solarItems.pv?.included ? rateOf(solarItems.pv, id) : 0;
+    const inverter = solarItems.inverter?.included ? rateOf(solarItems.inverter, id) : 0;
+    const mount = solarItems.mount?.included ? rateOf(solarItems.mount, id) : 0;
     return { pv, inverter, mount, kit: pv + inverter + mount };
   };
   const perStyleSolar = {
@@ -735,6 +834,25 @@ export function computeTotals(mix: Mix): Totals {
     kit: 0,
   };
   solarProject.kit = solarProject.pv + solarProject.inverter + solarProject.mount;
+
+  const byScope = SCOPE_IDS.map((id) => {
+    if (id === "oncosts") {
+      const selectedOn = oncostsOf(unfurnishedWorks, true);
+      return {
+        id,
+        amount: oncostsOn ? contingency + pm : 0,
+        fullAmount: selectedOn.contingency + selectedOn.pm,
+        on: oncostsOn,
+      };
+    }
+    const subset = lines.filter((l) => l.scopeId === id);
+    return {
+      id,
+      amount: subset.filter((l) => !l.tbd).reduce((s, l) => s + l.projectAmount, 0),
+      fullAmount: subset.filter((l) => !l.tbd).reduce((s, l) => s + l.fullAmount, 0),
+      on: !offScopes.has(id),
+    };
+  });
 
   return {
     lines,
@@ -752,6 +870,16 @@ export function computeTotals(mix: Mix): Totals {
     solarProject,
     siteSharePerHome,
     homeCount,
+    hiddenWorks,
+    fullUnfurnishedAllIn,
+    savingsVsFull,
+    factoryList,
+    distributorCredit,
+    kdkNetHomes,
+    partnerMargin,
+    kdkInvoice,
+    govPay,
+    byScope,
   };
 }
 

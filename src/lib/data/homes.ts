@@ -31,7 +31,7 @@ export type HomeStyle = {
   rooms: string[];
 };
 
-/** 10% campaign discount on factory list for a 100-home government order. */
+/** 10% KDK distributor net on factory list for a 100-home government order. */
 export const VOLUME_DISCOUNT = 0.1;
 export const FREIGHT_PER_40HQ = 19_000;
 

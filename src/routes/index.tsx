@@ -65,6 +65,9 @@ function Home() {
               </Link>
             </Button>
             <Button asChild size="lg" variant="invert">
+              <Link to="/scopes">Play with scopes</Link>
+            </Button>
+            <Button asChild size="lg" variant="secondary">
               <Link to="/boq">Read the BOQ</Link>
             </Button>
           </div>

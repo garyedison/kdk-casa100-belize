@@ -14,6 +14,7 @@ import { Route as BoqRouteImport } from './routes/boq'
 import { Route as CatalogRouteImport } from './routes/catalog'
 import { Route as CompareRouteImport } from './routes/compare'
 import { Route as LetterRouteImport } from './routes/letter'
+import { Route as ScopesRouteImport } from './routes/scopes'
 import { Route as SiteRouteImport } from './routes/site'
 
 const IndexRoute = IndexRouteImport.update({
@@ -41,6 +42,11 @@ const LetterRoute = LetterRouteImport.update({
   path: '/letter',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ScopesRoute = ScopesRouteImport.update({
+  id: '/scopes',
+  path: '/scopes',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SiteRoute = SiteRouteImport.update({
   id: '/site',
   path: '/site',
@@ -53,6 +59,7 @@ export interface FileRoutesByFullPath {
   '/catalog': typeof CatalogRoute
   '/compare': typeof CompareRoute
   '/letter': typeof LetterRoute
+  '/scopes': typeof ScopesRoute
   '/site': typeof SiteRoute
 }
 export interface FileRoutesByTo {
@@ -61,6 +68,7 @@ export interface FileRoutesByTo {
   '/catalog': typeof CatalogRoute
   '/compare': typeof CompareRoute
   '/letter': typeof LetterRoute
+  '/scopes': typeof ScopesRoute
   '/site': typeof SiteRoute
 }
 export interface FileRoutesById {
@@ -70,14 +78,24 @@ export interface FileRoutesById {
   '/catalog': typeof CatalogRoute
   '/compare': typeof CompareRoute
   '/letter': typeof LetterRoute
+  '/scopes': typeof ScopesRoute
   '/site': typeof SiteRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/boq' | '/catalog' | '/compare' | '/letter' | '/site'
+  fullPaths:
+    '/' | '/boq' | '/catalog' | '/compare' | '/letter' | '/scopes' | '/site'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/boq' | '/catalog' | '/compare' | '/letter' | '/site'
-  id: '__root__' | '/' | '/boq' | '/catalog' | '/compare' | '/letter' | '/site'
+  to: '/' | '/boq' | '/catalog' | '/compare' | '/letter' | '/scopes' | '/site'
+  id:
+    | '__root__'
+    | '/'
+    | '/boq'
+    | '/catalog'
+    | '/compare'
+    | '/letter'
+    | '/scopes'
+    | '/site'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -86,6 +104,7 @@ export interface RootRouteChildren {
   CatalogRoute: typeof CatalogRoute
   CompareRoute: typeof CompareRoute
   LetterRoute: typeof LetterRoute
+  ScopesRoute: typeof ScopesRoute
   SiteRoute: typeof SiteRoute
 }
 
@@ -126,6 +145,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LetterRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/scopes': {
+      id: '/scopes'
+      path: '/scopes'
+      fullPath: '/scopes'
+      preLoaderRoute: typeof ScopesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/site': {
       id: '/site'
       path: '/site'
@@ -142,6 +168,7 @@ const rootRouteChildren: RootRouteChildren = {
   CatalogRoute: CatalogRoute,
   CompareRoute: CompareRoute,
   LetterRoute: LetterRoute,
+  ScopesRoute: ScopesRoute,
   SiteRoute: SiteRoute,
 }
 export const routeTree = rootRouteImport
