@@ -6,13 +6,14 @@ import { computeTotals } from "@/lib/data/boq";
 import { TRANSMITTAL } from "@/lib/data/transmittal";
 import { useVillage } from "@/lib/store";
 import { usd, num } from "@/lib/utils";
+import { offScopesForPreset } from "@/lib/data/scopes";
 import { ArrowRight, FileText, FileSpreadsheet, Map, Sun, Wind } from "lucide-react";
 
 export const Route = createFileRoute("/")({ component: Home });
 
 function Home() {
   const mix = useVillage((s) => s.mix);
-  const totals = computeTotals(mix);
+  const totals = computeTotals(mix, { offScopes: offScopesForPreset("village") });
 
   return (
     <AppShell>
@@ -77,7 +78,7 @@ function Home() {
       <section className="mx-auto grid max-w-[1400px] gap-3 px-4 py-8 md:grid-cols-4 md:px-6">
         {[
           { k: "Homes", v: `${totals.homeCount}` },
-          { k: "Unfurnished all-in", v: usd(totals.unfurnishedAllIn) },
+          { k: "Unfurnished all-in (no extra civil)", v: usd(totals.unfurnishedAllIn) },
           { k: "FF&E upgrade", v: usd(totals.ffe) },
           { k: "Per ¼-acre lot (avg)", v: usd(totals.unfurnishedAllIn / totals.homeCount) },
         ].map((s) => (

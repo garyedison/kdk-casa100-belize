@@ -4,13 +4,14 @@ import { Button } from "@/components/ui/button";
 import { TRANSMITTAL, mailingBlock, financeMailingBlock } from "@/lib/data/transmittal";
 import { computeTotals } from "@/lib/data/boq";
 import { DEFAULT_MIX, STYLE_LIST, TOTAL_HOMES } from "@/lib/data/homes";
+import { offScopesForPreset } from "@/lib/data/scopes";
 import { usd } from "@/lib/utils";
 import { ArrowRight, Copy, Printer } from "lucide-react";
 import { useState } from "react";
 
 export const Route = createFileRoute("/letter")({ component: LetterPage });
 
-const totals = computeTotals(DEFAULT_MIX);
+const totals = computeTotals(DEFAULT_MIX, { offScopes: offScopesForPreset("village") });
 
 function LetterPage() {
   const [copied, setCopied] = useState<"opm" | "mof" | null>(null);
@@ -98,7 +99,9 @@ function LetterPage() {
               directly at that net, or contract a licensed Belizean distributor who buys from KDK at
               net and sells to the Government at list — so a Belizean entity is the seller and keeps
               the 10% on the homes. Officials can hide scopes on the attached playground to see a
-              homes-only floor, pads-and-set, house MEP, or the full village. Solar kit prices are
+              homes-only floor, pads-and-set, house MEP, or the full village (unfurnished, no extra
+              civil). Village roads, village power, water, WWTP, trees, plaza and gatehouse are
+              optional add-ons — not in that all-in. Solar kit prices are
               equipment only. Container-on-pad labour (11.01) is estimated at
               US$12.80/hr mixed — 80% Belizean structure crew. Solar install (11.02) is estimated at
               US$19.40/hr mixed — 70% Belizean electricians. Hours are still to be filled. KDK
@@ -112,7 +115,7 @@ function LetterPage() {
             {[
               { k: "Homes", v: `${TOTAL_HOMES}` },
               { k: "Submitted mix", v: `${DEFAULT_MIX.br1} / ${DEFAULT_MIX.br2} / ${DEFAULT_MIX.br3}` },
-              { k: "Unfurnished all-in", v: usd(totals.unfurnishedAllIn) },
+              { k: "Unfurnished all-in (no extra civil)", v: usd(totals.unfurnishedAllIn) },
               { k: "Per ¼-acre lot (avg)", v: usd(totals.unfurnishedAllIn / totals.homeCount) },
               { k: "FF&E upgrade (optional)", v: usd(totals.ffe) },
               { k: "Furnished all-in", v: usd(totals.furnishedAllIn) },
@@ -128,7 +131,9 @@ function LetterPage() {
           </dl>
           <p className="mt-2 text-[12px] text-muted">
             Mix = Compact Terrace / Hip Cottage / Family Gable. USD. Contingency 8% and project
-            management 5.5% sit on unfurnished works.
+            management 5.5% sit on unfurnished works. This all-in is Full village unfurnished: no
+            extra civil — no roads, village power, water mains, WWTP, trees, plaza, or gatehouse.
+            Those packages are optional on the scope playground.
           </p>
 
           <table className="mt-8 w-full text-sm">

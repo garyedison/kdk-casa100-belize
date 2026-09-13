@@ -17,19 +17,19 @@ function CivicPage() {
     <AppShell>
       <div className="mx-auto max-w-[1400px] px-4 py-8 md:px-6">
         <p className="text-[11px] uppercase tracking-[0.16em] text-muted">
-          Civic extras · in the Full village all-in
+          Civic extras · optional add-on · not in Full village
         </p>
         <h1 className="font-display text-3xl font-semibold tracking-tight md:text-4xl">
           Plaza, pavilion, and gatehouse
         </h1>
         <p className="mt-2 max-w-3xl text-ink-soft">
-          These drawings are conceptual — a government-budget civic green, not a resort. The dollars
-          are already in the Full village all-in ({usd(CIVIC_TOTAL)} EST. for civic extras). Hide the
-          Civic extras package on{" "}
+          These drawings are conceptual — a government-budget civic green, not a resort. Civic extras
+          are <strong>not</strong> in the Full village price ({usd(CIVIC_TOTAL)} EST. if you add
+          them). Full village is unfurnished homes with no extra civil. Turn civic on from{" "}
           <Link to="/scopes" className="text-kdk underline-offset-4 hover:underline">
             Scopes
           </Link>{" "}
-          if the Government does not want the plaza.
+          (Village civil + civic extras) if the Government wants the plaza.
         </p>
 
         <section className="mt-8">
@@ -39,7 +39,7 @@ function CivicPage() {
           <div className="mt-4 grid gap-4 md:grid-cols-2">
             <div className="rounded-lg bg-paper px-4 py-4 shadow-card">
               <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-kdk">
-                Still in Full village
+                Still in Full village (no extra civil)
               </p>
               <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-ink-soft">
                 {UNFURNISHED.stillIn.map((x) => (
@@ -98,8 +98,8 @@ function CivicPage() {
         <section className="mt-10">
           <h2 className="font-display text-2xl font-semibold">In the BOQ</h2>
           <p className="mt-1 text-sm text-ink-soft">
-            Civic extras total {usd(CIVIC_TOTAL)} EST. — already inside Full village. Off on Homes
-            only, Landed Belize, Pads, and Village utilities (no plaza).
+            Civic extras total {usd(CIVIC_TOTAL)} EST. — <strong>not</strong> inside Full village.
+            Off unless the reviewer chooses Village civil + civic extras.
           </p>
           <table className="mt-4 w-full text-sm">
             <thead>

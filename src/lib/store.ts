@@ -109,7 +109,7 @@ export const useVillage = create<VillageState>()(
         }),
     }),
     {
-      name: "kdk-casa-100",
+      name: "kdk-casa-100-v2",
       partialize: (s) => ({
         mix: s.mix,
         offScopes: s.offScopes,

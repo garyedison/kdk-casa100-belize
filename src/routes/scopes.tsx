@@ -18,9 +18,10 @@ function ScopesPage() {
           Reviewers can hide a package — or a single BOQ line — and watch the all-in fall. Homes
           only is FOB China port: pickup at the port, no ocean, no inland. Kitchen, bath, and split
           air on that tab are pending confirmation. Village roads, village power, potable water, and
-          the WWTP (wastewater treatment plant — shared sewage plant) are not in Homes only; they
-          switch on at Village utilities or Full village. Civic extras (gate, plaza, trees) are
-          optional on top. Full village is unfurnished: no furniture in the homes.{" "}
+          the WWTP (wastewater treatment plant — shared sewage plant) are not in Homes only and{" "}
+          <strong>not in Full village</strong>. Full village is unfurnished homes with{" "}
+          <strong>no extra civil</strong> (no roads, village power, water, WWTP, trees, plaza, or
+          gate). Add those on Scopes.{" "}
           <Link to="/civic" className="text-kdk underline-offset-4 hover:underline">
             Plaza rendering
           </Link>

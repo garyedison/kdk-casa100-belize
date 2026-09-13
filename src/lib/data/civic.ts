@@ -1,4 +1,4 @@
-/** Civic extras in the Full village all-in — not village utilities. */
+/** Civic extras — optional. Not in Full village (no extra civil). */
 
 export const CIVIC_LINES = [
   {
@@ -47,17 +47,18 @@ export const PLAZA_EXCLUDES = [
 ];
 
 export const UNFURNISHED = {
-  means: "The 100 homes have no furniture — no beds, sofas, dining sets, or linens.",
+  means:
+    "Full village unfurnished = the 100 homes have no furniture, and there is no extra civil. No roads, village power, water mains, WWTP, trees, plaza, or gatehouse in that price.",
   stillIn: [
-    "The container homes (kitchen / bath / split air still pending on Homes only)",
-    "Shipping when those packages are on",
+    "The container homes, ocean + inland when those packages are on",
     "Pads, set, house MEP, rooftop solar equipment (no battery)",
-    "Village roads, village power, potable water, WWTP",
-    "Civic extras (gate, plaza, trees) in Full village",
-    "Interior make-good (paint, floors) and range + refrigerator — separate packages, on in Full village",
+    "Interior make-good (paint, floors) and range + refrigerator",
   ],
   notIn: [
-    "Furniture / FF&E — take Furnished village to add it",
+    "Village roads, village power to the lots, potable water mains",
+    "WWTP (wastewater treatment plant / shared sewage plant)",
+    "Street trees, plaza, pavilion, gatehouse — see this page; add as civic extras",
+    "Furniture / FF&E — take Furnished homes to add it",
     "Battery storage",
     "Solar install labour and container-on-pad labour hours (TBD next week)",
   ],

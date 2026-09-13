@@ -134,21 +134,24 @@ export function ScopePlayground() {
         {presetId === "village" ? (
           <div className="mt-4 rounded-lg border border-kdk/30 bg-paper-2 px-4 py-4 text-sm">
             <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-kdk">
-              Full village = unfurnished
+              Full village = unfurnished, no extra civil
             </p>
             <ul className="mt-2 list-disc space-y-1 pl-5 text-ink-soft">
               <li>
-                <strong className="text-ink">Unfurnished</strong> means no furniture in the 100 homes
-                — no beds, sofas, dining sets, or linens. Take Furnished village for FF&E.
+                <strong className="text-ink">In this price:</strong> 100 homes landed, slabs, set,
+                house MEP, split air, rooftop solar equipment, interior make-good, range + fridge.
+                No furniture.
               </li>
               <li>
-                The village itself is not empty: roads, power, water, WWTP, and civic extras (gate,
-                plaza, trees) are on.
+                <strong className="text-ink">NOT in this price:</strong> village roads, village
+                power to the lots, potable water mains, WWTP (sewage plant), street trees, plaza,
+                pavilion, or gatehouse.
               </li>
               <li>
-                See the plaza rendering and inclusion list on{" "}
+                To add civil, use <strong className="text-ink">Add village civil</strong>. To add
+                the plaza, use{" "}
                 <Link to="/civic" className="text-kdk underline-offset-4 hover:underline">
-                  Plaza
+                  Village civil + civic extras
                 </Link>
                 .
               </li>
@@ -239,17 +242,17 @@ export function ScopePlayground() {
                     shared sewage plant for all 100 lots, not 100 septic tanks.
                   </li>
                   <li>
-                    <strong className="text-ink">Roads, village power, water, WWTP</strong> are{" "}
-                    <em>not</em> in Homes only, Landed Belize, Pads & set, house MEP, or solar.
-                    They switch on at <strong className="text-ink">Village utilities</strong> or{" "}
-                    <strong className="text-ink">Full village</strong>.
+                    <strong className="text-ink">Roads, village power, water, WWTP, trees, plaza,
+                    gate</strong>{" "}
+                    are <em>not</em> in Full village. The Full village price is the homes campaign
+                    only.
                   </li>
                   <li>
-                    <strong className="text-ink">Civic extras</strong> (gate, plaza, trees) are
-                    optional. They are not water, not roads, not power, not the sewage plant. On in
-                    Full village; off in Village utilities.{" "}
+                    Turn civil on with <strong className="text-ink">Add village civil</strong>. Add
+                    gate / plaza / trees with{" "}
+                    <strong className="text-ink">Village civil + civic extras</strong>.{" "}
                     <Link to="/civic" className="text-kdk underline-offset-4 hover:underline">
-                      Plaza rendering and what it includes
+                      Plaza rendering
                     </Link>
                     .
                   </li>

@@ -52,13 +52,13 @@ export const SCOPE_GROUPS: { id: string; title: string; blurb: string; ids: Scop
     id: "village",
     title: "Village infrastructure",
     blurb:
-      "Not in Homes only, Landed Belize, Pads, house MEP, or solar. Only in Full village — unless you tap a package on. WWTP means wastewater treatment plant: one shared sewage plant for 100 lots, not 100 septic tanks. Civic extras (gate, plaza, trees) are not water, roads, or power.",
+      "NOT in Full village. Optional add-on. WWTP = wastewater treatment plant (shared sewage plant, not 100 septic tanks). Civic extras (gate, plaza, trees) are not roads, water, or power.",
     ids: ["roads", "village_elec", "village_wet", "civic"],
   },
   {
     id: "fitout",
     title: "Interior fit-out",
-    blurb: "Not in the unfurnished village. Optional.",
+    blurb: "Paint, floors, and range + fridge are on in Full village. Furniture (FF&E) is not.",
     ids: ["finishes", "appliances", "ffe"],
   },
   {
@@ -138,7 +138,7 @@ export const SCOPES: ScopeDef[] = [
     label: "Village electrical (power to the lots)",
     short: "Village power",
     blurb:
-      "Transformers, underground/overhead cables to each of the 100 lots, 80 street lights, testing. Village power — not rooftop solar, not the house split air. Off until Full village.",
+      "Transformers, underground/overhead cables to each of the 100 lots, 80 street lights, testing. Village power — not rooftop solar, not the house split air. NOT in Full village.",
     items: ["05.01", "05.02", "05.03", "05.06"],
   },
   {
@@ -146,7 +146,7 @@ export const SCOPES: ScopeDef[] = [
     label: "Village water + WWTP (sewage plant)",
     short: "Water + WWTP",
     blurb:
-      "Potable water: elevated tank, mains to the lots, disinfection. WWTP = wastewater treatment plant — one shared sewage plant for the 100 lots instead of 100 septic tanks. Off until Full village.",
+      "Potable water: elevated tank, mains to the lots, disinfection. WWTP = wastewater treatment plant — one shared sewage plant for the 100 lots instead of 100 septic tanks. NOT in Full village.",
     items: ["06.02", "06.04"],
   },
   {
@@ -154,7 +154,7 @@ export const SCOPES: ScopeDef[] = [
     label: "Village roads + storm drainage",
     short: "Roads",
     blurb:
-      "Gravel avenues through the subdivision, access to each ¼-acre lot, culverts and drainage. Not asphalt paving. Off until Full village.",
+      "Gravel avenues through the subdivision, access to each ¼-acre lot, culverts and drainage. Not asphalt paving. NOT in Full village.",
     items: ["09.02", "09.07"],
   },
   {
@@ -162,7 +162,7 @@ export const SCOPES: ScopeDef[] = [
     label: "Civic extras — gate, plaza, trees",
     short: "Civic extras",
     blurb:
-      "Optional: perimeter fence, gatehouse, community plaza and pavilion, street trees. Not roads. Not water. Not village power. Not the WWTP. Off until Full village.",
+      "Optional add-on: perimeter fence, gatehouse, community plaza and pavilion, street trees. Not roads. Not water. Not village power. Not the WWTP. NOT in Full village.",
     items: ["09.04", "09.05", "09.06", "05.05"],
   },
   {
@@ -196,6 +196,23 @@ export const SCOPES: ScopeDef[] = [
 ];
 
 export const SCOPE_IDS = SCOPES.map((s) => s.id);
+
+export const HOUSE_CAMPAIGN: ScopeId[] = [
+  "homes",
+  "distributor",
+  "ocean",
+  "inland",
+  "site_enable",
+  "slabs",
+  "set",
+  "house_mep",
+  "solar",
+  "finishes",
+  "appliances",
+  "oncosts",
+];
+
+export const CIVIL_SCOPES: ScopeId[] = ["roads", "village_elec", "village_wet", "civic"];
 
 export const ITEM_SCOPE: Record<string, ScopeId> = Object.fromEntries(
   SCOPES.flatMap((s) => s.items.map((item) => [item, s.id])),
@@ -267,39 +284,32 @@ export const PRESETS: Preset[] = [
     ],
   },
   {
-    id: "utilities",
-    label: "Village utilities (no plaza)",
-    blurb:
-      "Pads + MEP + solar, plus roads, village power, potable water, and WWTP (sewage plant). No gate, plaza, or trees.",
-    scopes: [
-      "homes",
-      "distributor",
-      "ocean",
-      "inland",
-      "site_enable",
-      "slabs",
-      "set",
-      "house_mep",
-      "solar",
-      "roads",
-      "village_elec",
-      "village_wet",
-      "oncosts",
-    ],
-  },
-  {
     id: "village",
     label: "Full village — unfurnished",
-    kicker: "UNFURNISHED",
+    kicker: "NO EXTRA CIVIL",
     blurb:
-      "No furniture in the 100 homes (no beds, sofas, dining, linens). Roads, village power, water, WWTP, plus civic extras (gate, plaza, trees). Take Furnished village to add FF&E.",
-    scopes: SCOPE_IDS.filter((id) => id !== "ffe"),
+      "The 100 homes landed, set, MEP, and solar. No furniture. NO roads. NO village power. NO water mains. NO WWTP (sewage plant). NO trees, plaza, or gatehouse. Add those as separate packages.",
+    scopes: HOUSE_CAMPAIGN,
+  },
+  {
+    id: "utilities",
+    label: "Add village civil",
+    blurb:
+      "Full village plus roads, village power, potable water, and WWTP (sewage plant). Still no plaza, trees, or gate.",
+    scopes: [...HOUSE_CAMPAIGN, "roads", "village_elec", "village_wet"],
+  },
+  {
+    id: "withCivic",
+    label: "Village civil + civic extras",
+    blurb: "Village civil plus gate, plaza, pavilion, and trees.",
+    scopes: [...HOUSE_CAMPAIGN, "roads", "village_elec", "village_wet", "civic"],
   },
   {
     id: "furnished",
-    label: "Furnished village",
-    blurb: "Full unfurnished village plus furniture (beds, seating, dining, linens).",
-    scopes: [...SCOPE_IDS],
+    label: "Furnished homes (no extra civil)",
+    blurb:
+      "Full village unfurnished plus beds, seating, dining, linens. Still no roads, village power, water, WWTP, plaza, or trees.",
+    scopes: [...HOUSE_CAMPAIGN, "ffe"],
   },
 ];
 
