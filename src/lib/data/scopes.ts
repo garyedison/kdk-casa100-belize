@@ -48,14 +48,14 @@ export const SCOPES: ScopeDef[] = [
     id: "ocean",
     label: "Ocean freight China → Belize",
     short: "Ocean",
-    blurb: "$19,000 per 40HQ, split by load factor.",
+    blurb: "$19,000 per 40HQ, China port to Belize. Off on Homes only (FOB China).",
     items: ["02.01"],
   },
   {
     id: "inland",
     label: "Inland delivery + duties",
     short: "Inland",
-    blurb: "Site-gate convoy and HS 9406.20 allowance.",
+    blurb: "Site-gate convoy and HS 9406.20 allowance. Off on Homes only — Government’s own trucking if they pick up in China.",
     items: ["02.02"],
   },
   {
@@ -167,14 +167,21 @@ export type Preset = {
 export const PRESETS: Preset[] = [
   {
     id: "homes",
-    label: "Homes only",
-    blurb: "Lowest KDK price — factory boxes at distributor net. No site work.",
+    label: "Homes only — FOB China",
+    blurb:
+      "Factory boxes at distributor net. Government (or its forwarder) takes the units at the China port and pays its own ocean and Belize inland.",
     scopes: ["homes", "distributor"],
+  },
+  {
+    id: "landed",
+    label: "Landed Belize",
+    blurb: "Homes plus KDK ocean freight and inland to the site gate. Still no slabs or set.",
+    scopes: ["homes", "distributor", "ocean", "inland", "oncosts"],
   },
   {
     id: "pads",
     label: "Pads & set",
-    blurb: "Homes landed, excavated, slabbed, and set on the pad.",
+    blurb: "Landed, excavated, slabbed, and set on the pad.",
     scopes: ["homes", "distributor", "ocean", "inland", "site_enable", "slabs", "set", "oncosts"],
   },
   {
