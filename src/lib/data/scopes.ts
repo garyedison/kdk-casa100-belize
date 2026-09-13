@@ -29,6 +29,46 @@ export type ScopeDef = {
   items: string[];
 };
 
+export const SCOPE_GROUPS: { id: string; title: string; blurb: string; ids: ScopeId[] }[] = [
+  {
+    id: "module",
+    title: "The houses",
+    blurb: "Factory boxes. Homes only is FOB China port — no shipping.",
+    ids: ["homes", "distributor"],
+  },
+  {
+    id: "logistics",
+    title: "Shipping",
+    blurb: "Off on Homes only. On from Landed Belize onward.",
+    ids: ["ocean", "inland"],
+  },
+  {
+    id: "site",
+    title: "On each lot",
+    blurb: "Off on Homes only and Landed Belize. On from Pads & set.",
+    ids: ["site_enable", "slabs", "set", "house_mep", "solar"],
+  },
+  {
+    id: "village",
+    title: "Village infrastructure",
+    blurb:
+      "Not in Homes only, Landed Belize, Pads, house MEP, or solar. Only in Full village — unless you tap a package on. WWTP means wastewater treatment plant: one shared sewage plant for 100 lots, not 100 septic tanks. Civic extras (gate, plaza, trees) are not water, roads, or power.",
+    ids: ["roads", "village_elec", "village_wet", "civic"],
+  },
+  {
+    id: "fitout",
+    title: "Interior fit-out",
+    blurb: "Not in the unfurnished village. Optional.",
+    ids: ["finishes", "appliances", "ffe"],
+  },
+  {
+    id: "oncosts",
+    title: "Allowances",
+    blurb: "8% contingency and 5.5% project management on the scopes still switched on.",
+    ids: ["oncosts"],
+  },
+];
+
 export const SCOPES: ScopeDef[] = [
   {
     id: "homes",
@@ -95,31 +135,35 @@ export const SCOPES: ScopeDef[] = [
   },
   {
     id: "village_elec",
-    label: "Village electrical",
-    short: "Village elec.",
-    blurb: "Transformers, MV/LV, street lights, civic power, commissioning.",
-    items: ["05.01", "05.02", "05.03", "05.05", "05.06"],
+    label: "Village electrical (power to the lots)",
+    short: "Village power",
+    blurb:
+      "Transformers, underground/overhead cables to each of the 100 lots, 80 street lights, testing. Village power — not rooftop solar, not the house split air. Off until Full village.",
+    items: ["05.01", "05.02", "05.03", "05.06"],
   },
   {
     id: "village_wet",
-    label: "Village water & wastewater",
-    short: "Water / WW",
-    blurb: "Tank and loop, package WWTP.",
+    label: "Village water + WWTP (sewage plant)",
+    short: "Water + WWTP",
+    blurb:
+      "Potable water: elevated tank, mains to the lots, disinfection. WWTP = wastewater treatment plant — one shared sewage plant for the 100 lots instead of 100 septic tanks. Off until Full village.",
     items: ["06.02", "06.04"],
   },
   {
     id: "roads",
-    label: "Avenues & stormwater",
+    label: "Village roads + storm drainage",
     short: "Roads",
-    blurb: "Gravel avenues, lot access, drainage.",
+    blurb:
+      "Gravel avenues through the subdivision, access to each ¼-acre lot, culverts and drainage. Not asphalt paving. Off until Full village.",
     items: ["09.02", "09.07"],
   },
   {
     id: "civic",
-    label: "Gate, plaza, trees",
-    short: "Civic",
-    blurb: "Fence, gatehouse, pavilion, civic green.",
-    items: ["09.04", "09.05", "09.06"],
+    label: "Civic extras — gate, plaza, trees",
+    short: "Civic extras",
+    blurb:
+      "Optional: perimeter fence, gatehouse, community plaza and pavilion, street trees. Not roads. Not water. Not village power. Not the WWTP. Off until Full village.",
+    items: ["09.04", "09.05", "09.06", "05.05"],
   },
   {
     id: "finishes",
@@ -208,7 +252,7 @@ export const PRESETS: Preset[] = [
   {
     id: "solar",
     label: "Pads + MEP + solar",
-    blurb: "Previous, plus rooftop PV and inverter. No battery.",
+    blurb: "Previous, plus rooftop PV and inverter. No battery. Still no village roads, water, power, or WWTP.",
     scopes: [
       "homes",
       "distributor",
@@ -223,9 +267,31 @@ export const PRESETS: Preset[] = [
     ],
   },
   {
+    id: "utilities",
+    label: "Village utilities (no plaza)",
+    blurb:
+      "Pads + MEP + solar, plus roads, village power, potable water, and WWTP (sewage plant). No gate, plaza, or trees.",
+    scopes: [
+      "homes",
+      "distributor",
+      "ocean",
+      "inland",
+      "site_enable",
+      "slabs",
+      "set",
+      "house_mep",
+      "solar",
+      "roads",
+      "village_elec",
+      "village_wet",
+      "oncosts",
+    ],
+  },
+  {
     id: "village",
     label: "Full village",
-    blurb: "Unfurnished campaign — roads, water, WWTP, village electrical, civic.",
+    blurb:
+      "Village utilities plus civic extras (gate, plaza, trees). Roads, power, water, WWTP included. Unfurnished.",
     scopes: SCOPE_IDS.filter((id) => id !== "ffe"),
   },
   {

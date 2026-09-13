@@ -4,6 +4,7 @@ import { MixControls } from "@/components/site/MixControls";
 import { computeTotals } from "@/lib/data/boq";
 import {
   PRESETS,
+  SCOPE_GROUPS,
   SCOPES,
   pricingCopy,
   type PricingMode,
@@ -198,17 +199,47 @@ export function ScopePlayground() {
           Off = that package is not in KDK’s price. The all-in above drops by that amount (plus
           on-costs if they are on). Labour hours stay TBD.
         </p>
-        <div className="mt-4 grid gap-3 sm:grid-cols-2">
-          {SCOPES.map((scope) => (
-            <ScopeCard
-              key={scope.id}
-              scope={scope.id}
-              on={!offScopes.includes(scope.id)}
-              amount={totals.byScope.find((s) => s.id === scope.id)?.fullAmount ?? 0}
-              onToggle={() => toggleScope(scope.id)}
-            />
-          ))}
-        </div>
+        {SCOPE_GROUPS.map((group) => (
+          <div key={group.id} className="mt-6">
+            <h3 className="font-display text-xl font-semibold">{group.title}</h3>
+            <p className="mt-1 max-w-3xl text-sm text-ink-soft">{group.blurb}</p>
+            {group.id === "village" ? (
+              <div className="mt-3 overflow-x-auto rounded-lg bg-paper px-4 py-3 text-sm shadow-card">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-kdk">
+                  For the reviewing official
+                </p>
+                <ul className="mt-2 list-disc space-y-1 pl-5 text-ink-soft">
+                  <li>
+                    <strong className="text-ink">WWTP</strong> = wastewater treatment plant — a
+                    shared sewage plant for all 100 lots, not 100 septic tanks.
+                  </li>
+                  <li>
+                    <strong className="text-ink">Roads, village power, water, WWTP</strong> are{" "}
+                    <em>not</em> in Homes only, Landed Belize, Pads & set, house MEP, or solar.
+                    They switch on at <strong className="text-ink">Village utilities</strong> or{" "}
+                    <strong className="text-ink">Full village</strong>.
+                  </li>
+                  <li>
+                    <strong className="text-ink">Civic extras</strong> (gate, plaza, trees) are
+                    optional. They are not water, not roads, not power, not the sewage plant. On in
+                    Full village; off in Village utilities.
+                  </li>
+                </ul>
+              </div>
+            ) : null}
+            <div className="mt-3 grid gap-3 sm:grid-cols-2">
+              {group.ids.map((id) => (
+                <ScopeCard
+                  key={id}
+                  scope={id}
+                  on={!offScopes.includes(id)}
+                  amount={totals.byScope.find((s) => s.id === id)?.fullAmount ?? 0}
+                  onToggle={() => toggleScope(id)}
+                />
+              ))}
+            </div>
+          </div>
+        ))}
       </section>
     </div>
   );
