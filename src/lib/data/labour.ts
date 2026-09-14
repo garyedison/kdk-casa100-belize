@@ -1,7 +1,8 @@
 /**
  * Campaign labour rates — researched Sep 2026.
  * Gross payroll vs contractor all-in (SSB, tools, transport, OH&P, scarcity).
- * Hours remain TBD. Rates are EST. until local quotes land next week.
+ * Hours for pad assembly are from the supplier install sheets (10-hour days @ US$280/day).
+ * Solar install hours remain TBD until next week's local quotes.
  *
  * Sources:
  * - Belize min wage BZ$5.00/hr = US$2.50 (Ministry of Labour; peg 2:1)
@@ -68,7 +69,7 @@ export const ALL_IN: Record<string, LabourGrade> = {
     chinaDomestic: 4.2,
     chinaOnSite: 26,
     mixed: 12.8,
-    mixNote: "80% Belize structure / 20% China factory tech",
+    mixNote: "80% Belize structure / 20% China tech",
   },
   electrical: {
     id: "electrical",
@@ -107,7 +108,17 @@ export const CAMPAIGN_RATES = {
   solarInstall: ALL_IN.electrical.mixed,
 } as const;
 
-/** Recommended crew mix and local-jobs pledge for the Government. Hours still TBD. */
+/** Supplier assembly: 10-hour days at US$280/day → US$28/hr. */
+export const ASSEMBLY = {
+  hoursPerDay: 10,
+  dayRate: 280,
+  hourly: 28,
+  hours: { br1: 42, br2: 80, br3: 80 } as const,
+  days: { br1: 4.2, br2: 8, br3: 8 } as const,
+  cost: { br1: 1_176, br2: 2_240, br3: 2_240 } as const,
+};
+
+/** Recommended crew mix and local-jobs pledge for the Government. */
 export const EMPLOYMENT = {
   campaignMonths: 12,
   campaignSpan: "12 months or longer",
@@ -117,7 +128,7 @@ export const EMPLOYMENT = {
     "KDK recommends Belizean crews as the standing workforce for 12 months or longer. Chinese technicians train, commission the first pads, and stand down. Village civil (roads, water, WWTP, laterals) is almost entirely Belizean for the full campaign.",
   pad: {
     item: "11.01",
-    title: "Container install on the concrete pad",
+    title: "Module assembly on the pad",
     rate: CAMPAIGN_RATES.padInstall,
     belizePct: 80,
     chinaPct: 20,

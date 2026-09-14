@@ -74,7 +74,7 @@ export const SCOPES: ScopeDef[] = [
     id: "homes",
     label: "Factory container homes",
     short: "Homes",
-    blurb: "PT220348-1 / PT211222 / PT230206. FOB China on Homes only. Kitchen / bath / split air pending confirmation.",
+    blurb: "1-bed, 2-bed and 3-bed under 100 m². FOB China on Homes only. Kitchen, toilet and shower included. Split air is house MEP.",
     items: ["01.01", "06.01", "07.04"],
   },
   {
@@ -116,7 +116,7 @@ export const SCOPES: ScopeDef[] = [
     id: "set",
     label: "Set home on the pad",
     short: "Set",
-    blurb: "Shared crane plant. Pad-crew hours (11.01) still TBD.",
+    blurb: "Shared crane plant. Assembly hours on 11.01 from the supplier sheets (42 / 80 / 80 hrs).",
     items: ["03.03", "11.01", "11.03", "11.04"],
   },
   {
@@ -244,7 +244,7 @@ export const PRESETS: Preset[] = [
     blurb:
       "Pickup at the China port. No ocean freight. No Belize inland. Government (or its forwarder) takes the boxes at the port and pays its own shipping.",
     pending:
-      "Kitchen, bath (toilet + shower), and split air — to confirm. Not yet decided whether they travel with Homes only or are added later.",
+      "Kitchen, toilet and shower are included in the module. Split air is not — it sits in house MEP.",
     scopes: ["homes", "distributor"],
   },
   {

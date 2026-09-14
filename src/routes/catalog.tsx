@@ -22,10 +22,10 @@ function CatalogPage() {
           Three styles under 100 m²
         </h1>
         <p className="mt-2 max-w-2xl text-ink-soft">
-          Taken from the attached factory file. Kitchen, toilet and shower ship in the module.
-          Split air, rooftop PV modules and a grid-tie inverter are added in the Belize BOQ as
-          equipment. Solar install labour and container-on-pad labour are TBD — rates next week.
-          Battery storage is not included. Furniture is not.
+          Three styles under 100 m². Kitchen, toilet and shower ship in the module. Split air,
+          rooftop PV and a grid-tie inverter are added in the Belize BOQ as equipment. Assembly
+          hours are from the supplier install sheets (42 / 80 / 80 hours). Solar install hours
+          remain TBD. Battery storage is not included. Furniture is not.
         </p>
 
         <div className="mt-8 space-y-14">
@@ -41,7 +41,7 @@ function CatalogPage() {
                   />
                   <div className="p-6 md:p-8">
                     <p className="text-[11px] uppercase tracking-wide text-muted">
-                      {s.itemNo} · factory {s.code}
+                      {s.beds}-bed · {s.look}
                     </p>
                     <h2 className="font-display text-3xl font-semibold">{s.name}</h2>
                     <p className="text-ink-soft">
@@ -59,7 +59,7 @@ function CatalogPage() {
                       ))}
                     </ul>
                     <dl className="mt-5 grid grid-cols-2 gap-3 text-sm">
-                      <Row k="Factory list" v={usd(s.factoryList)} />
+                      <Row k="List price" v={usd(s.factoryList)} />
                       <Row k="Volume rate (−10%)" v={usd(s.volumeRate)} />
                       <Row k="Freight / home" v={usd(s.freightPerHome)} />
                       <Row k="Units per 40HQ" v={String(s.unitsPer40hq)} />
@@ -68,7 +68,8 @@ function CatalogPage() {
                       <Row k="Battery" v="Not included" />
                       <Row k="Split air" v={s.acBtu} />
                       <Row k="Solar equipment (PV + inverter + rails)" v={usd(solar.kit)} />
-                      <Row k="Solar install labour" v="TBD next week" />
+                      <Row k="Assembly labour" v={`${s.assembleHours} hrs · ${s.assembleDays} days`} />
+                      <Row k="Solar install labour" v="Hours TBD" />
                       <Row k="House package" v={usd(totals.perStyleHouse[s.id])} />
                       <Row k="Village all-in" v={usd(totals.perStyleVillage[s.id])} />
                       <Row k="FF&E upgrade" v={usd(totals.perStyleFfe[s.id])} />

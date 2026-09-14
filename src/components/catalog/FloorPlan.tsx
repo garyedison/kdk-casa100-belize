@@ -248,7 +248,7 @@ export function FloorPlan({
     >
       <div className="flex items-baseline justify-between gap-3 border-b border-line px-3 py-2 md:px-4">
         <div>
-          <p className="text-[11px] uppercase tracking-wide text-muted">{style.itemNo} · floor layout</p>
+          <p className="text-[11px] uppercase tracking-wide text-muted">{style.beds}-bed · floor layout</p>
           <p className={cn("font-display font-semibold", compact ? "text-base" : "text-lg")}>
             {plan.title}
           </p>

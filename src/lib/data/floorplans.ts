@@ -44,15 +44,15 @@ export type FloorPlanData = {
   dims: FloorDim[];
 };
 
-/** Factory Popular Design list 7 Sep 2026 — layouts redrawn from the attached catalog. */
+/** Layouts for the three CASA 100 styles — 1-bed, 2-bed, 3-bed. */
 export const FLOORPLANS: Record<StyleId, FloorPlanData> = {
   br1: {
-    code: "PT220348-1",
+    code: "1-bed",
     title: "Compact Terrace · 1BR / 1BA",
     interiorM2: 29,
     widthMm: 7510,
     depthMm: 5710,
-    note: "29 m² excluding terrace. Studio-plan: bedroom, bath, kitchen, south terrace.",
+    note: "29 m² excluding terrace. Bedroom, bath, kitchen, south terrace.",
     rooms: [
       { id: "br", label: "Bedroom", x: 0, y: 0, w: 3850, h: 3860 },
       { id: "ba", label: "Bath", x: 3850, y: 0, w: 1550, h: 2000 },
@@ -76,12 +76,12 @@ export const FLOORPLANS: Record<StyleId, FloorPlanData> = {
     ],
   },
   br2: {
-    code: "PT211222",
+    code: "2-bed",
     title: "Hip Cottage · 2BR / 2BA",
     interiorM2: 54,
     widthMm: 9000,
     depthMm: 8410,
-    note: "54 m² excluding porch. Two bedrooms, two baths, kitchen, living. Pool from the factory sheet is omitted.",
+    note: "54 m² excluding porch. Two bedrooms, two baths, kitchen, living.",
     rooms: [
       { id: "br1", label: "Bedroom 1", x: 0, y: 0, w: 3300, h: 3030 },
       { id: "ba1", label: "Bath 1", x: 3300, y: 0, w: 1100, h: 3030 },
@@ -112,7 +112,7 @@ export const FLOORPLANS: Record<StyleId, FloorPlanData> = {
     ],
   },
   br3: {
-    code: "PT230206",
+    code: "3-bed",
     title: "Family Gable · 3BR / 1BA",
     interiorM2: 54,
     widthMm: 9000,

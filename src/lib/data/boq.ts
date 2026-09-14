@@ -4,7 +4,7 @@ import {
   type StyleId,
   VOLUME_DISCOUNT,
 } from "./homes";
-import { CAMPAIGN_RATES } from "./labour";
+import { ASSEMBLY, CAMPAIGN_RATES } from "./labour";
 import { ITEM_SCOPE, SCOPE_IDS, type PricingMode, type ScopeId } from "./scopes";
 
 export type Status = "QUOTED" | "EST." | "TBD" | "INCL." | "EXCL.";
@@ -29,7 +29,7 @@ export type BoqLine = {
 };
 
 export const DIVISIONS = [
-  { no: "01", name: "Factory modules" },
+  { no: "01", name: "Container homes" },
   { no: "02", name: "Logistics" },
   { no: "03", name: "Foundations & anchoring" },
   { no: "04", name: "Split air & solar PV — no battery" },
@@ -61,7 +61,7 @@ export const LINES: BoqLine[] = [
     item: "01.01",
     division: "Factory modules",
     divisionNo: "01",
-    description: "Container home unit — factory list, unfurnished (FOB China port)",
+    description: "Container home unit — list price, unfurnished (FOB China port)",
     unit: "home",
     perHome: per(1),
     rate: rates(
@@ -70,13 +70,13 @@ export const LINES: BoqLine[] = [
       STYLES.br3.factoryList,
     ),
     status: "QUOTED",
-    note: "Factory list 7 Sep 2026. PT220348-1 / PT211222 / PT230206. Homes only is FOB China port — no ocean, no inland. Kitchen, bath, and split air: pending confirmation whether they are in this line or added later.",
+    note: "List 7 Sep 2026. Homes only is FOB China port — no ocean, no inland. Kitchen, toilet and shower are included in the module. Split air is a separate house-MEP line.",
   },
   {
     item: "01.02",
     division: "Factory modules",
     divisionNo: "01",
-    description: `Distributor net — ${VOLUME_DISCOUNT * 100}% off factory list (100-home campaign)`,
+    description: `Distributor net — ${VOLUME_DISCOUNT * 100}% off list (100-home campaign)`,
     unit: "home",
     perHome: per(1),
     rate: rates(
@@ -144,7 +144,7 @@ export const LINES: BoqLine[] = [
     perHome: per(1),
     rate: 800,
     status: "EST.",
-    note: "Shared crawler plant hire only. Crew to set the container on the pad is 11.01 at $12.80/hr EST. mixed (80% Belizean / 20% China tech). Moonlight Bay day-hire was $2,500/home.",
+    note: "Shared crawler plant hire only. Crew to assemble the module on the pad is 11.01 — supplier hours at US$28/hr. Mix 80% Belizean / 20% China tech.",
   },
   {
     item: "04.01",
@@ -155,7 +155,7 @@ export const LINES: BoqLine[] = [
     perHome: per(1),
     rate: rates(1_200, 1_800, 2_400),
     status: "EST.",
-    note: "12k / 18k / 24k BTU. In house MEP today — not in Homes only (FOB China). Pending confirmation whether split air travels with the factory box.",
+    note: "12k / 18k / 24k BTU. In house MEP — not in Homes only (FOB China). Not in the standard module fittings.",
   },
   {
     item: "04.02",
@@ -277,12 +277,12 @@ export const LINES: BoqLine[] = [
     item: "06.01",
     division: "Plumbing & sanitary",
     divisionNo: "06",
-    description: "Sanitaryware — toilet, shower, kitchen sink (factory fitted)",
+    description: "Sanitaryware — toilet, shower, kitchen sink (in the module)",
     unit: "home",
     perHome: per(1),
     rate: 0,
     status: "INCL.",
-    note: "Shown for scope. Pending confirmation whether toilet, shower, and kitchen sink travel with Homes only (FOB China) or are added later. Split air is 04.01 — also pending for Homes only.",
+    note: "Toilet, shower, kitchen sink and cabinet ship in the module. Confirmed on the supplier fittings list. Split air is 04.01 — not in the module.",
   },
   {
     item: "06.02",
@@ -383,7 +383,7 @@ export const LINES: BoqLine[] = [
     perHome: per(1),
     rate: rates(350, 480, 520),
     status: "EST.",
-    note: "RTOAC Div (i) analog — factory kitchen already in 01.01.",
+    note: "RTOAC Div (i) analog — kitchen cabinet already in the module.",
   },
   {
     item: "07.06",
@@ -506,13 +506,12 @@ export const LINES: BoqLine[] = [
     item: "11.01",
     division: "Labour & duration",
     divisionNo: "11",
-    description: "Container install on concrete pad — local crew (man-hours / home)",
+    description: "Module assembly on the pad (man-hours / home)",
     unit: "hr",
-    perHome: per(1),
-    rate: CAMPAIGN_RATES.padInstall,
-    status: "TBD",
-    tbd: true,
-    note: "Hours TBD. Rate EST. $12.80/hr mixed: 80% Belizean structure @ $9.50 + 20% China factory tech on-site @ $26. Belizean pad crew is the standing workforce for 12 months or longer. Chinese techs train the first sets and stand down. Not in 03.03 plant hire.",
+    perHome: { br1: ASSEMBLY.hours.br1, br2: ASSEMBLY.hours.br2, br3: ASSEMBLY.hours.br3 },
+    rate: ASSEMBLY.hourly,
+    status: "QUOTED",
+    note: `Supplier assembly at 10-hour days, US$${ASSEMBLY.dayRate}/day (US$${ASSEMBLY.hourly}/hr). 1-bed ${ASSEMBLY.hours.br1} hrs / ${ASSEMBLY.days.br1} days (US$${ASSEMBLY.cost.br1.toLocaleString()}). 2-bed and 3-bed ${ASSEMBLY.hours.br2} hrs / ${ASSEMBLY.days.br2} days (US$${ASSEMBLY.cost.br2.toLocaleString()} each). Crew mix still 80% Belizean / 20% China tech — Belizeans are the standing workforce. Not in 03.03 plant hire.`,
   },
   {
     item: "11.02",
@@ -530,26 +529,25 @@ export const LINES: BoqLine[] = [
     item: "11.03",
     division: "Labour & duration",
     divisionNo: "11",
-    description: "China factory engineer attendance",
+    description: "China technician attendance (trainer)",
     unit: "day",
     perHome: per(0),
     rate: 0,
     status: "TBD",
     tbd: true,
     lump: true,
-    note: "Factory engineer as trainer/commissioner — not the standing workforce. Belizean foremen run the site after handover. Duration TBD.",
+    note: "China technician as trainer/commissioner — not the standing workforce. Belizean foremen run the site after handover. Duration TBD.",
   },
   {
     item: "11.04",
     division: "Labour & duration",
     divisionNo: "11",
-    description: "Duration — container set on pad",
+    description: "Duration — module assembly on pad",
     unit: "day",
-    perHome: per(1),
+    perHome: { br1: ASSEMBLY.days.br1, br2: ASSEMBLY.days.br2, br3: ASSEMBLY.days.br3 },
     rate: 0,
-    status: "TBD",
-    tbd: true,
-    note: "Calendar days on pad after crane. Fill with 11.01 labour next week.",
+    status: "QUOTED",
+    note: "Calendar crew-days at 10 hours/day from the supplier assembly sheet. 1-bed 4.2 days; 2-bed and 3-bed 8 days. No dollar on this line — dollars sit on 11.01.",
   },
   {
     item: "11.05",
@@ -889,7 +887,7 @@ export const PM_RATE = PM;
 /** Moonlight Bay 2-home PT211222 working figures — for the comparison view. */
 export const MOONLIGHT = {
   name: "Moonlight Bay — 2 homes (lots 127 & 115)",
-  style: "PT211222",
+  style: "Hip Cottage",
   factoryWorking: 20_000,
   factoryList: 23_100,
   freight: 9_500,

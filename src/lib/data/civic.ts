@@ -60,7 +60,7 @@ export const UNFURNISHED = {
     "Street trees, plaza, pavilion, gatehouse — see this page; add as civic extras",
     "Furniture / FF&E — take Furnished homes to add it",
     "Battery storage",
-    "Solar install labour and container-on-pad labour hours (TBD next week)",
+    "Solar install labour hours (TBD). Module assembly hours are in 11.01.",
   ],
 };
 

@@ -99,7 +99,7 @@ function Home() {
             />
             <div className="p-5">
               <p className="text-[11px] uppercase tracking-wide text-muted">
-                {s.itemNo} · {s.code}
+                {s.beds}-bed · {s.assembleHours} assembly hrs
               </p>
               <h2 className="font-display text-2xl font-semibold">
                 {s.name}{" "}
@@ -148,7 +148,7 @@ function Home() {
           <p className="mt-1 text-sm text-ink-soft">
             Split air, rooftop PV modules and a grid-tie inverter, toilet, shower and kitchen are
             in the unfurnished price. Battery storage is not included. Furniture is a separate FF&E
-            line. Labour man-hours and setup days are laid out as TBD.
+            line. Module assembly is 42 / 80 / 80 man-hours by style. Solar install hours are TBD.
           </p>
         </div>
       </section>

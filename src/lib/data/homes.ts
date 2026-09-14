@@ -29,6 +29,10 @@ export type HomeStyle = {
   acBtu: string;
   notes: string;
   rooms: string[];
+  /** Supplier assembly man-hours per home (10-hour days). */
+  assembleHours: number;
+  /** Calendar days on a 10-hour crew-day. */
+  assembleDays: number;
 };
 
 /** 10% KDK distributor net on factory list for a 100-home government order. */
@@ -52,7 +56,7 @@ export const STYLES: Record<StyleId, HomeStyle> = {
     unitsPer40hq: 3,
     freightPerHome: FREIGHT_PER_40HQ / 3,
     volumeRate: 15_850 * (1 - VOLUME_DISCOUNT),
-    image: "/homes/pt220348-1.jpg",
+    image: "/homes/1bed.jpg",
     color: "#5C7A62",
     colorMuted: "#C5D4C4",
     roof: "#1A1C1A",
@@ -63,8 +67,10 @@ export const STYLES: Record<StyleId, HomeStyle> = {
     panelWatt: 400,
     inverterKw: 3,
     acBtu: "12,000 BTU split",
-    notes: "Compact 1BR/1BA. Three units per 40HQ. Factory fitted kitchen, toilet and shower.",
+    notes: "Compact 1BR/1BA. Kitchen, toilet and shower included. 42 assembly hours (4.2 days).",
     rooms: ["Bedroom", "Bath (toilet + shower)", "Kitchen", "Living", "Terrace (excl. area)"],
+    assembleHours: 42,
+    assembleDays: 4.2,
   },
   br2: {
     id: "br2",
@@ -82,7 +88,7 @@ export const STYLES: Record<StyleId, HomeStyle> = {
     unitsPer40hq: 2,
     freightPerHome: FREIGHT_PER_40HQ / 2,
     volumeRate: 23_100 * (1 - VOLUME_DISCOUNT),
-    image: "/homes/pt211222.jpg",
+    image: "/homes/2bed.jpg",
     color: "#2F6B5C",
     colorMuted: "#D7E2DA",
     roof: "#2A2C2A",
@@ -93,8 +99,10 @@ export const STYLES: Record<StyleId, HomeStyle> = {
     panelWatt: 400,
     inverterKw: 4,
     acBtu: "18,000 BTU split",
-    notes: "2BR/2BA hip-roof cottage. Two units per 40HQ. Closest factory match to a family cottage under 100 m².",
+    notes: "2BR/2BA hip-roof cottage. Kitchen, toilets and showers included. 80 assembly hours (8 days).",
     rooms: ["Bedroom 1", "Bedroom 2", "Bath 1", "Bath 2", "Kitchen", "Living / dining", "Porch (excl. area)"],
+    assembleHours: 80,
+    assembleDays: 8,
   },
   br3: {
     id: "br3",
@@ -112,7 +120,7 @@ export const STYLES: Record<StyleId, HomeStyle> = {
     unitsPer40hq: 1.82,
     freightPerHome: FREIGHT_PER_40HQ / 1.82,
     volumeRate: 23_500 * (1 - VOLUME_DISCOUNT),
-    image: "/homes/pt230206.jpg",
+    image: "/homes/3bed.jpg",
     color: "#1F4A3A",
     colorMuted: "#B7C7B4",
     roof: "#241E18",
@@ -123,8 +131,10 @@ export const STYLES: Record<StyleId, HomeStyle> = {
     panelWatt: 400,
     inverterKw: 5,
     acBtu: "24,000 BTU split",
-    notes: "3BR/1BA at 54 m² (master + two bedrooms from factory plan). 1.82 units per 40HQ.",
+    notes: "3BR/1BA at 54 m². Kitchen, toilet and shower included. 80 assembly hours (8 days).",
     rooms: ["Master", "Bedroom 2", "Bedroom 3", "Bath", "Kitchen", "Living / dining", "Porch (excl. area)"],
+    assembleHours: 80,
+    assembleDays: 8,
   },
 };
 

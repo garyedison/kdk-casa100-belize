@@ -67,7 +67,8 @@ function SitePage() {
             Village unfurnished all-in{" "}
             <span className="tabular font-medium">{usd(totals.unfurnishedAllIn)}</span>
             <span className="block text-xs text-muted">
-              Includes 8% contingency and 5.5% PM. FF&E {usd(totals.ffe)} extra. Labour TBD.
+              Includes 8% contingency and 5.5% PM. FF&E {usd(totals.ffe)} extra. Assembly labour
+              in; solar hours TBD.
             </span>
           </p>
         </div>

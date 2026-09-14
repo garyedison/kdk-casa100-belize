@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell } from "@/components/layout/AppShell";
 import { computeTotals, CONTINGENCY_RATE, PM_RATE, type PricedLine } from "@/lib/data/boq";
-import { ALL_IN, CAMPAIGN_RATES, EMPLOYMENT, LABOUR_NOTES } from "@/lib/data/labour";
+import { ALL_IN, ASSEMBLY, CAMPAIGN_RATES, EMPLOYMENT, LABOUR_NOTES } from "@/lib/data/labour";
 import { STYLE_LIST, type StyleId } from "@/lib/data/homes";
 import { useVillage } from "@/lib/store";
 import { usd, num } from "@/lib/utils";
@@ -54,8 +54,9 @@ function BoqPage() {
           <Link to="/scopes" className="text-kdk underline-offset-4 hover:underline">
             scope playground
           </Link>
-          . Pad-set and solar hours are still TBD; 10% off the three models is KDK’s distributor
-          net on a 100-home order.
+          . Module assembly hours are filled from the supplier sheets (42 / 80 / 80 hrs). Solar
+          install hours remain TBD. 10% off the three models is KDK’s distributor net on a 100-home
+          order.
         </p>
 
         <div className="mt-6 grid gap-4 lg:grid-cols-[minmax(0,1fr)_300px]">
@@ -210,9 +211,9 @@ function BoqPage() {
               <h2 className="font-display text-2xl font-semibold">Setting the container home on the pad</h2>
             </div>
             <p className="max-w-xl text-sm text-ink-soft">
-              Crane 03.03 is plant hire only. The crew that lands the box is 11.01 at{" "}
-              {usd(EMPLOYMENT.pad.rate, 2)}/hr EST. — {EMPLOYMENT.pad.belizePct}% Belizean structure
-              crew for the full campaign.
+              Crane 03.03 is plant hire only. The crew that assembles the module is 11.01 — supplier
+              hours at {usd(ASSEMBLY.hourly)}/hr (US${ASSEMBLY.dayRate} per 10-hour day).{" "}
+              {EMPLOYMENT.pad.belizePct}% Belizean structure crew for the full campaign.
             </p>
           </div>
           <div className="overflow-x-auto rounded-[18px] bg-paper shadow-card">
@@ -237,23 +238,28 @@ function BoqPage() {
                   <td className="px-3 py-2 text-muted">Plant</td>
                   <td className="px-3 py-2 font-medium tabular">{usd(800 * totals.homeCount)}</td>
                 </tr>
-                <tr className="border-t border-line bg-tbd/10">
+                <tr className="border-t border-line">
                   <td className="px-3 py-2 font-mono text-xs">{EMPLOYMENT.pad.item}</td>
                   <td className="px-3 py-2">
                     <span className="font-medium">{EMPLOYMENT.pad.title}</span>
                     <span className="mt-1 block text-[11px] text-muted">
-                      Hours TBD. Belizean structure {usd(EMPLOYMENT.pad.belizeRate, 2)}/hr · China
-                      factory tech {usd(EMPLOYMENT.pad.chinaRate, 2)}/hr on-site.{" "}
-                      {EMPLOYMENT.pad.belizeCrew} standing; {EMPLOYMENT.pad.chinaCrew}.
+                      Supplier assembly hours. Belizean structure {usd(EMPLOYMENT.pad.belizeRate, 2)}
+                      /hr payroll · China tech {usd(EMPLOYMENT.pad.chinaRate, 2)}/hr on-site. Line is
+                      priced at {usd(ASSEMBLY.hourly)}/hr. {EMPLOYMENT.pad.belizeCrew} standing;{" "}
+                      {EMPLOYMENT.pad.chinaCrew}.
                     </span>
                   </td>
-                  <td className="px-3 py-2 tabular font-medium">
-                    {usd(EMPLOYMENT.pad.rate, 2)}/hr EST.
-                  </td>
+                  <td className="px-3 py-2 tabular font-medium">{usd(ASSEMBLY.hourly)}/hr</td>
                   <td className="px-3 py-2">
                     <MixBar belize={EMPLOYMENT.pad.belizePct} china={EMPLOYMENT.pad.chinaPct} />
                   </td>
-                  <td className="px-3 py-2 font-medium">hrs TBD</td>
+                  <td className="px-3 py-2 font-medium tabular">
+                    {usd(
+                      mix.br1 * ASSEMBLY.cost.br1 +
+                        mix.br2 * ASSEMBLY.cost.br2 +
+                        mix.br3 * ASSEMBLY.cost.br3,
+                    )}
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -262,11 +268,14 @@ function BoqPage() {
 
         <section className="mt-8">
           <div className="mb-3">
-            <p className="text-[11px] uppercase tracking-wide text-muted">Division 11 · labour held</p>
-            <h2 className="font-display text-2xl font-semibold">Pad set and solar install — EST. rates, hours TBD</h2>
+            <p className="text-[11px] uppercase tracking-wide text-muted">Division 11 · labour</p>
+            <h2 className="font-display text-2xl font-semibold">
+              Assembly hours quoted · solar hours TBD
+            </h2>
             <p className="mt-1 max-w-3xl text-sm text-ink-soft">
-              Hours still blank. Rates below are researched EST. (Sep 2026) so the Government can see
-              Belize vs China before next week’s local quotes. {LABOUR_NOTES.burden} {LABOUR_NOTES.chinaOnSite}
+              Module assembly hours and days are from the supplier install sheets (10-hour days at
+              US${ASSEMBLY.dayRate}/day). Solar install hours stay blank until local quotes.{" "}
+              {LABOUR_NOTES.burden} {LABOUR_NOTES.chinaOnSite}
             </p>
           </div>
           <div className="overflow-x-auto rounded-[18px] bg-paper shadow-card">
@@ -282,21 +291,27 @@ function BoqPage() {
                 </tr>
               </thead>
               <tbody>
-                <tr className="border-t border-line bg-tbd/10">
+                <tr className="border-t border-line">
                   <td className="px-3 py-2 font-mono text-xs">11.01</td>
                   <td className="px-3 py-2">
-                    Container install on concrete pad
+                    Module assembly on the pad
                     <span className="block text-[11px] text-muted">
                       {EMPLOYMENT.pad.belizeCrew}. {EMPLOYMENT.pad.chinaRole}
                     </span>
                     <MixBar belize={EMPLOYMENT.pad.belizePct} china={EMPLOYMENT.pad.chinaPct} />
                   </td>
                   <td className="px-3 py-2 text-muted">hr / home</td>
-                  <td className="px-3 py-2">TBD</td>
-                  <td className="px-3 py-2 tabular font-medium">
-                    {usd(CAMPAIGN_RATES.padInstall, 2)} EST.
+                  <td className="px-3 py-2 tabular">
+                    {ASSEMBLY.hours.br1} / {ASSEMBLY.hours.br2} / {ASSEMBLY.hours.br3}
                   </td>
-                  <td className="px-3 py-2 font-medium">TBD</td>
+                  <td className="px-3 py-2 tabular font-medium">{usd(ASSEMBLY.hourly)}</td>
+                  <td className="px-3 py-2 font-medium tabular">
+                    {usd(
+                      mix.br1 * ASSEMBLY.cost.br1 +
+                        mix.br2 * ASSEMBLY.cost.br2 +
+                        mix.br3 * ASSEMBLY.cost.br3,
+                    )}
+                  </td>
                 </tr>
                 <tr className="border-t border-line bg-tbd/10">
                   <td className="px-3 py-2 font-mono text-xs">11.02</td>
@@ -314,13 +329,15 @@ function BoqPage() {
                   </td>
                   <td className="px-3 py-2 font-medium">TBD</td>
                 </tr>
-                <tr className="border-t border-line bg-tbd/10">
+                <tr className="border-t border-line">
                   <td className="px-3 py-2 font-mono text-xs">11.04</td>
-                  <td className="px-3 py-2">Duration — container on pad</td>
+                  <td className="px-3 py-2">Duration — module assembly on pad</td>
                   <td className="px-3 py-2 text-muted">day / home</td>
-                  <td className="px-3 py-2">TBD</td>
+                  <td className="px-3 py-2 tabular">
+                    {ASSEMBLY.days.br1} / {ASSEMBLY.days.br2} / {ASSEMBLY.days.br3}
+                  </td>
                   <td className="px-3 py-2">—</td>
-                  <td className="px-3 py-2 font-medium">TBD</td>
+                  <td className="px-3 py-2 font-medium">in 11.01</td>
                 </tr>
                 <tr className="border-t border-line bg-tbd/10">
                   <td className="px-3 py-2 font-mono text-xs">11.05</td>
@@ -517,7 +534,7 @@ function BoqPage() {
               </tr>
               <tr className="border-t-2 border-kdk bg-kdk text-kdk-fg">
                 <td className="px-3 py-3 font-medium" colSpan={3}>
-                  ALL-IN UNFURNISHED (excl. TBD labour · no battery storage)
+                  ALL-IN UNFURNISHED (assembly labour in · solar labour TBD · no battery)
                 </td>
                 {ids.map((id) => (
                   <td key={id} className="px-3 py-3 tabular font-medium">
@@ -547,8 +564,9 @@ function BoqPage() {
         </div>
 
         <p className="mt-4 max-w-3xl text-xs text-muted">
-          Status key: QUOTED = factory list or freight formula. EST. = campaign estimate. INCL. =
-          already inside the factory module. EXCL. = battery storage — not in this proposal. TBD =
+          Status key: QUOTED = list price, freight formula, or supplier assembly hours. EST. =
+          campaign estimate. INCL. = already inside the module (kitchen, toilet, shower). EXCL. =
+          battery storage — not in this proposal. TBD = solar install hours and remaining duration.
           labour, man-hours, duration — 11.01 pad install and 11.02 solar install held for rates next
           week. HS 9406.20 steel modular; Belize duty to be confirmed with broker. Working draft — not a
           client contract.

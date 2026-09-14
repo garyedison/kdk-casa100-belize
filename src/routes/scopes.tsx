@@ -16,12 +16,12 @@ function ScopesPage() {
         </h1>
         <p className="mt-2 max-w-3xl text-ink-soft">
           Reviewers can hide a package — or a single BOQ line — and watch the all-in fall. Homes
-          only is FOB China port: pickup at the port, no ocean, no inland. Kitchen, bath, and split
-          air on that tab are pending confirmation. Village roads, village power, potable water, and
-          the WWTP (wastewater treatment plant — shared sewage plant) are not in Homes only and{" "}
-          <strong>not in Full village</strong>. Full village is unfurnished homes with{" "}
-          <strong>no extra civil</strong> (no roads, village power, water, WWTP, trees, plaza, or
-          gate). Add those on Scopes.{" "}
+          only is FOB China port: pickup at the port, no ocean, no inland. Kitchen, toilet and
+          shower are in the module. Split air is house MEP, not Homes only. Village roads, village
+          power, potable water and the WWTP (wastewater treatment plant — shared sewage plant) are
+          not in Homes only and <strong>not in Full village</strong>. Full village is unfurnished
+          homes with <strong>no extra civil</strong> (no roads, village power, water, WWTP, trees,
+          plaza, or gate). Add those on this page.{" "}
           <Link to="/civic" className="text-kdk underline-offset-4 hover:underline">
             Plaza rendering
           </Link>

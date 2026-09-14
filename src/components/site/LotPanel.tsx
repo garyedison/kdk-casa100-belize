@@ -41,7 +41,7 @@ export function LotPanel() {
       />
       <div className="p-4">
         <p className="text-[11px] uppercase tracking-wide text-muted">
-          {lot.label} · {s.itemNo}
+          {lot.label} · {s.beds}-bed
         </p>
         <h3 className="font-display text-xl font-semibold tracking-tight">
           {s.name}{" "}
@@ -50,7 +50,7 @@ export function LotPanel() {
           </span>
         </h3>
         <p className="mt-1 text-sm text-ink-soft">
-          {s.code} · {s.areaM2} m² / {s.areaSf} sf · {s.look}
+          {s.areaM2} m² / {s.areaSf} sf · {s.look}
         </p>
         <dl className="mt-3 grid grid-cols-2 gap-x-3 gap-y-2 text-sm">
           <div>
@@ -83,7 +83,9 @@ export function LotPanel() {
           </div>
           <div>
             <dt className="text-[11px] uppercase tracking-wide text-muted">Install labour</dt>
-            <dd>Pad + solar TBD next week</dd>
+            <dd>
+              {s.assembleHours} hrs / {s.assembleDays} days assembly. Solar hours TBD.
+            </dd>
           </div>
           <div>
             <dt className="text-[11px] uppercase tracking-wide text-muted">FF&E (optional)</dt>

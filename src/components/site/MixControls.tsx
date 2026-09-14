@@ -45,7 +45,7 @@ export function MixControls() {
               <span className="flex items-center justify-between text-sm">
                 <span className="inline-flex items-center gap-2">
                   <i className="size-2.5 rounded-sm" style={{ background: s.color }} />
-                  {s.short} · {s.code}
+                  {s.short} · {s.assembleHours} hrs
                 </span>
                 <span className="tabular font-medium">{mix[id]}</span>
               </span>

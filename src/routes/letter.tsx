@@ -102,12 +102,13 @@ function LetterPage() {
               homes-only floor, pads-and-set, house MEP, or the full village (unfurnished, no extra
               civil). Village roads, village power, water, WWTP, trees, plaza and gatehouse are
               optional add-ons — not in that all-in. Solar kit prices are
-              equipment only. Container-on-pad labour (11.01) is estimated at
-              US$12.80/hr mixed — 80% Belizean structure crew. Solar install (11.02) is estimated at
-              US$19.40/hr mixed — 70% Belizean electricians. Hours are still to be filled. KDK
-              recommends Belizean crews as the standing workforce for 12 months or longer; Chinese
-              technicians train the first pads and stand down. This is a working draft for review —
-              not a contract.
+              equipment only. Module assembly (11.01) uses supplier hours: 42 / 80 / 80 man-hours
+              (4.2 / 8 / 8 days) at US$28/hr (US$280 per 10-hour day). Crew mix is 80% Belizean /
+              20% China tech — Belizeans are the standing workforce. Solar install (11.02) is
+              estimated at US$19.40/hr mixed — 70% Belizean electricians; those hours are still
+              blank. KDK recommends Belizean crews as the standing workforce for 12 months or
+              longer; Chinese technicians train the first pads and stand down. This is a working
+              draft for review — not a contract.
             </p>
           </div>
 
@@ -151,7 +152,7 @@ function LetterPage() {
                   <td className="py-2.5">
                     {s.name}{" "}
                     <span className="text-muted">
-                      {s.itemNo} · {s.code}
+                      {s.beds}-bed · {s.assembleHours} hrs
                     </span>
                   </td>
                   <td className="py-2.5">
@@ -166,7 +167,7 @@ function LetterPage() {
 
           <div className="mt-8 space-y-4 text-[15px] leading-relaxed">
             <p>
-              Enclosed with this letter: an interactive 10 × 10 plat, the factory catalog, a priced
+              enclosed: an interactive 10 × 10 plat, the home catalog, a priced
               bill of quantities written as a greenfield village, and a side-by-side against the
               two-home Moonlight Bay enquiry so the campaign rates are transparent.
             </p>

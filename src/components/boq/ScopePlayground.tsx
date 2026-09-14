@@ -146,17 +146,15 @@ export function ScopePlayground() {
             </p>
             <ul className="mt-2 list-disc space-y-1 pl-5 text-ink-soft">
               <li>
-                <strong className="text-ink">Not included:</strong> ocean freight, Belize inland,
-                duties, slabs, set, solar, village works.
+                <strong className="text-ink">Included in the module:</strong> kitchen, toilet, shower.
+              </li>
+              <li>
+                <strong className="text-ink">Not in Homes only:</strong> split air (house MEP), ocean
+                freight, Belize inland, duties, slabs, set, solar, village works.
               </li>
               <li>
                 The Government (or its forwarder) picks up at the{" "}
                 <strong className="text-ink">China port</strong> and pays its own shipping.
-              </li>
-              <li>
-                <strong className="text-ink">To confirm:</strong> kitchen, bath (toilet + shower), and
-                split air — whether they travel with Homes only or are added later. Price not
-                changed until that is decided.
               </li>
             </ul>
           </div>
@@ -194,7 +192,7 @@ export function ScopePlayground() {
         <p className="text-[11px] uppercase tracking-wide text-muted">Who sells to the Government</p>
         <h2 className="font-display text-2xl font-semibold">Hong Kong KDK, or a licensed Belizean distributor</h2>
         <p className="mt-1 max-w-3xl text-sm text-ink-soft">
-          Each of the three models is 10% off factory list on a 100-home order. That 10% is how a
+          Each of the three models is 10% off list on a 100-home order. That 10% is how a
           licensed Belizean company can be the seller to the Government — if the Government prefers
           to buy from a Belizean entity rather than from KDK Technology Ltd (Hong Kong). The 10% is
           on the homes only, not on slabs, MEP, or village works.
@@ -222,7 +220,7 @@ export function ScopePlayground() {
           })}
         </div>
         <dl className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          <Stat k="Factory list (homes)" v={usd(totals.factoryList)} />
+          <Stat k="List price (homes)" v={usd(totals.factoryList)} />
           <Stat k="KDK invoices (net)" v={usd(totals.kdkNetHomes)} />
           <Stat k="Belizean distributor 10%" v={usd(totals.partnerMargin)} />
           <Stat
@@ -255,7 +253,7 @@ export function ScopePlayground() {
         <h2 className="font-display text-2xl font-semibold">Tap a scope to hide it</h2>
         <p className="mt-1 max-w-3xl text-sm text-ink-soft">
           Off = that package is not in KDK’s price. The all-in above drops by that amount (plus
-          on-costs if they are on). Labour hours stay TBD.
+          on-costs if they are on). Solar install hours stay TBD.
         </p>
         {SCOPE_GROUPS.map((group) => (
           <div key={group.id} className="mt-6">
