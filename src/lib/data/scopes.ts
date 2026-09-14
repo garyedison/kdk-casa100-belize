@@ -72,9 +72,10 @@ export const SCOPE_GROUPS: { id: string; title: string; blurb: string; ids: Scop
 export const SCOPES: ScopeDef[] = [
   {
     id: "homes",
-    label: "Factory container homes",
-    short: "Homes",
-    blurb: "1-bed, 2-bed and 3-bed under 100 m². FOB China on Homes only. Kitchen, toilet and shower included. Split air is house MEP.",
+    label: "Basic shell modules",
+    short: "Shell",
+    blurb:
+      "FOB China. Structure, kitchen cabinet + sink, toilet, wash-basin, shower, house electrics. Unfurnished. Split air is house MEP — not in the shell.",
     items: ["01.01", "06.01", "07.04"],
   },
   {
@@ -240,11 +241,11 @@ export const PRESETS: Preset[] = [
   {
     id: "homes",
     label: "Homes only — FOB China port",
-    kicker: "FOB CHINA PORT",
+    kicker: "BASIC SHELL · FOB CHINA",
     blurb:
-      "Pickup at the China port. No ocean freight. No Belize inland. Government (or its forwarder) takes the boxes at the port and pays its own shipping.",
+      "The box as it leaves China. Structure, kitchen cabinet + sink, toilet, wash-basin, shower, house lights. Unfurnished. Pickup at the China port — no ocean, no inland.",
     pending:
-      "Kitchen, toilet and shower are included in the module. Split air is not — it sits in house MEP.",
+      "Split air is not in the shell. Range, fridge, furniture, solar, pads and village works are Belize add-ons.",
     scopes: ["homes", "distributor"],
   },
   {

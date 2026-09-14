@@ -67,7 +67,8 @@ export const STYLES: Record<StyleId, HomeStyle> = {
     panelWatt: 400,
     inverterKw: 3,
     acBtu: "12,000 BTU split",
-    notes: "Compact 1BR/1BA. Kitchen, toilet and shower included. 42 assembly hours (4.2 days).",
+    notes:
+      "Basic shell: structure, kitchen cabinet + sink, toilet, wash-basin, shower, house electrics. Unfurnished. 42 assembly hours (4.2 days) if KDK sets the box — not in the FOB shell price.",
     rooms: ["Bedroom", "Bath (toilet + shower)", "Kitchen", "Living", "Terrace (excl. area)"],
     assembleHours: 42,
     assembleDays: 4.2,
@@ -99,7 +100,8 @@ export const STYLES: Record<StyleId, HomeStyle> = {
     panelWatt: 400,
     inverterKw: 4,
     acBtu: "18,000 BTU split",
-    notes: "2BR/2BA hip-roof cottage. Kitchen, toilets and showers included. 80 assembly hours (8 days).",
+    notes:
+      "Basic shell: structure, kitchen cabinet + sink, toilets, showers, house electrics. Unfurnished. 80 assembly hours (8 days) if KDK sets the box — not in the FOB shell price.",
     rooms: ["Bedroom 1", "Bedroom 2", "Bath 1", "Bath 2", "Kitchen", "Living / dining", "Porch (excl. area)"],
     assembleHours: 80,
     assembleDays: 8,
@@ -131,7 +133,8 @@ export const STYLES: Record<StyleId, HomeStyle> = {
     panelWatt: 400,
     inverterKw: 5,
     acBtu: "24,000 BTU split",
-    notes: "3BR/1BA at 54 m². Kitchen, toilet and shower included. 80 assembly hours (8 days).",
+    notes:
+      "Basic shell: structure, kitchen cabinet + sink, toilet, wash-basin, shower, house electrics. Unfurnished. 80 assembly hours (8 days) if KDK sets the box — not in the FOB shell price.",
     rooms: ["Master", "Bedroom 2", "Bedroom 3", "Bath", "Kitchen", "Living / dining", "Porch (excl. area)"],
     assembleHours: 80,
     assembleDays: 8,

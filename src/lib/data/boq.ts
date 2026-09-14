@@ -59,9 +59,9 @@ const rates = (a: number, b: number, c: number): Record<StyleId, number> => ({
 export const LINES: BoqLine[] = [
   {
     item: "01.01",
-    division: "Factory modules",
+    division: "Container homes",
     divisionNo: "01",
-    description: "Container home unit — list price, unfurnished (FOB China port)",
+    description: "Basic shell module — list price, unfurnished (FOB China port)",
     unit: "home",
     perHome: per(1),
     rate: rates(
@@ -70,11 +70,11 @@ export const LINES: BoqLine[] = [
       STYLES.br3.factoryList,
     ),
     status: "QUOTED",
-    note: "List 7 Sep 2026. Homes only is FOB China port — no ocean, no inland. Kitchen, toilet and shower are included in the module. Split air is a separate house-MEP line.",
+    note: "Basic SHELL: steel frames, walls, insulated roof, doors, windows, house lights/sockets/DB, kitchen cabinet + sink + faucet, ceramic toilet, wash-basin, glass shower, bathroom pipework. Unfurnished. FOB China — no ocean, no inland. NOT in the shell: split air, solar, range, fridge, furniture, gas stove, pads, village works.",
   },
   {
     item: "01.02",
-    division: "Factory modules",
+    division: "Container homes",
     divisionNo: "01",
     description: `Distributor net — ${VOLUME_DISCOUNT * 100}% off list (100-home campaign)`,
     unit: "home",
@@ -282,7 +282,7 @@ export const LINES: BoqLine[] = [
     perHome: per(1),
     rate: 0,
     status: "INCL.",
-    note: "Toilet, shower, kitchen sink and cabinet ship in the module. Confirmed on the supplier fittings list. Split air is 04.01 — not in the module.",
+    note: "INCL. in the basic shell — $0 extra. Toilet, shower cube, wash-basin, kitchen sink and cabinet ship in the box. Split air is 04.01. Range/fridge is 08.01.",
   },
   {
     item: "06.02",
@@ -405,7 +405,7 @@ export const LINES: BoqLine[] = [
     perHome: per(1),
     rate: rates(1_400, 1_800, 2_100),
     status: "EST.",
-    note: "RTOAC Div (j) analog. Washer/dryer not in base.",
+    note: "Not in the basic shell. Gas stove is optional at the supplier and is not in this price. Washer/dryer not in base.",
   },
   {
     item: "09.01",

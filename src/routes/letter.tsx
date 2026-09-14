@@ -88,13 +88,14 @@ function LetterPage() {
             <p>Dear Mr. Courtenay,</p>
             <p>
               KDK Technology Ltd submits this working proposal to the Office of the Prime Minister for a
-              one-hundred-home modular village — CASA 100 — finished-ready container dwellings on a
-              square ¼-acre plat, each with kitchen, toilet, shower, split air and rooftop solar
-              (PV modules and a grid-tie inverter — no battery storage).
+              one-hundred-home modular village — CASA 100 — basic-shell container dwellings on a
+              square ¼-acre plat. The shell includes kitchen cabinet and sink, toilet, shower and
+              house electrics. Split air and rooftop solar (PV modules and a grid-tie inverter — no
+              battery storage) are Belize add-ons, not in the FOB shell.
             </p>
             <p>
-              The package is sized for a government campaign, not a two-home waterfront enquiry. Factory
-              list is dated 7 September 2026. Each of the three models is offered at a 10% distributor
+              The package is sized for a government campaign, not a two-home waterfront enquiry. List
+              is dated 7 September 2026. Each of the three models is offered at a 10% distributor
               net on the 100-home order. The Government may contract KDK Technology Ltd (Hong Kong)
               directly at that net, or contract a licensed Belizean distributor who buys from KDK at
               net and sells to the Government at list — so a Belizean entity is the seller and keeps

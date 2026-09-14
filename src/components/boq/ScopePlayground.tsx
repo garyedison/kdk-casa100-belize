@@ -142,15 +142,18 @@ export function ScopePlayground() {
         {presetId === "homes" ? (
           <div className="mt-4 rounded-lg border border-kdk/30 bg-paper-2 px-4 py-4 text-sm">
             <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-kdk">
-              Homes only = FOB China port
+              Homes only = basic shell · FOB China port
             </p>
             <ul className="mt-2 list-disc space-y-1 pl-5 text-ink-soft">
               <li>
-                <strong className="text-ink">Included in the module:</strong> kitchen, toilet, shower.
+                <strong className="text-ink">In the shell:</strong> steel frames, walls, insulated
+                roof, doors, windows, house lights/sockets, kitchen cabinet + sink + faucet, toilet,
+                wash-basin, glass shower, bathroom pipework. Unfurnished.
               </li>
               <li>
-                <strong className="text-ink">Not in Homes only:</strong> split air (house MEP), ocean
-                freight, Belize inland, duties, slabs, set, solar, village works.
+                <strong className="text-ink">Not in the shell:</strong> split air, solar, range,
+                fridge, gas stove, furniture, ocean freight, Belize inland, pads, set, village
+                works.
               </li>
               <li>
                 The Government (or its forwarder) picks up at the{" "}
