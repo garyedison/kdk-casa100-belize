@@ -35,8 +35,9 @@ function BoqPage() {
   const offScopes = useVillage((s) => s.offScopes);
   const offItems = useVillage((s) => s.offItems);
   const pricingMode = useVillage((s) => s.pricingMode);
+  const commissionRate = useVillage((s) => s.commissionRate);
   const toggleItem = useVillage((s) => s.toggleItem);
-  const totals = computeTotals(mix, { offScopes, offItems, pricingMode });
+  const totals = computeTotals(mix, { offScopes, offItems, pricingMode, commissionRate });
   const ids: StyleId[] = ["br1", "br2", "br3"];
 
   return (
@@ -55,8 +56,12 @@ function BoqPage() {
             scope playground
           </Link>
           . Module assembly hours are filled from the supplier sheets (42 / 80 / 80 hrs). Solar
-          install hours remain TBD. 10% off the three models is KDK’s distributor net on a 100-home
-          order.
+          install hours remain TBD. The Belize set-aside (default 10% of shell list) can be
+          modelled at 5 / 15 / 20% on the{" "}
+          <Link to="/scopes" className="text-kdk underline-offset-4 hover:underline">
+            calculator
+          </Link>
+          .
         </p>
 
         <div className="mt-6 grid gap-4 lg:grid-cols-[minmax(0,1fr)_300px]">

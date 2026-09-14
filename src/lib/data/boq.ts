@@ -6,6 +6,7 @@ import {
 } from "./homes";
 import { ASSEMBLY, CAMPAIGN_RATES } from "./labour";
 import { ITEM_SCOPE, SCOPE_IDS, type PricingMode, type ScopeId } from "./scopes";
+import { clampCommission, DEFAULT_COMMISSION, pctLabel } from "./commission";
 
 export type Status = "QUOTED" | "EST." | "TBD" | "INCL." | "EXCL.";
 
@@ -76,7 +77,7 @@ export const LINES: BoqLine[] = [
     item: "01.02",
     division: "Container homes",
     divisionNo: "01",
-    description: `Distributor net — ${VOLUME_DISCOUNT * 100}% off list (100-home campaign)`,
+    description: `Belize set-aside / distributor — ${VOLUME_DISCOUNT * 100}% of shell list (default)`,
     unit: "home",
     perHome: per(1),
     rate: rates(
@@ -85,7 +86,7 @@ export const LINES: BoqLine[] = [
       -STYLES.br3.factoryList * VOLUME_DISCOUNT,
     ),
     status: "EST.",
-    note: "If the Government buys from KDK Hong Kong, this 10% is the campaign net. If it buys from a licensed Belizean distributor, KDK still invoices that company at net and the 10% is the Belizean seller’s margin on the homes only.",
+    note: "On the shell list only — not on slabs, solar, or village works. If the Government buys from KDK Hong Kong, this percentage is a campaign discount. If it buys through a licensed Belizean distributor, this percentage is the Belizean seller’s margin and may be designated as a departmental set-aside. Officials can change the rate on the calculator.",
   },
   {
     item: "02.01",
@@ -596,6 +597,8 @@ export type PriceOptions = {
   offScopes?: Iterable<ScopeId>;
   offItems?: Iterable<string>;
   pricingMode?: PricingMode;
+  /** Belize set-aside / distributor rate on shell list. Default 10%. */
+  commissionRate?: number;
 };
 
 function asSet<T extends string>(v?: Iterable<T>): Set<T> {
@@ -627,9 +630,23 @@ export function priceLines(mix: Mix, options: PriceOptions = {}): PricedLine[] {
   const offScopes = asSet(options.offScopes);
   const offItems = asSet(options.offItems);
   const pricingMode: PricingMode = options.pricingMode ?? "kdk_net";
+  const commission = clampCommission(options.commissionRate ?? DEFAULT_COMMISSION);
   const flags = { offScopes, offItems, pricingMode };
 
-  return LINES.map((line) => {
+  return LINES.map((raw) => {
+    const line =
+      raw.item === "01.02"
+        ? {
+            ...raw,
+            description: `Belize set-aside / distributor — ${pctLabel(commission)} of shell list`,
+            rate: rates(
+              -STYLES.br1.factoryList * commission,
+              -STYLES.br2.factoryList * commission,
+              -STYLES.br3.factoryList * commission,
+            ),
+            note: `On the shell list only. ${pctLabel(commission)} of factory list. KDK Hong Kong path = discount to the Government. Licensed Belizean distributor path = set-aside / seller margin. Not on slabs, solar, or village works.`,
+          }
+        : raw;
     const qty = { br1: 0, br2: 0, br3: 0 } as Record<StyleId, number>;
     const amount = { br1: 0, br2: 0, br3: 0 } as Record<StyleId, number>;
     let projectQty = 0;
@@ -711,6 +728,7 @@ export type Totals = {
   partnerMargin: number;
   kdkInvoice: number;
   govPay: number;
+  commissionRate: number;
   byScope: { id: ScopeId; amount: number; fullAmount: number; on: boolean }[];
 };
 
@@ -727,7 +745,8 @@ function oncostsOf(works: number, on: boolean) {
 export function computeTotals(mix: Mix, options: PriceOptions = {}): Totals {
   const offScopes = asSet(options.offScopes);
   const pricingMode: PricingMode = options.pricingMode ?? "kdk_net";
-  const lines = priceLines(mix, options);
+  const commission = clampCommission(options.commissionRate ?? DEFAULT_COMMISSION);
+  const lines = priceLines(mix, { ...options, commissionRate: commission });
   const homeCount = mix.br1 + mix.br2 + mix.br3 || 1;
   const oncostsOn = !offScopes.has("oncosts");
 
@@ -744,7 +763,7 @@ export function computeTotals(mix: Mix, options: PriceOptions = {}): Totals {
   const { contingency, pm, allIn: unfurnishedAllIn } = oncostsOf(unfurnishedWorks, oncostsOn);
   const furnishedAllIn = unfurnishedAllIn + ffe;
 
-  const fullLines = priceLines(mix, { pricingMode: "kdk_net" });
+  const fullLines = priceLines(mix, { pricingMode: "kdk_net", commissionRate: commission });
   const fullWorks = fullLines
     .filter((l) => !l.ffe && !l.tbd)
     .reduce((s, l) => s + l.fullAmount, 0);
@@ -754,9 +773,9 @@ export function computeTotals(mix: Mix, options: PriceOptions = {}): Totals {
   const factoryLine = lines.find((l) => l.item === "01.01");
   const factoryList = factoryLine?.fullAmount ?? 0;
   const homesOn = Boolean(factoryLine?.included);
-  const distributorCredit = homesOn ? factoryList * VOLUME_DISCOUNT : 0;
+  const distributorCredit = homesOn ? factoryList * commission : 0;
   const kdkNetHomes = homesOn ? factoryList - distributorCredit : 0;
-  const partnerMargin = homesOn ? factoryList * VOLUME_DISCOUNT : 0;
+  const partnerMargin = homesOn ? factoryList * commission : 0;
 
   const otherWorks = lines
     .filter((l) => !l.ffe && !l.tbd && l.item !== "01.01" && l.item !== "01.02")
@@ -877,6 +896,7 @@ export function computeTotals(mix: Mix, options: PriceOptions = {}): Totals {
     partnerMargin,
     kdkInvoice,
     govPay,
+    commissionRate: commission,
     byScope,
   };
 }

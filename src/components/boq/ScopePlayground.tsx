@@ -1,3 +1,4 @@
+import { CommissionCalculator } from "@/components/boq/CommissionCalculator";
 import { Eye, EyeOff, RotateCcw } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
@@ -22,13 +23,14 @@ export function ScopePlayground() {
   const offScopes = useVillage((s) => s.offScopes);
   const offItems = useVillage((s) => s.offItems);
   const pricingMode = useVillage((s) => s.pricingMode);
+  const commissionRate = useVillage((s) => s.commissionRate);
   const presetId = useVillage((s) => s.presetId);
   const toggleScope = useVillage((s) => s.toggleScope);
   const applyPreset = useVillage((s) => s.applyPreset);
   const setPricingMode = useVillage((s) => s.setPricingMode);
   const reset = useVillage((s) => s.reset);
 
-  const totals = computeTotals(mix, { offScopes, offItems, pricingMode });
+  const totals = computeTotals(mix, { offScopes, offItems, pricingMode, commissionRate });
   const ffeOn = !offScopes.includes("ffe");
 
   return (
@@ -195,14 +197,15 @@ export function ScopePlayground() {
         <p className="text-[11px] uppercase tracking-wide text-muted">Who sells to the Government</p>
         <h2 className="font-display text-2xl font-semibold">Hong Kong KDK, or a licensed Belizean distributor</h2>
         <p className="mt-1 max-w-3xl text-sm text-ink-soft">
-          Each of the three models is 10% off list on a 100-home order. That 10% is how a
-          licensed Belizean company can be the seller to the Government — if the Government prefers
-          to buy from a Belizean entity rather than from KDK Technology Ltd (Hong Kong). The 10% is
-          on the homes only, not on slabs, MEP, or village works.
+          Default is 10% of the shell list on a 100-home order. Officials can change that rate on
+          the calculator. The set-aside is on the homes only, not on slabs, MEP, or village works.
         </p>
+        <div className="mt-4">
+          <CommissionCalculator />
+        </div>
         <div className="mt-4 grid gap-3 md:grid-cols-2">
           {MODES.map((m) => {
-            const copy = pricingCopy(m);
+            const copy = pricingCopy(m, commissionRate);
             const active = pricingMode === m;
             return (
               <button
@@ -225,7 +228,10 @@ export function ScopePlayground() {
         <dl className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           <Stat k="List price (homes)" v={usd(totals.factoryList)} />
           <Stat k="KDK invoices (net)" v={usd(totals.kdkNetHomes)} />
-          <Stat k="Belizean distributor 10%" v={usd(totals.partnerMargin)} />
+          <Stat
+            k={`Belize set-aside ${Math.round(commissionRate * 100)}%`}
+            v={usd(totals.partnerMargin)}
+          />
           <Stat
             k={
               pricingMode === "gov_via_partner"
@@ -240,13 +246,15 @@ export function ScopePlayground() {
             Contract path: Government ↔ licensed Belizean distributor ↔ KDK Hong Kong. KDK invoices
             the distributor {usd(totals.kdkInvoice)} (homes at net, same switched-on scopes). The
             Government pays the Belizean seller {usd(totals.govPay)}. The difference{" "}
-            {usd(totals.govPay - totals.kdkInvoice)} is the distributor’s 10% on the homes.
+            {usd(totals.govPay - totals.kdkInvoice)} is the {Math.round(commissionRate * 100)}%
+            set-aside on the homes.
           </p>
         ) : (
           <p className="mt-3 rounded-md bg-paper-2 px-4 py-3 text-sm text-ink-soft">
             Contract path: Government ↔ KDK Technology Ltd (Hong Kong). The Government pays KDK the
-            distributor net. No Belizean seller is in the chain, so that 10% is a campaign discount
-            rather than a local margin.
+            distributor net. No Belizean seller is in the chain, so that{" "}
+            {Math.round(commissionRate * 100)}% is a campaign discount rather than a local
+            set-aside.
           </p>
         )}
       </section>

@@ -22,7 +22,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const offScopes = useVillage((s) => s.offScopes);
   const offItems = useVillage((s) => s.offItems);
   const pricingMode = useVillage((s) => s.pricingMode);
-  const totals = computeTotals(mix, { offScopes, offItems, pricingMode });
+  const commissionRate = useVillage((s) => s.commissionRate);
+  const totals = computeTotals(mix, { offScopes, offItems, pricingMode, commissionRate });
   const ok = mixTotal(mix) === 100;
 
   return (

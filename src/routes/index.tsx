@@ -7,13 +7,18 @@ import { TRANSMITTAL } from "@/lib/data/transmittal";
 import { useVillage } from "@/lib/store";
 import { usd, num } from "@/lib/utils";
 import { offScopesForPreset } from "@/lib/data/scopes";
+import { CommissionCalculator } from "@/components/boq/CommissionCalculator";
 import { ArrowRight, FileText, FileSpreadsheet, Map, Sun, Wind } from "lucide-react";
 
 export const Route = createFileRoute("/")({ component: Home });
 
 function Home() {
   const mix = useVillage((s) => s.mix);
-  const totals = computeTotals(mix, { offScopes: offScopesForPreset("village") });
+  const commissionRate = useVillage((s) => s.commissionRate);
+  const totals = computeTotals(mix, {
+    offScopes: offScopesForPreset("village"),
+    commissionRate,
+  });
 
   return (
     <AppShell>
@@ -87,6 +92,17 @@ function Home() {
             <p className="mt-1 font-display text-2xl font-semibold tabular">{s.v}</p>
           </div>
         ))}
+      </section>
+
+      <section className="mx-auto max-w-[1400px] px-4 pb-10 md:px-6">
+        <CommissionCalculator />
+        <p className="mt-3 text-sm text-ink-soft">
+          Full scope playground (hide slabs, MEP, civil) is on{" "}
+          <Link to="/scopes" className="text-kdk underline-offset-4 hover:underline">
+            Scopes
+          </Link>
+          .
+        </p>
       </section>
 
       <section className="mx-auto grid max-w-[1400px] gap-6 px-4 pb-10 md:grid-cols-3 md:px-6">

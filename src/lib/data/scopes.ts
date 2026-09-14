@@ -82,7 +82,7 @@ export const SCOPES: ScopeDef[] = [
     id: "distributor",
     label: "Distributor net (−10%)",
     short: "−10% net",
-    blurb: "If the Government buys from KDK Hong Kong: 10% off list. If it buys from a licensed Belizean distributor: that company keeps the 10%.",
+    blurb: "If the Government buys from KDK Hong Kong: this % is a discount. If it buys from a licensed Belizean distributor: that company (or a designated set-aside) keeps it — homes only.",
     items: ["01.02"],
   },
   {
@@ -330,23 +330,22 @@ export function offScopesForPreset(presetId: string): ScopeId[] {
   return SCOPE_IDS.filter((id) => !on.has(id));
 }
 
-export function pricingCopy(mode: PricingMode) {
+export function pricingCopy(mode: PricingMode, commissionRate = 0.1) {
+  const pct = `${Math.round(commissionRate * 100)}%`;
   if (mode === "list") {
     return {
-      label: "Factory list (no 10%)",
-      blurb: "Diagnostic only — neither KDK nor a Belizean distributor takes the 10%.",
+      label: "Factory list (no set-aside)",
+      blurb: "Diagnostic only — neither KDK nor a Belizean distributor takes a set-aside.",
     };
   }
   if (mode === "gov_via_partner") {
     return {
       label: "Buy from a licensed Belizean distributor",
-      blurb:
-        "The Government contracts a Belizean company, not KDK Hong Kong. That distributor buys from KDK at net (−10%) and sells to the Government at factory list. The 10% is their margin on the homes only — not on slabs, MEP, or village works.",
+      blurb: `The Government contracts a Belizean company, not KDK Hong Kong. That distributor buys from KDK at net (−${pct}) and sells to the Government at shell list. The ${pct} is their margin on the homes only — not on slabs, MEP, or village works. It may be designated as a departmental set-aside.`,
     };
   }
   return {
     label: "Buy from KDK Hong Kong",
-    blurb:
-      "The Government contracts KDK Technology Ltd directly. KDK invoices at factory list less 10% on the three models. 100-home campaign only.",
+    blurb: `The Government contracts KDK Technology Ltd directly. KDK invoices at shell list less ${pct} on the three models. That ${pct} is a campaign discount the Government keeps. 100-home campaign only.`,
   };
 }

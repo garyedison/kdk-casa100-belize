@@ -99,7 +99,8 @@ function LetterPage() {
               net on the 100-home order. The Government may contract KDK Technology Ltd (Hong Kong)
               directly at that net, or contract a licensed Belizean distributor who buys from KDK at
               net and sells to the Government at list — so a Belizean entity is the seller and keeps
-              the 10% on the homes. Officials can hide scopes on the attached playground to see a
+              the 10% on the homes (officials can model 5%, 15% or 20% on the set-aside calculator).
+              Officials can hide scopes on the attached playground to see a
               homes-only floor, pads-and-set, house MEP, or the full village (unfurnished, no extra
               civil). Village roads, village power, water, WWTP, trees, plaza and gatehouse are
               optional add-ons — not in that all-in. Solar kit prices are

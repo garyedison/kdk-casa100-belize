@@ -9,7 +9,8 @@ export const Route = createFileRoute("/compare")({ component: ComparePage });
 
 function ComparePage() {
   const mix = useVillage((s) => s.mix);
-  const totals = computeTotals(mix);
+  const commissionRate = useVillage((s) => s.commissionRate);
+  const totals = computeTotals(mix, { commissionRate });
   const cottage = STYLES.br2;
   const casaHouse = totals.perStyleHouse.br2;
   const casaVillage = totals.perStyleVillage.br2;
@@ -101,7 +102,7 @@ function ComparePage() {
               <li>Water loop, WWTP, laterals</li>
               <li>Avenues, drainage, gatehouse, civic pavilion</li>
               <li>8% contingency instead of $20k flat</li>
-              <li>10% distributor net on 100 units</li>
+              <li>Belize set-aside on shell list (default 10%; officials can model 5–20%)</li>
             </ul>
           </div>
           <div className="rounded-[18px] bg-paper-2 p-5 shadow-card">

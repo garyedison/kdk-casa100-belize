@@ -9,9 +9,10 @@ export function LotPanel() {
   const hovered = useVillage((s) => s.hovered);
   const selected = useVillage((s) => s.selected);
   const mix = useVillage((s) => s.mix);
+  const commissionRate = useVillage((s) => s.commissionRate);
   const id = selected ?? hovered;
   const lot = lots.find((l) => l.id === id);
-  const totals = computeTotals(mix);
+  const totals = computeTotals(mix, { commissionRate });
 
   if (!lot) {
     return (

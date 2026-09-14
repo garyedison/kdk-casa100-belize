@@ -13,7 +13,8 @@ export const Route = createFileRoute("/site")({ component: SitePage });
 
 function SitePage() {
   const mix = useVillage((s) => s.mix);
-  const totals = computeTotals(mix);
+  const commissionRate = useVillage((s) => s.commissionRate);
+  const totals = computeTotals(mix, { commissionRate });
 
   return (
     <AppShell>

@@ -8,6 +8,7 @@ import {
   type ScopeId,
 } from "./data/scopes";
 import type { PriceOptions } from "./data/boq";
+import { clampCommission, DEFAULT_COMMISSION } from "./data/commission";
 
 const IDS: StyleId[] = ["br1", "br2", "br3"];
 
@@ -38,6 +39,7 @@ type VillageState = {
   offScopes: ScopeId[];
   offItems: string[];
   pricingMode: PricingMode;
+  commissionRate: number;
   presetId: string;
   setCount: (id: StyleId, value: number) => void;
   applyMix: (mix: Mix) => void;
@@ -47,6 +49,7 @@ type VillageState = {
   toggleItem: (item: string) => void;
   applyPreset: (id: string) => void;
   setPricingMode: (mode: PricingMode) => void;
+  setCommissionRate: (rate: number) => void;
   priceOptions: () => PriceOptions;
   reset: () => void;
 };
@@ -61,6 +64,7 @@ export const useVillage = create<VillageState>()(
       offScopes: offScopesForPreset("village"),
       offItems: [],
       pricingMode: "kdk_net",
+      commissionRate: DEFAULT_COMMISSION,
       presetId: "village",
       setCount: (id, value) => {
         const mix = redistribute(get().mix, id, value);
@@ -88,12 +92,14 @@ export const useVillage = create<VillageState>()(
           offItems: [],
         }),
       setPricingMode: (mode) => set({ pricingMode: mode }),
+      setCommissionRate: (rate) => set({ commissionRate: clampCommission(rate) }),
       priceOptions: () => {
         const s = get();
         return {
           offScopes: s.offScopes,
           offItems: s.offItems,
           pricingMode: s.pricingMode,
+          commissionRate: s.commissionRate,
         };
       },
       reset: () =>
@@ -105,20 +111,25 @@ export const useVillage = create<VillageState>()(
           offScopes: offScopesForPreset("village"),
           offItems: [],
           pricingMode: "kdk_net",
+          commissionRate: DEFAULT_COMMISSION,
           presetId: "village",
         }),
     }),
     {
-      name: "kdk-casa-100-v2",
+      name: "kdk-casa-100-v3",
       partialize: (s) => ({
         mix: s.mix,
         offScopes: s.offScopes,
         offItems: s.offItems,
         pricingMode: s.pricingMode,
+        commissionRate: s.commissionRate,
         presetId: s.presetId,
       }),
       onRehydrateStorage: () => (state) => {
         if (state?.mix) state.lots = buildLots(state.mix);
+        if (state && (state.commissionRate == null || !Number.isFinite(state.commissionRate))) {
+          state.commissionRate = DEFAULT_COMMISSION;
+        }
       },
     },
   ),

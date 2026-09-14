@@ -11,7 +11,8 @@ export const Route = createFileRoute("/catalog")({ component: CatalogPage });
 
 function CatalogPage() {
   const mix = useVillage((s) => s.mix);
-  const totals = computeTotals(mix);
+  const commissionRate = useVillage((s) => s.commissionRate);
+  const totals = computeTotals(mix, { commissionRate });
 
   return (
     <AppShell>
@@ -96,7 +97,10 @@ function CatalogPage() {
                     </ul>
                     <dl className="mt-5 grid grid-cols-2 gap-3 text-sm">
                       <Row k="Shell list (FOB China)" v={usd(s.factoryList)} />
-                      <Row k="Distributor net (−10%)" v={usd(s.volumeRate)} />
+                      <Row
+                        k={`Net after ${Math.round(commissionRate * 100)}% set-aside`}
+                        v={usd(s.factoryList * (1 - commissionRate))}
+                      />
                       <Row k="Kitchen / bath in shell" v="Yes — cabinet, sink, toilet, shower" />
                       <Row k="Range / fridge in shell" v="No — Belize add-on" />
                       <Row k="Split air in shell" v="No — Belize add-on" />
