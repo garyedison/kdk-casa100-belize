@@ -8,6 +8,7 @@ import { usd, num } from "@/lib/utils";
 import { cn } from "@/lib/utils";
 import { MixControls } from "@/components/site/MixControls";
 import { FloorPlanStrip } from "@/components/catalog/FloorPlan";
+import { ChinaCrewCard } from "@/components/boq/ChinaCrewCard";
 
 export const Route = createFileRoute("/boq")({ component: BoqPage });
 
@@ -270,6 +271,10 @@ function BoqPage() {
             </table>
           </div>
         </section>
+
+        <div className="mt-8">
+          <ChinaCrewCard />
+        </div>
 
         <section className="mt-8">
           <div className="mb-3">
