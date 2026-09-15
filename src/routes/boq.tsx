@@ -64,6 +64,16 @@ function BoqPage() {
           </Link>
           .
         </p>
+        <p className="mt-3 text-sm">
+          <a
+            href="/CASA100_BOQ_worksheet.xlsx"
+            download
+            className="text-kdk underline-offset-4 hover:underline"
+          >
+            Download the BOQ worksheet (Excel)
+          </a>
+          <span className="text-muted"> — 11.01 vs 4-worker China crew, line-by-line, shell vs add-ons.</span>
+        </p>
 
         <div className="mt-6 grid gap-4 lg:grid-cols-[minmax(0,1fr)_300px]">
           <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
