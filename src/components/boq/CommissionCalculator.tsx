@@ -29,17 +29,16 @@ export function CommissionCalculator() {
   return (
     <section className="rounded-xl bg-paper p-5 shadow-card md:p-6">
       <p className="text-[11px] uppercase tracking-[0.16em] text-kdk">
-        Belize set-aside calculator
+        Pricing desk · internal
       </p>
       <h2 className="font-display text-2xl font-semibold">
-        How much does the distributor / finance set-aside make?
+        Government volume discount / licensed distributor margin
       </h2>
       <p className="mt-2 max-w-3xl text-sm text-ink-soft">
         Default is 10% of the <strong className="text-ink">shell list only</strong> — not slabs,
-        solar, or village works. Officials can try 5%, 15% or 20%. If the Government buys through
-        a licensed Belizean distributor, this amount is that seller’s margin and may be designated
-        as a departmental set-aside. If it buys from KDK Hong Kong, the same percentage is a
-        discount the Government keeps. KDK does not pay an individual official.
+        solar, or village works. If the Government buys through a licensed Belizean distributor,
+        this amount is that seller’s margin. If it buys from KDK Hong Kong, the same percentage is
+        a Government volume discount. Not shown on the Minister letter.
       </p>
 
       <div className="mt-5 flex flex-wrap gap-2">
@@ -79,7 +78,7 @@ export function CommissionCalculator() {
 
       {homesOff ? (
         <p className="mt-4 rounded-md bg-tbd/15 px-4 py-3 text-sm">
-          Homes are hidden — set-aside is $0 because it is a percentage of the shell list.
+          Homes are hidden — volume discount is $0 because it is a percentage of the shell list.
         </p>
       ) : (
         <>
@@ -87,7 +86,7 @@ export function CommissionCalculator() {
             <Tile k="Shell list (100 homes)" v={usd(totals.factoryList)} />
             <Tile k={`KDK net after ${pctLabel(commissionRate)}`} v={usd(totals.kdkNetHomes)} />
             <Tile
-              k={`${pctLabel(commissionRate)} set-aside`}
+              k={`${pctLabel(commissionRate)} discount / margin`}
               v={usd(setAside)}
               accent
             />
@@ -101,8 +100,8 @@ export function CommissionCalculator() {
                   <th className="py-2 pr-3 font-medium">Style</th>
                   <th className="py-2 pr-3 font-medium">Qty</th>
                   <th className="py-2 pr-3 font-medium">List / home</th>
-                  <th className="py-2 pr-3 font-medium">Set-aside / home</th>
-                  <th className="py-2 font-medium">Campaign set-aside</th>
+                  <th className="py-2 pr-3 font-medium">Margin / home</th>
+                  <th className="py-2 font-medium">Campaign margin</th>
                 </tr>
               </thead>
               <tbody>
@@ -120,7 +119,7 @@ export function CommissionCalculator() {
                 })}
                 <tr>
                   <td className="py-2 pr-3 font-semibold" colSpan={4}>
-                    Total set-aside at {pctLabel(commissionRate)}
+                    Total at {pctLabel(commissionRate)}
                   </td>
                   <td className="py-2 font-display text-lg font-semibold tabular">{usd(setAside)}</td>
                 </tr>
@@ -134,9 +133,9 @@ export function CommissionCalculator() {
                 Buy from KDK Hong Kong
               </p>
               <p className="mt-1 text-ink-soft">
-                The Government keeps the {pctLabel(commissionRate)} as a discount. Pays KDK{" "}
-                <strong className="text-ink">{usd(totals.kdkNetHomes)}</strong> for the shells.
-                Departmental set-aside: <strong className="text-ink">$0</strong>.
+                The Government keeps the {pctLabel(commissionRate)} as a Government volume discount.
+                Pays KDK <strong className="text-ink">{usd(totals.kdkNetHomes)}</strong> for the
+                shells.
               </p>
             </div>
             <div className="rounded-lg bg-kdk/10 px-4 py-4 text-sm">
@@ -144,8 +143,7 @@ export function CommissionCalculator() {
                 Buy through a Belizean distributor
               </p>
               <p className="mt-1 text-ink-soft">
-                The Government pays list on the shells. The licensed Belizean seller (or a
-                designated departmental set-aside) receives{" "}
+                The Government pays list on the shells. The licensed Belizean distributor receives{" "}
                 <strong className="text-ink">{usd(setAside)}</strong>. KDK still invoices that
                 company {usd(totals.kdkNetHomes)} for the shells.
               </p>

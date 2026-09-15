@@ -5,6 +5,7 @@ import { Plat2D } from "@/components/site/Plat2D";
 import { LotPanel } from "@/components/site/LotPanel";
 import { MixControls } from "@/components/site/MixControls";
 import { computeTotals } from "@/lib/data/boq";
+import { offScopesForPreset } from "@/lib/data/scopes";
 import { useVillage } from "@/lib/store";
 import { usd } from "@/lib/utils";
 import { STYLE_LIST } from "@/lib/data/homes";
@@ -14,7 +15,10 @@ export const Route = createFileRoute("/site")({ component: SitePage });
 function SitePage() {
   const mix = useVillage((s) => s.mix);
   const commissionRate = useVillage((s) => s.commissionRate);
-  const totals = computeTotals(mix, { commissionRate });
+  const totals = computeTotals(mix, {
+    commissionRate,
+    offScopes: offScopesForPreset("village"),
+  });
 
   return (
     <AppShell>
@@ -65,11 +69,11 @@ function SitePage() {
             ))}
           </ul>
           <p className="mt-4 border-t border-line pt-3 text-sm">
-            Village unfurnished all-in{" "}
+            Installed homes{" "}
             <span className="tabular font-medium">{usd(totals.unfurnishedAllIn)}</span>
             <span className="block text-xs text-muted">
-              Includes 8% contingency and 5.5% PM. FF&E {usd(totals.ffe)} extra. Assembly labour
-              in; solar hours TBD.
+              Landed, set, house MEP, solar equipment. No village civil. FF&E {usd(totals.ffe)} extra.
+              Solar install hours estimated.
             </span>
           </p>
         </div>

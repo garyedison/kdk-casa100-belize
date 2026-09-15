@@ -2,12 +2,11 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell } from "@/components/layout/AppShell";
 import { Button } from "@/components/ui/button";
 import { STYLE_LIST } from "@/lib/data/homes";
-import { computeTotals } from "@/lib/data/boq";
+import { computeTotals, packageTotals } from "@/lib/data/boq";
 import { TRANSMITTAL } from "@/lib/data/transmittal";
 import { useVillage } from "@/lib/store";
 import { usd, num } from "@/lib/utils";
 import { offScopesForPreset } from "@/lib/data/scopes";
-import { CommissionCalculator } from "@/components/boq/CommissionCalculator";
 import { ArrowRight, FileText, FileSpreadsheet, Map, Sun, Wind } from "lucide-react";
 
 export const Route = createFileRoute("/")({ component: Home });
@@ -19,6 +18,7 @@ function Home() {
     offScopes: offScopesForPreset("village"),
     commissionRate,
   });
+  const packages = packageTotals(mix, commissionRate);
 
   return (
     <AppShell>
@@ -83,9 +83,9 @@ function Home() {
       <section className="mx-auto grid max-w-[1400px] gap-3 px-4 py-8 md:grid-cols-4 md:px-6">
         {[
           { k: "Homes", v: `${totals.homeCount}` },
-          { k: "Unfurnished all-in (no extra civil)", v: usd(totals.unfurnishedAllIn) },
+          { k: "Installed homes", v: usd(packages.installed.unfurnishedAllIn) },
+          { k: "Turnkey village", v: usd(packages.turnkey.unfurnishedAllIn) },
           { k: "FF&E upgrade", v: usd(totals.ffe) },
-          { k: "Per ¼-acre lot (avg)", v: usd(totals.unfurnishedAllIn / totals.homeCount) },
         ].map((s) => (
           <div key={s.k} className="rounded-[18px] bg-paper-2 px-4 py-4 shadow-card">
             <p className="text-[11px] uppercase tracking-wide text-muted">{s.k}</p>
@@ -95,9 +95,11 @@ function Home() {
       </section>
 
       <section className="mx-auto max-w-[1400px] px-4 pb-10 md:px-6">
-        <CommissionCalculator />
-        <p className="mt-3 text-sm text-ink-soft">
-          Full scope playground (hide slabs, MEP, civil) is on{" "}
+        <p className="text-sm text-ink-soft">
+          <strong className="text-ink">Installed homes</strong> = landed, set, house MEP, solar
+          equipment, interior make-good. No village roads, power, water or WWTP.{" "}
+          <strong className="text-ink">Turnkey village</strong> = installed homes plus that civil
+          infrastructure. Plaza, trees and furniture stay optional. Scope playground is on{" "}
           <Link to="/scopes" className="text-kdk underline-offset-4 hover:underline">
             Scopes
           </Link>

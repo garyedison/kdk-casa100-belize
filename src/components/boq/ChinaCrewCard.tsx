@@ -29,7 +29,8 @@ export function ChinaCrewCard() {
         <strong className="text-ink">Div 11.01</strong> is the crew that puts the container home
         together on its concrete pad after it arrives. A 2-bed / 1-bath home takes{" "}
         <strong className="text-ink">four workers, two days</strong> at {usd(CHINA_CREW.dayRate)} per
-        worker-day — <strong className="text-ink">{usd(labour2bed)}</strong> labour for that home.
+        worker-day — conservative if Belizean skilled labour is expensive —{" "}
+        <strong className="text-ink">{usd(labour2bed)}</strong> labour for that home.
         Round-trip for four workers is a one-time{" "}
         <strong className="text-ink">{usd(CHINA_CREW.mobilize4)}</strong> (tickets, meals, hotel in
         transit). Do not add the table below on top of Div 11.01 — it is the same assembly work,

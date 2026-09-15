@@ -17,7 +17,8 @@ export type ScopeId =
   | "finishes"
   | "appliances"
   | "ffe"
-  | "oncosts";
+  | "oncosts"
+  | "prelims";
 
 export type PricingMode = "kdk_net" | "list" | "gov_via_partner";
 
@@ -52,20 +53,20 @@ export const SCOPE_GROUPS: { id: string; title: string; blurb: string; ids: Scop
     id: "village",
     title: "Village infrastructure",
     blurb:
-      "NOT in Full village. Optional add-on. WWTP = wastewater treatment plant (shared sewage plant, not 100 septic tanks). Civic extras (gate, plaza, trees) are not roads, water, or power.",
+      "NOT in Installed homes. In Turnkey village (roads, village power, water, WWTP). Civic extras (gate, plaza, trees) are NOT in Turnkey — they stay optional.",
     ids: ["roads", "village_elec", "village_wet", "civic"],
   },
   {
     id: "fitout",
     title: "Interior fit-out",
-    blurb: "Paint, floors, and range + fridge are on in Full village. Furniture (FF&E) is not.",
+    blurb: "Paint, floors, and range + fridge are on in Installed homes. Furniture (FF&E) is not.",
     ids: ["finishes", "appliances", "ffe"],
   },
   {
     id: "oncosts",
     title: "Allowances",
     blurb: "8% contingency and 5.5% project management on the scopes still switched on.",
-    ids: ["oncosts"],
+    ids: ["oncosts", "prelims"],
   },
 ];
 
@@ -82,7 +83,7 @@ export const SCOPES: ScopeDef[] = [
     id: "distributor",
     label: "Distributor net (−10%)",
     short: "−10% net",
-    blurb: "If the Government buys from KDK Hong Kong: this % is a discount. If it buys from a licensed Belizean distributor: that company (or a designated set-aside) keeps it — homes only.",
+    blurb: "If the Government buys from KDK Hong Kong: this % is a Government volume discount. If it buys from a licensed Belizean distributor: that company’s margin on the homes only.",
     items: ["01.02"],
   },
   {
@@ -131,15 +132,15 @@ export const SCOPES: ScopeDef[] = [
     id: "solar",
     label: "Solar PV + inverter (no battery)",
     short: "Solar",
-    blurb: "Panels, grid-tie inverter, rails. Install labour 11.02 TBD. No battery.",
-    items: ["04.02", "04.03", "04.04", "04.05", "11.02", "11.05"],
+    blurb: "Panels, grid-tie inverter, rails. Install labour Div 11.02 ESTIMATED. No battery. Needs village power (Turnkey village) to export.",
+    items: ["04.02", "04.03", "04.04", "04.05", "04.06", "11.02", "11.05"],
   },
   {
     id: "village_elec",
     label: "Village electrical (power to the lots)",
     short: "Village power",
     blurb:
-      "Transformers, underground/overhead cables to each of the 100 lots, 80 street lights, testing. Village power — not rooftop solar, not the house split air. NOT in Full village.",
+      "Transformers, cables to each of the 100 lots, 80 street lights, testing. Village power — not rooftop solar. NOT in Installed homes. IN Turnkey village.",
     items: ["05.01", "05.02", "05.03", "05.06"],
   },
   {
@@ -147,15 +148,15 @@ export const SCOPES: ScopeDef[] = [
     label: "Village water + WWTP (sewage plant)",
     short: "Water + WWTP",
     blurb:
-      "Potable water: elevated tank, mains to the lots, disinfection. WWTP = wastewater treatment plant — one shared sewage plant for the 100 lots instead of 100 septic tanks. NOT in Full village.",
-    items: ["06.02", "06.04"],
+      "Potable water: source, elevated tank, pumps, mains to the lots. WWTP = wastewater treatment plant — shared sewage plant, collectors, commissioning, discharge. NOT in Installed homes. IN Turnkey village.",
+    items: ["06.02", "06.04", "06.06", "06.07", "06.08"],
   },
   {
     id: "roads",
     label: "Village roads + storm drainage",
     short: "Roads",
     blurb:
-      "Gravel avenues through the subdivision, access to each ¼-acre lot, culverts and drainage. Not asphalt paving. NOT in Full village.",
+      "Gravel avenues, lot access, culverts and drainage. Not asphalt. NOT in Installed homes. IN Turnkey village.",
     items: ["09.02", "09.07"],
   },
   {
@@ -163,7 +164,7 @@ export const SCOPES: ScopeDef[] = [
     label: "Civic extras — gate, plaza, trees",
     short: "Civic extras",
     blurb:
-      "Optional add-on: perimeter fence, gatehouse, community plaza and pavilion, street trees. Not roads. Not water. Not village power. Not the WWTP. NOT in Full village.",
+      "Optional add-on: perimeter fence, gatehouse, plaza and pavilion, street trees. Not roads, water, power or WWTP. NOT in Installed homes. NOT in Turnkey village.",
     items: ["09.04", "09.05", "09.06", "05.05"],
   },
   {
@@ -194,6 +195,13 @@ export const SCOPES: ScopeDef[] = [
     blurb: "Applied only to the scopes still switched on.",
     items: [],
   },
+  {
+    id: "prelims",
+    label: "Preliminaries (surveys, design, permits, insurance)",
+    short: "Prelims",
+    blurb: "Shown at $0 until the Belize subcontractor confirms. In Installed homes so they are not forgotten.",
+    items: ["13.01", "13.02", "13.03", "13.04", "13.05", "13.06", "13.07", "13.08"],
+  },
 ];
 
 export const SCOPE_IDS = SCOPES.map((s) => s.id);
@@ -210,10 +218,11 @@ export const HOUSE_CAMPAIGN: ScopeId[] = [
   "solar",
   "finishes",
   "appliances",
+  "prelims",
   "oncosts",
 ];
 
-export const CIVIL_SCOPES: ScopeId[] = ["roads", "village_elec", "village_wet", "civic"];
+export const CIVIL_SCOPES: ScopeId[] = ["roads", "village_elec", "village_wet"];
 
 /** Plain-language extras so a reviewer can read a price and know what is in it. */
 export const PRICE_LENS: { id: ScopeId; kind: "civil" | "civic" | "ffe"; label: string }[] = [
@@ -295,30 +304,31 @@ export const PRESETS: Preset[] = [
   },
   {
     id: "village",
-    label: "Full village — unfurnished",
-    kicker: "NO EXTRA CIVIL",
+    label: "Installed homes — unfurnished",
+    kicker: "NO VILLAGE CIVIL",
     blurb:
-      "The 100 homes landed, set, MEP, and solar. No furniture. NO roads. NO village power. NO water mains. NO WWTP (sewage plant). NO trees, plaza, or gatehouse. Add those as separate packages.",
+      "The 100 homes landed, set, house MEP, split air and solar equipment. Interior make-good and range + fridge. No furniture. No roads, village power, water mains or WWTP. No plaza, trees or gate. Preliminaries shown at $0.",
     scopes: HOUSE_CAMPAIGN,
   },
   {
     id: "utilities",
-    label: "Add village civil",
+    label: "Turnkey village",
+    kicker: "CIVIL ON · PLAZA OFF",
     blurb:
-      "Full village plus roads, village power, potable water, and WWTP (sewage plant). Still no plaza, trees, or gate.",
+      "Installed homes plus gravel roads, stormwater, village power to the lots, potable water and WWTP. Still no plaza, trees, gate or furniture.",
     scopes: [...HOUSE_CAMPAIGN, "roads", "village_elec", "village_wet"],
   },
   {
     id: "withCivic",
-    label: "Village civil + civic extras",
-    blurb: "Village civil plus gate, plaza, pavilion, and trees.",
+    label: "Turnkey + civic extras",
+    blurb: "Turnkey village plus gate, plaza, pavilion and trees.",
     scopes: [...HOUSE_CAMPAIGN, "roads", "village_elec", "village_wet", "civic"],
   },
   {
     id: "furnished",
-    label: "Furnished homes (no extra civil)",
+    label: "Installed homes + FF&E",
     blurb:
-      "Full village unfurnished plus beds, seating, dining, linens. Still no roads, village power, water, WWTP, plaza, or trees.",
+      "Installed homes plus beds, seating, dining, linens. Still no roads, village power, water, WWTP, plaza or trees.",
     scopes: [...HOUSE_CAMPAIGN, "ffe"],
   },
 ];
@@ -334,18 +344,18 @@ export function pricingCopy(mode: PricingMode, commissionRate = 0.1) {
   const pct = `${Math.round(commissionRate * 100)}%`;
   if (mode === "list") {
     return {
-      label: "List (no set-aside)",
-      blurb: "Diagnostic only — neither KDK nor a Belizean distributor takes a set-aside.",
+      label: "List (no volume discount)",
+      blurb: "Diagnostic only — neither KDK nor a Belizean distributor takes a discount or margin.",
     };
   }
   if (mode === "gov_via_partner") {
     return {
       label: "Buy from a licensed Belizean distributor",
-      blurb: `The Government contracts a Belizean company, not KDK Hong Kong. That distributor buys from KDK at net (−${pct}) and sells to the Government at shell list. The ${pct} is their margin on the homes only — not on slabs, MEP, or village works. It may be designated as a departmental set-aside.`,
+      blurb: `The Government contracts a Belizean company, not KDK Hong Kong. That distributor buys from KDK at net (−${pct}) and sells to the Government at shell list. The ${pct} is the licensed Belizean distributor’s margin on the homes only — not on slabs, MEP, or village works.`,
     };
   }
   return {
     label: "Buy from KDK Hong Kong",
-    blurb: `The Government contracts KDK Technology Ltd directly. KDK invoices at shell list less ${pct} on the three models. That ${pct} is a campaign discount the Government keeps. 100-home campaign only.`,
+    blurb: `The Government contracts KDK Technology Ltd directly. KDK invoices at shell list less ${pct} on the three models. That ${pct} is a Government volume discount. 100-home campaign only.`,
   };
 }

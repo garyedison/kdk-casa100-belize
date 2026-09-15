@@ -40,6 +40,9 @@ export const SHELL_MARKUP = 0.1;
 /** 10% off KDK list for a 100-home government order (distributor or direct). */
 export const VOLUME_DISCOUNT = 0.1;
 export const FREIGHT_PER_40HQ = 19_000;
+/** Whole 40HQ boxes, rounded up by style: 30÷3=10, 45÷2→23, 25÷1.82→14. */
+export const FREIGHT_BOXES = { br1: 10, br2: 23, br3: 14 } as const;
+export const FREIGHT_CONTAINERS = FREIGHT_BOXES.br1 + FREIGHT_BOXES.br2 + FREIGHT_BOXES.br3;
 
 function kdkList(supplier: number) {
   return Math.round(supplier * (1 + SHELL_MARKUP));
@@ -60,7 +63,7 @@ export const STYLES: Record<StyleId, HomeStyle> = {
     look: "Skillion roof + terrace",
     factoryList: kdkList(15_850),
     unitsPer40hq: 3,
-    freightPerHome: FREIGHT_PER_40HQ / 3,
+    freightPerHome: (FREIGHT_PER_40HQ * FREIGHT_BOXES.br1) / 30,
     volumeRate: kdkList(15_850) * (1 - VOLUME_DISCOUNT),
     image: "/homes/1bed.jpg",
     color: "#5C7A62",
@@ -93,7 +96,7 @@ export const STYLES: Record<StyleId, HomeStyle> = {
     look: "Hip roof — premium look",
     factoryList: kdkList(23_100),
     unitsPer40hq: 2,
-    freightPerHome: FREIGHT_PER_40HQ / 2,
+    freightPerHome: (FREIGHT_PER_40HQ * FREIGHT_BOXES.br2) / 45,
     volumeRate: kdkList(23_100) * (1 - VOLUME_DISCOUNT),
     image: "/homes/2bed.jpg",
     color: "#2F6B5C",
@@ -126,7 +129,7 @@ export const STYLES: Record<StyleId, HomeStyle> = {
     look: "Gable, wood clad, porch",
     factoryList: kdkList(23_500),
     unitsPer40hq: 1.82,
-    freightPerHome: FREIGHT_PER_40HQ / 1.82,
+    freightPerHome: (FREIGHT_PER_40HQ * FREIGHT_BOXES.br3) / 25,
     volumeRate: kdkList(23_500) * (1 - VOLUME_DISCOUNT),
     image: "/homes/3bed.jpg",
     color: "#1F4A3A",

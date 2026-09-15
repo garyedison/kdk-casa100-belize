@@ -67,3 +67,23 @@ export const SHELL_OUT = [
 
 export const SHELL_BLURB =
   "The basic shell is the finished-ready box as it leaves China: structure, walls, roof, doors, windows, house electrics, kitchen cabinet + sink, toilet, wash-basin and shower. It is unfurnished. It is not a bare empty container. Split air, solar, range, fridge, furniture, pads and village works are Belize add-ons.";
+
+/** So flooring / paint / lighting are not double-counted. */
+export const FACTORY_VS_LOCAL = {
+  factory: [
+    "Steel structure, insulated roof, walls, doors, windows",
+    "Factory PVC floor + bath anti-slip; factory wall panels",
+    "Prefabricated house lights, switches, sockets, distribution box",
+    "Kitchen cabinet, sink, faucet",
+    "Toilet, wash-basin, glass shower, bathroom pipework",
+    "Interior doors and moldings as shipped",
+  ],
+  belize: [
+    "Slab, hurricane ties, crane, Div 11.01 assembly on the pad",
+    "Split air (04.01) and rooftop solar equipment + estimated install",
+    "House water/sewer laterals and extra consumer-unit hookup",
+    "Interior make-good: extra floor finish, paint, ceiling, kitchen (Div 07)",
+    "Extra house LED allowance (07.06) beyond the factory lights",
+    "Range + refrigerator (08.01). Furniture if FF&E is taken.",
+  ],
+} as const;

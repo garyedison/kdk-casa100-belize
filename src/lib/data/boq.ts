@@ -3,9 +3,11 @@ import {
   type Mix,
   type StyleId,
   VOLUME_DISCOUNT,
+  FREIGHT_CONTAINERS,
+  FREIGHT_PER_40HQ,
 } from "./homes";
-import { ASSEMBLY, CAMPAIGN_RATES } from "./labour";
-import { ITEM_SCOPE, SCOPE_IDS, type PricingMode, type ScopeId } from "./scopes";
+import { ASSEMBLY, CHINA_CREW, FFE_INSTALL, SOLAR_INSTALL } from "./labour";
+import { ITEM_SCOPE, SCOPE_IDS, offScopesForPreset, type PricingMode, type ScopeId } from "./scopes";
 import { clampCommission, DEFAULT_COMMISSION, pctLabel } from "./commission";
 
 export type Status = "QUOTED" | "EST." | "TBD" | "INCL." | "EXCL.";
@@ -42,6 +44,7 @@ export const DIVISIONS = [
   { no: "10", name: "FF&E — furnished upgrade" },
   { no: "11", name: "Labour & duration" },
   { no: "12", name: "On-costs" },
+  { no: "13", name: "Preliminaries — allowances to confirm" },
 ] as const;
 
 const per = (n: number): Record<StyleId, number> => ({ br1: n, br2: n, br3: n });
@@ -52,10 +55,7 @@ const rates = (a: number, b: number, c: number): Record<StyleId, number> => ({
 });
 
 /**
- * Government 100-home campaign rates — not Moonlight Bay (2 custom waterfront homes).
- * Moonlight Bay used $20k slab, $5k inland, $2.5k crane, $20k flat contingency and
- * left solar/AC/deck/labour as TBD. CASA 100 uses volume factory, shared crane,
- * convoy inland, campaign slabs, included solar + split air, and 8% contingency.
+ * Government 100-home campaign rates. Installed homes vs turnkey village (civil on, plaza off).
  */
 export const LINES: BoqLine[] = [
   {
@@ -77,7 +77,7 @@ export const LINES: BoqLine[] = [
     item: "01.02",
     division: "Container homes",
     divisionNo: "01",
-    description: `Belize set-aside / distributor — ${VOLUME_DISCOUNT * 100}% of shell list (default)`,
+    description: `Government volume discount / distributor margin — ${VOLUME_DISCOUNT * 100}% of shell list`,
     unit: "home",
     perHome: per(1),
     rate: rates(
@@ -86,13 +86,13 @@ export const LINES: BoqLine[] = [
       -STYLES.br3.factoryList * VOLUME_DISCOUNT,
     ),
     status: "EST.",
-    note: "On the shell list only — not on slabs, solar, or village works. If the Government buys from KDK Hong Kong, this percentage is a campaign discount. If it buys through a licensed Belizean distributor, this percentage is the Belizean seller’s margin and may be designated as a departmental set-aside. Officials can change the rate on the calculator.",
+    note: "On the shell list only — not on slabs, solar, or village works. If the Government buys from KDK Hong Kong, this is a Government volume discount. If it buys through a licensed Belizean distributor, this is that company’s margin on the homes.",
   },
   {
     item: "02.01",
     division: "Logistics",
     divisionNo: "02",
-    description: "Ocean freight, China → Belize ($19,000 per 40HQ ÷ units/container)",
+    description: `Ocean freight, China → Belize (${FREIGHT_CONTAINERS} × 40HQ at $${FREIGHT_PER_40HQ.toLocaleString()} )`,
     unit: "home",
     perHome: per(1),
     rate: rates(
@@ -101,7 +101,7 @@ export const LINES: BoqLine[] = [
       STYLES.br3.freightPerHome,
     ),
     status: "QUOTED",
-    note: "Load factors 3 / 2 / 1.82 per 40HQ. Full-container campaign — no lone-home penalty.",
+    note: `Whole containers, rounded up by style: 10 + 23 + 14 = ${FREIGHT_CONTAINERS} × 40HQ. Mixed loading not assumed. $${(FREIGHT_CONTAINERS * FREIGHT_PER_40HQ).toLocaleString()} campaign freight.`,
   },
   {
     item: "02.02",
@@ -112,7 +112,7 @@ export const LINES: BoqLine[] = [
     perHome: per(1),
     rate: 3_200,
     status: "EST.",
-    note: "Moonlight Bay carried $5,000/home for two units. Convoy rate for 100.",
+    note: "Site-gate convoy and HS 9406.20 duties/taxes allowance. Customs and port handling also listed at $0 under Div 13 until the Belize broker confirms.",
   },
   {
     item: "03.01",
@@ -123,7 +123,7 @@ export const LINES: BoqLine[] = [
     perHome: per(1),
     rate: rates(11_500, 12_500, 13_000),
     status: "EST.",
-    note: "Moonlight Bay $20,000/home. Campaign crew, government spec slab-on-grade.",
+    note: "Campaign crew, government spec slab-on-grade. Includes excavation and house MEP stub-up.",
   },
   {
     item: "03.02",
@@ -167,7 +167,7 @@ export const LINES: BoqLine[] = [
     perHome: per(1),
     rate: rates(2_550, 3_400, 4_250),
     status: "EST.",
-    note: "8 / 10 / 13 × 400 W modules = 3.2 / 4.0 / 5.2 kW array. Equipment only — no install labour. Install is 11.02 at $19.40/hr EST. (70% Belizean electrician / 30% China PV tech).",
+    note: "8 / 10 / 13 × 400 W modules = 3.2 / 4.0 / 5.2 kW array. Equipment only. Install is Div 11.02 (estimated hours). Grid-tie — needs village power (Turnkey village) or a later battery. No battery in this package.",
   },
   {
     item: "04.03",
@@ -178,7 +178,7 @@ export const LINES: BoqLine[] = [
     perHome: per(1),
     rate: rates(1_650, 1_800, 1_950),
     status: "EST.",
-    note: "3 / 4 / 5 kW hybrid inverter, grid-interactive. Equipment only — no install labour. No battery. Install is 11.02 at $19.40/hr EST.",
+    note: "3 / 4 / 5 kW hybrid inverter, grid-interactive. Equipment only. No battery. Div 11.02 install is estimated. Arrays need the village electrical network (Turnkey village) to export.",
   },
   {
     item: "04.04",
@@ -189,7 +189,7 @@ export const LINES: BoqLine[] = [
     perHome: per(1),
     rate: 300,
     status: "EST.",
-    note: "Materials only. Roof install labour is 11.02 at $19.40/hr EST. (70% Belizean / 30% China) — not in this $300.",
+    note: "Rails, clamps, bonding. DC/AC home-run, isolators and utility interconnection are 04.06. Roof labour is Div 11.02 (estimated).",
   },
   {
     item: "04.05",
@@ -201,7 +201,18 @@ export const LINES: BoqLine[] = [
     rate: 0,
     status: "EXCL.",
     tbd: true,
-    note: "No battery storage is included with the PV arrays. Grid-tie only. Optional later upgrade — rate left blank until the Government elects storage.",
+    note: "No battery storage. Grid-tie only. Arrays depend on village electrical (in Turnkey village) or a later battery upgrade.",
+  },
+  {
+    item: "04.06",
+    division: "Split air & solar PV — no battery",
+    divisionNo: "04",
+    description: "PV balance-of-system + utility interconnection (isolators, DC/AC, earth)",
+    unit: "home",
+    perHome: per(1),
+    rate: 0,
+    status: "EST.",
+    note: "Allowance $0 pending factory confirmation that BOS is not already in 04.04. Grid interconnection needs village power (Turnkey village).",
   },
   {
     item: "05.01",
@@ -295,7 +306,7 @@ export const LINES: BoqLine[] = [
     rate: 410_000,
     lump: true,
     status: "EST.",
-    note: "RTOAC plumbing distribution analog — drinking-water loop for 100 lots. Not in Homes only. WWTP (sewage) is 06.04, separate.",
+    note: "Drinking-water loop for 100 lots: bulk source at the site boundary (municipal / well — Government to confirm), elevated tank, pumps, disinfection, mains to each lot. House laterals are 06.03. Not in Installed homes — in Turnkey village.",
   },
   {
     item: "06.03",
@@ -318,7 +329,7 @@ export const LINES: BoqLine[] = [
     rate: 380_000,
     lump: true,
     status: "EST.",
-    note: "WWTP = wastewater treatment plant. One shared sewage plant instead of 100 septic tanks. Not in Homes only. Not part of Civic extras (gate/plaza/trees).",
+    note: "WWTP = wastewater treatment plant. One shared sewage plant instead of 100 septic tanks. Includes collector mains, plant, commissioning and a treated-discharge arrangement (outfall / soakaway — Government to confirm receiving body). House laterals are 06.05. Not in Installed homes — in Turnkey village. Not civic (plaza/gate).",
   },
   {
     item: "06.05",
@@ -329,7 +340,43 @@ export const LINES: BoqLine[] = [
     perHome: per(1),
     rate: 980,
     status: "EST.",
-    note: "",
+    note: "Pad to collector. Collectors, WWTP and discharge are 06.04 (Turnkey village).",
+  },
+  {
+    item: "06.06",
+    division: "Plumbing & sanitary",
+    divisionNo: "06",
+    description: "Water source, tanks and pumps (in 06.02)",
+    unit: "ls",
+    perHome: per(0),
+    rate: 0,
+    lump: true,
+    status: "INCL.",
+    note: "INCL. in 06.02. Source (municipal tap or well) to be confirmed with the Government. $0 extra.",
+  },
+  {
+    item: "06.07",
+    division: "Plumbing & sanitary",
+    divisionNo: "06",
+    description: "Sewer collector mains (in 06.04)",
+    unit: "ls",
+    perHome: per(0),
+    rate: 0,
+    lump: true,
+    status: "INCL.",
+    note: "INCL. in 06.04. Not the house laterals (06.05).",
+  },
+  {
+    item: "06.08",
+    division: "Plumbing & sanitary",
+    divisionNo: "06",
+    description: "WWTP commissioning + treated discharge (in 06.04)",
+    unit: "ls",
+    perHome: per(0),
+    rate: 0,
+    lump: true,
+    status: "INCL.",
+    note: "INCL. in 06.04. Receiving body / permit to be confirmed. $0 extra on this line.",
   },
   {
     item: "07.01",
@@ -512,32 +559,30 @@ export const LINES: BoqLine[] = [
     perHome: { br1: ASSEMBLY.hours.br1, br2: ASSEMBLY.hours.br2, br3: ASSEMBLY.hours.br3 },
     rate: ASSEMBLY.hourly,
     status: "QUOTED",
-    note: `Supplier assembly at 10-hour days, US$${ASSEMBLY.dayRate}/day (US$${ASSEMBLY.hourly}/hr). 1-bed ${ASSEMBLY.hours.br1} hrs / ${ASSEMBLY.days.br1} days (US$${ASSEMBLY.cost.br1.toLocaleString()}). 2-bed and 3-bed ${ASSEMBLY.hours.br2} hrs / ${ASSEMBLY.days.br2} days (US$${ASSEMBLY.cost.br2.toLocaleString()} each). Crew mix still 80% Belizean / 20% China tech — Belizeans are the standing workforce. Not in 03.03 plant hire.`,
+    note: `KDK assembly at 10-hour days, US$${ASSEMBLY.dayRate}/worker-day (US$${ASSEMBLY.hourly}/hr). Conservative if Belizean skilled labour is expensive. 1-bed ${ASSEMBLY.hours.br1} hrs / ${ASSEMBLY.days.br1} days (US$${ASSEMBLY.cost.br1.toLocaleString()}). 2-bed and 3-bed four workers, two days (US$${ASSEMBLY.cost.br2.toLocaleString()}). Mix 80% Belizean / 20% China tech. Not in 03.03 plant hire. Travel for the China trainers is Div 11.03.`,
   },
   {
     item: "11.02",
     division: "Labour & duration",
     divisionNo: "11",
-    description: "Solar PV + inverter install — local crew (man-hours / home)",
+    description: "Solar PV + inverter install — local crew (man-hours / home) — ESTIMATED",
     unit: "hr",
-    perHome: per(1),
-    rate: CAMPAIGN_RATES.solarInstall,
-    status: "TBD",
-    tbd: true,
-    note: "Hours TBD. Rate EST. $19.40/hr mixed: 70% Belizean electrician @ $14 + 30% China PV tech on-site @ $32. Belizean electricians run the roofs for the 12-month campaign. One Chinese tech commissions the first kits and trains. Not in 04.02–04.04 equipment.",
+    perHome: { br1: SOLAR_INSTALL.hours.br1, br2: SOLAR_INSTALL.hours.br2, br3: SOLAR_INSTALL.hours.br3 },
+    rate: SOLAR_INSTALL.hourly,
+    status: "EST.",
+    note: "ESTIMATED. 16 / 20 / 24 hours by style at $19.40/hr mixed (70% Belizean electrician / 30% China PV). Local electrician quote in a few days. Not in 04.02–04.04 equipment. Grid-tie — needs village power (Turnkey village).",
   },
   {
     item: "11.03",
     division: "Labour & duration",
     divisionNo: "11",
-    description: "China technician attendance (trainer)",
-    unit: "day",
+    description: "China technician attendance — mobilisation (4 workers, tickets, meals, hotel)",
+    unit: "ls",
     perHome: per(0),
-    rate: 0,
-    status: "TBD",
-    tbd: true,
+    rate: CHINA_CREW.mobilize4,
+    status: "EST.",
     lump: true,
-    note: "China technician as trainer/commissioner — not the standing workforce. Belizean foremen run the site after handover. Duration TBD.",
+    note: "One-time travel for four workers (tickets, meals, hotel in transit, 3–4 days’ salary). Not pad labour — pad labour is Div 11.01 at $280/worker-day. Do not add the per-home travel table on top of 11.01; this line is the travel lump only.",
   },
   {
     item: "11.04",
@@ -548,32 +593,126 @@ export const LINES: BoqLine[] = [
     perHome: { br1: ASSEMBLY.days.br1, br2: ASSEMBLY.days.br2, br3: ASSEMBLY.days.br3 },
     rate: 0,
     status: "QUOTED",
-    note: "Calendar crew-days at 10 hours/day from the supplier assembly sheet. 1-bed 4.2 days; 2-bed and 3-bed 8 days. No dollar on this line — dollars sit on 11.01.",
+    note: "Calendar crew-days at 10 hours/day. 1-bed 4.2 days; 2-bed and 3-bed two crew-days with four workers. Dollars sit on Div 11.01.",
   },
   {
     item: "11.05",
     division: "Labour & duration",
     divisionNo: "11",
-    description: "Duration — solar install",
+    description: "Duration — solar install — ESTIMATED",
     unit: "day",
-    perHome: per(1),
+    perHome: { br1: SOLAR_INSTALL.days.br1, br2: SOLAR_INSTALL.days.br2, br3: SOLAR_INSTALL.days.br3 },
     rate: 0,
-    status: "TBD",
-    tbd: true,
-    note: "Calendar days for PV + inverter on the roof. Fill with 11.02 labour next week.",
+    status: "EST.",
+    note: "ESTIMATED. 1.6 / 2 / 2.4 days by style. Dollars sit on Div 11.02. Local quote in a few days.",
   },
   {
     item: "11.06",
     division: "Labour & duration",
     divisionNo: "11",
-    description: "FF&E installation labour",
+    description: "FF&E installation labour — ESTIMATED",
     unit: "home",
     perHome: per(1),
-    rate: 0,
-    status: "TBD",
-    tbd: true,
+    rate: FFE_INSTALL.rate,
+    status: "EST.",
     ffe: true,
-    note: "Only if the furnished upgrade is taken.",
+    note: "ESTIMATED. Only if the furnished upgrade is taken. ~8 hours per home.",
+  },
+  {
+    item: "13.01",
+    division: "Preliminaries — allowances to confirm",
+    divisionNo: "13",
+    description: "Surveys + geotechnical investigations",
+    unit: "ls",
+    perHome: per(0),
+    rate: 0,
+    lump: true,
+    status: "EST.",
+    note: "Allowance $0 — Belize subcontractor to confirm.",
+  },
+  {
+    item: "13.02",
+    division: "Preliminaries — allowances to confirm",
+    divisionNo: "13",
+    description: "Design and engineering",
+    unit: "ls",
+    perHome: per(0),
+    rate: 0,
+    lump: true,
+    status: "EST.",
+    note: "Allowance $0 — Belize engineer / factory drawings to confirm.",
+  },
+  {
+    item: "13.03",
+    division: "Preliminaries — allowances to confirm",
+    divisionNo: "13",
+    description: "Approvals and permit fees",
+    unit: "ls",
+    perHome: per(0),
+    rate: 0,
+    lump: true,
+    status: "EST.",
+    note: "Allowance $0 — confirm whether the Government carries permits.",
+  },
+  {
+    item: "13.04",
+    division: "Preliminaries — allowances to confirm",
+    divisionNo: "13",
+    description: "Temporary site facilities",
+    unit: "ls",
+    perHome: per(0),
+    rate: 0,
+    lump: true,
+    status: "EST.",
+    note: "Allowance $0 — compound, welfare, fencing of the works.",
+  },
+  {
+    item: "13.05",
+    division: "Preliminaries — allowances to confirm",
+    divisionNo: "13",
+    description: "Customs and port handling (beyond 02.02)",
+    unit: "ls",
+    perHome: per(0),
+    rate: 0,
+    lump: true,
+    status: "EST.",
+    note: "Allowance $0 — duties are in 02.02; this is broker / port handling if extra.",
+  },
+  {
+    item: "13.06",
+    division: "Preliminaries — allowances to confirm",
+    divisionNo: "13",
+    description: "Insurance — cargo + contractors’ all-risk",
+    unit: "ls",
+    perHome: per(0),
+    rate: 0,
+    lump: true,
+    status: "EST.",
+    note: "Allowance $0 — Belize broker to confirm.",
+  },
+  {
+    item: "13.07",
+    division: "Preliminaries — allowances to confirm",
+    divisionNo: "13",
+    description: "Testing, commissioning and as-builts (beyond village electrical 05.06)",
+    unit: "ls",
+    perHome: per(0),
+    rate: 0,
+    lump: true,
+    status: "EST.",
+    note: "Allowance $0. Village electrical closeout is 05.06. This is solar, water and WWTP closeout if not already in those lumps.",
+  },
+  {
+    item: "13.08",
+    division: "Preliminaries — allowances to confirm",
+    divisionNo: "13",
+    description: "Warranties and 12-month defects support",
+    unit: "ls",
+    perHome: per(0),
+    rate: 0,
+    lump: true,
+    status: "EST.",
+    note: "Allowance $0 — factory module warranty + Belize defects attendance to confirm.",
   },
 ];
 
@@ -597,7 +736,7 @@ export type PriceOptions = {
   offScopes?: Iterable<ScopeId>;
   offItems?: Iterable<string>;
   pricingMode?: PricingMode;
-  /** Belize set-aside / distributor rate on shell list. Default 10%. */
+  /** Volume discount / licensed distributor margin on shell list. Default 10%. */
   commissionRate?: number;
 };
 
@@ -638,13 +777,13 @@ export function priceLines(mix: Mix, options: PriceOptions = {}): PricedLine[] {
       raw.item === "01.02"
         ? {
             ...raw,
-            description: `Belize set-aside / distributor — ${pctLabel(commission)} of shell list`,
+            description: `Government volume discount / distributor margin — ${pctLabel(commission)} of shell list`,
             rate: rates(
               -STYLES.br1.factoryList * commission,
               -STYLES.br2.factoryList * commission,
               -STYLES.br3.factoryList * commission,
             ),
-            note: `On the shell list only. ${pctLabel(commission)} of KDK list. KDK Hong Kong path = discount to the Government. Licensed Belizean distributor path = set-aside / seller margin. Not on slabs, solar, or village works.`,
+            note: `On the shell list only. ${pctLabel(commission)} of KDK list. KDK Hong Kong path = Government volume discount. Licensed Belizean distributor path = that company’s margin on the homes. Not on slabs, solar, or village works.`,
           }
         : raw;
     const qty = { br1: 0, br2: 0, br3: 0 } as Record<StyleId, number>;
@@ -903,6 +1042,14 @@ export function computeTotals(mix: Mix, options: PriceOptions = {}): Totals {
 
 export const CONTINGENCY_RATE = CONTINGENCY;
 export const PM_RATE = PM;
+
+/** Fixed package totals for the header — not the live playground. */
+export function packageTotals(mix: Mix, commissionRate?: number) {
+  const opts = { commissionRate };
+  const installed = computeTotals(mix, { ...opts, offScopes: offScopesForPreset("village") });
+  const turnkey = computeTotals(mix, { ...opts, offScopes: offScopesForPreset("utilities") });
+  return { installed, turnkey };
+}
 
 /** Moonlight Bay 2-home PT211222 working figures — for the comparison view. */
 export const MOONLIGHT = {

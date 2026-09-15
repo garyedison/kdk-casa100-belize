@@ -2,7 +2,7 @@ import { Link, useRouterState } from "@tanstack/react-router";
 import { cn } from "@/lib/utils";
 import { usd } from "@/lib/utils";
 import { useVillage } from "@/lib/store";
-import { computeTotals } from "@/lib/data/boq";
+import { packageTotals } from "@/lib/data/boq";
 import { mixTotal } from "@/lib/data/homes";
 
 const NAV = [
@@ -13,17 +13,13 @@ const NAV = [
   { to: "/civic", label: "Plaza" },
   { to: "/scopes", label: "Scopes" },
   { to: "/boq", label: "BOQ" },
-  { to: "/compare", label: "vs Moonlight Bay" },
 ] as const;
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const mix = useVillage((s) => s.mix);
-  const offScopes = useVillage((s) => s.offScopes);
-  const offItems = useVillage((s) => s.offItems);
-  const pricingMode = useVillage((s) => s.pricingMode);
   const commissionRate = useVillage((s) => s.commissionRate);
-  const totals = computeTotals(mix, { offScopes, offItems, pricingMode, commissionRate });
+  const packages = packageTotals(mix, commissionRate);
   const ok = mixTotal(mix) === 100;
 
   return (
@@ -62,12 +58,15 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             })}
           </nav>
 
-          <div className="ml-auto hidden items-baseline gap-2 rounded-[12px] bg-paper-2 px-3 py-2 lg:flex">
-            <span className="text-[11px] uppercase tracking-wide text-muted">All-in</span>
+          <div className="ml-auto hidden items-baseline gap-3 rounded-[12px] bg-paper-2 px-3 py-2 lg:flex">
+            <span className="text-[11px] uppercase tracking-wide text-muted">Installed homes</span>
             <span className="font-display text-lg font-semibold tabular leading-none">
-              {usd(totals.unfurnishedAllIn)}
+              {usd(packages.installed.unfurnishedAllIn)}
             </span>
-            <span className="text-[11px] text-muted">this scope</span>
+            <span className="text-[11px] uppercase tracking-wide text-muted">Turnkey village</span>
+            <span className="font-display text-lg font-semibold tabular leading-none">
+              {usd(packages.turnkey.unfurnishedAllIn)}
+            </span>
           </div>
         </div>
         <nav className="flex gap-1 overflow-x-auto border-t border-line px-3 py-2 md:hidden">
@@ -98,7 +97,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         Prepared by KDK Technology Ltd for Mr. Ian Courtenay, Senior Investment & E-Governance
         Officer, Office of the Prime Minister, Sir Edney Cain Building, Belmopan. Working draft for
         government review — not a contract. USD. KDK list. Distributor net is 10% off
-        the three models on a 100-home order. Assembly 42 / 80 / 80 hrs by style. Solar install hours TBD.
+        the three models on a 100-home order. Assembly 42 / 80 / 80 hrs by style. Solar install hours ESTIMATED.
       </footer>
     </div>
   );

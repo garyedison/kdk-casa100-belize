@@ -102,7 +102,7 @@ function ComparePage() {
               <li>Water loop, WWTP, laterals</li>
               <li>Avenues, drainage, gatehouse, civic pavilion</li>
               <li>8% contingency instead of $20k flat</li>
-              <li>Belize set-aside on shell list (default 10%; officials can model 5–20%)</li>
+              <li>Government volume discount / licensed distributor margin on shell list (default 10%)</li>
             </ul>
           </div>
           <div className="rounded-[18px] bg-paper-2 p-5 shadow-card">

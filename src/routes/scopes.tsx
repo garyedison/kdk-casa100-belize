@@ -19,9 +19,10 @@ function ScopesPage() {
           only is FOB China port: pickup at the port, no ocean, no inland. Kitchen, toilet and
           shower are in the module. Split air is house MEP, not Homes only. Village roads, village
           power, potable water and the WWTP (wastewater treatment plant — shared sewage plant) are
-          not in Homes only and <strong>not in Full village</strong>. Full village is unfurnished
-          homes with <strong>no extra civil</strong> (no roads, village power, water, WWTP, trees,
-          plaza, or gate). Add those on this page.{" "}
+          not in Homes only and <strong>not in Installed homes</strong>. Installed homes is
+          unfurnished houses with <strong>no village civil</strong>.{" "}
+          <strong>Turnkey village</strong> adds roads, village power, water and WWTP — not the plaza.
+          Plaza, trees and gate stay optional civic extras.{" "}
           <Link to="/civic" className="text-kdk underline-offset-4 hover:underline">
             Plaza rendering
           </Link>

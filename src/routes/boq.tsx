@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell } from "@/components/layout/AppShell";
 import { computeTotals, CONTINGENCY_RATE, PM_RATE, type PricedLine } from "@/lib/data/boq";
-import { ALL_IN, ASSEMBLY, CAMPAIGN_RATES, EMPLOYMENT, LABOUR_NOTES } from "@/lib/data/labour";
+import { ALL_IN, ASSEMBLY, CHINA_CREW, EMPLOYMENT, LABOUR_NOTES, SOLAR_INSTALL } from "@/lib/data/labour";
 import { STYLE_LIST, type StyleId } from "@/lib/data/homes";
 import { useVillage } from "@/lib/store";
 import { usd, num } from "@/lib/utils";
@@ -51,18 +51,10 @@ function BoqPage() {
           Government village BOQ
         </h1>
         <p className="mt-2 max-w-3xl text-ink-soft">
-          Hide a line to drop it from the all-in. The header total updates. For package-level
-          play — homes only, pads & set, house MEP — use the{" "}
-          <Link to="/scopes" className="text-kdk underline-offset-4 hover:underline">
-            scope playground
-          </Link>
-          . Module assembly hours are filled from the supplier sheets (42 / 80 / 80 hrs). Solar
-          install hours remain TBD. The Belize set-aside (default 10% of shell list) can be
-          modelled at 5 / 15 / 20% on the{" "}
-          <Link to="/scopes" className="text-kdk underline-offset-4 hover:underline">
-            calculator
-          </Link>
-          .
+          Hide a line to drop it from this playground total. Header always shows Installed homes
+          and Turnkey village. Module assembly (Div 11.01) is 42 / 80 / 80 hrs at $280/worker-day.
+          Solar install hours are estimated. Government volume discount (default 10% of shell list)
+          can be modelled on Scopes.
         </p>
         <p className="mt-3 text-sm">
           <a
@@ -77,14 +69,14 @@ function BoqPage() {
 
         <div className="mt-6 grid gap-4 lg:grid-cols-[minmax(0,1fr)_300px]">
           <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-            <Stat k="Works (unfurnished)" v={usd(totals.unfurnishedWorks)} />
+            <Stat k="Works (this playground)" v={usd(totals.unfurnishedWorks)} />
             <Stat k={`Contingency ${CONTINGENCY_RATE * 100}%`} v={usd(totals.contingency)} />
             <Stat k={`PM ${PM_RATE * 100}%`} v={usd(totals.pm)} />
-            <Stat k="All-in unfurnished" v={usd(totals.unfurnishedAllIn)} />
+            <Stat k="All-in (this playground)" v={usd(totals.unfurnishedAllIn)} />
             <Stat k="FF&E upgrade" v={usd(totals.ffe)} />
             <Stat k="Furnished all-in" v={usd(totals.furnishedAllIn)} />
             <Stat k="Hidden works" v={usd(totals.hiddenWorks)} />
-            <Stat k="vs full village" v={`−${usd(totals.savingsVsFull)}`} />
+            <Stat k="vs all scopes on" v={`−${usd(totals.savingsVsFull)}`} />
           </div>
           <MixControls />
         </div>
@@ -185,31 +177,40 @@ function BoqPage() {
                   ))}
                   <td className="px-3 py-2 font-medium tabular">{usd(totals.solarProject.kit)}</td>
                 </tr>
-                <tr className="border-t border-line bg-tbd/10">
+                <tr className="border-t border-line">
                   <td className="px-3 py-2">
                     <span className="font-medium">
-                      {EMPLOYMENT.solar.item} {EMPLOYMENT.solar.title}
+                      {EMPLOYMENT.solar.item} {EMPLOYMENT.solar.title} — ESTIMATED
                     </span>
                     <span className="mt-1 block text-[11px] text-muted">
-                      Not in the kit. Hours TBD. Mixed crew {usd(EMPLOYMENT.solar.rate, 2)}/hr EST. —
-                      Belizean electrician {usd(EMPLOYMENT.solar.belizeRate, 2)} · China PV tech{" "}
-                      {usd(EMPLOYMENT.solar.chinaRate, 2)} on-site.
+                      Not in the kit. {SOLAR_INSTALL.hours.br1} / {SOLAR_INSTALL.hours.br2} /{" "}
+                      {SOLAR_INSTALL.hours.br3} hrs ESTIMATED. Local quote in a few days. Mixed crew{" "}
+                      {usd(SOLAR_INSTALL.hourly, 2)}/hr. Grid-tie — needs village power (Turnkey
+                      village).
                     </span>
                     <MixBar belize={EMPLOYMENT.solar.belizePct} china={EMPLOYMENT.solar.chinaPct} />
                   </td>
                   {ids.map((id) => (
                     <td key={id} className="px-3 py-2 tabular">
-                      <span className="block text-[11px] text-muted">hrs TBD</span>
-                      {usd(EMPLOYMENT.solar.rate, 2)}/hr
+                      <span className="block text-[11px] text-muted">
+                        {SOLAR_INSTALL.hours[id]} hrs EST.
+                      </span>
+                      {usd(SOLAR_INSTALL.hourly, 2)}/hr
                     </td>
                   ))}
-                  <td className="px-3 py-2 font-medium">TBD</td>
+                  <td className="px-3 py-2 font-medium tabular">
+                    {usd(
+                      mix.br1 * SOLAR_INSTALL.hours.br1 * SOLAR_INSTALL.hourly +
+                        mix.br2 * SOLAR_INSTALL.hours.br2 * SOLAR_INSTALL.hourly +
+                        mix.br3 * SOLAR_INSTALL.hours.br3 * SOLAR_INSTALL.hourly,
+                    )}
+                  </td>
                 </tr>
                 <tr className="border-t border-line bg-tbd/10">
                   <td className="px-3 py-2" colSpan={4}>
                     04.05 Battery energy storage — <span className="font-medium">not included</span>.
-                    Arrays are grid-tie only. No LiFePO4, no backup islanding. Rate left blank if the
-                    Government later elects storage.
+                    Arrays are grid-tie only. Need village electrical (Turnkey village) or a later
+                    battery. No LiFePO4 in this proposal.
                   </td>
                   <td className="px-3 py-2 font-medium">EXCL.</td>
                 </tr>
@@ -288,12 +289,12 @@ function BoqPage() {
           <div className="mb-3">
             <p className="text-[11px] uppercase tracking-wide text-muted">Division 11 · labour</p>
             <h2 className="font-display text-2xl font-semibold">
-              Assembly hours quoted · solar hours TBD
+              Assembly hours quoted · solar hours ESTIMATED
             </h2>
             <p className="mt-1 max-w-3xl text-sm text-ink-soft">
-              Module assembly hours and days are from the supplier install sheets (10-hour days at
-              US${ASSEMBLY.dayRate}/day). Solar install hours stay blank until local quotes.{" "}
-              {LABOUR_NOTES.burden} {LABOUR_NOTES.chinaOnSite}
+              Module assembly at US${ASSEMBLY.dayRate}/worker-day — conservative if Belizean skilled
+              labour is expensive. Solar install hours are estimated pending a local quote in a few
+              days. {LABOUR_NOTES.burden} {LABOUR_NOTES.chinaOnSite}
             </p>
           </div>
           <div className="overflow-x-auto rounded-[18px] bg-paper shadow-card">
@@ -331,21 +332,30 @@ function BoqPage() {
                     )}
                   </td>
                 </tr>
-                <tr className="border-t border-line bg-tbd/10">
+                <tr className="border-t border-line">
                   <td className="px-3 py-2 font-mono text-xs">11.02</td>
                   <td className="px-3 py-2">
-                    Solar PV + inverter install
+                    Solar PV + inverter install — ESTIMATED
                     <span className="block text-[11px] text-muted">
-                      {EMPLOYMENT.solar.belizeCrew}. {EMPLOYMENT.solar.chinaRole}
+                      {EMPLOYMENT.solar.belizeCrew}. {EMPLOYMENT.solar.chinaRole} Local quote in a
+                      few days.
                     </span>
                     <MixBar belize={EMPLOYMENT.solar.belizePct} china={EMPLOYMENT.solar.chinaPct} />
                   </td>
                   <td className="px-3 py-2 text-muted">hr / home</td>
-                  <td className="px-3 py-2">TBD</td>
-                  <td className="px-3 py-2 tabular font-medium">
-                    {usd(CAMPAIGN_RATES.solarInstall, 2)} EST.
+                  <td className="px-3 py-2 tabular">
+                    {SOLAR_INSTALL.hours.br1} / {SOLAR_INSTALL.hours.br2} / {SOLAR_INSTALL.hours.br3}
                   </td>
-                  <td className="px-3 py-2 font-medium">TBD</td>
+                  <td className="px-3 py-2 tabular font-medium">
+                    {usd(SOLAR_INSTALL.hourly, 2)} EST.
+                  </td>
+                  <td className="px-3 py-2 font-medium tabular">
+                    {usd(
+                      mix.br1 * SOLAR_INSTALL.hours.br1 * SOLAR_INSTALL.hourly +
+                        mix.br2 * SOLAR_INSTALL.hours.br2 * SOLAR_INSTALL.hourly +
+                        mix.br3 * SOLAR_INSTALL.hours.br3 * SOLAR_INSTALL.hourly,
+                    )}
+                  </td>
                 </tr>
                 <tr className="border-t border-line">
                   <td className="px-3 py-2 font-mono text-xs">11.04</td>
@@ -357,13 +367,23 @@ function BoqPage() {
                   <td className="px-3 py-2">—</td>
                   <td className="px-3 py-2 font-medium">in 11.01</td>
                 </tr>
-                <tr className="border-t border-line bg-tbd/10">
-                  <td className="px-3 py-2 font-mono text-xs">11.05</td>
-                  <td className="px-3 py-2">Duration — solar install</td>
-                  <td className="px-3 py-2 text-muted">day / home</td>
-                  <td className="px-3 py-2">TBD</td>
+                <tr className="border-t border-line">
+                  <td className="px-3 py-2 font-mono text-xs">11.03</td>
+                  <td className="px-3 py-2">China technician mobilisation (travel)</td>
+                  <td className="px-3 py-2 text-muted">ls</td>
+                  <td className="px-3 py-2">1</td>
                   <td className="px-3 py-2">—</td>
-                  <td className="px-3 py-2 font-medium">TBD</td>
+                  <td className="px-3 py-2 font-medium tabular">{usd(CHINA_CREW.mobilize4)}</td>
+                </tr>
+                <tr className="border-t border-line">
+                  <td className="px-3 py-2 font-mono text-xs">11.05</td>
+                  <td className="px-3 py-2">Duration — solar install — ESTIMATED</td>
+                  <td className="px-3 py-2 text-muted">day / home</td>
+                  <td className="px-3 py-2 tabular">
+                    {SOLAR_INSTALL.days.br1} / {SOLAR_INSTALL.days.br2} / {SOLAR_INSTALL.days.br3}
+                  </td>
+                  <td className="px-3 py-2">—</td>
+                  <td className="px-3 py-2 font-medium">in 11.02</td>
                 </tr>
               </tbody>
             </table>
@@ -525,8 +545,7 @@ function BoqPage() {
               </tr>
               <tr className="border-t border-line bg-paper-2">
                 <td className="px-3 py-2" colSpan={6}>
-                  Contingency {CONTINGENCY_RATE * 100}% (campaign — not Moonlight Bay’s $20,000 flat
-                  per home)
+                  Contingency {CONTINGENCY_RATE * 100}% on works in this playground
                 </td>
                 <td className="px-3 py-2 tabular">{usd(totals.contingency)}</td>
                 <td />
@@ -542,7 +561,7 @@ function BoqPage() {
               </tr>
               <tr className="border-t-2 border-kdk bg-kdk text-kdk-fg">
                 <td className="px-3 py-3 font-medium" colSpan={3}>
-                  ALL-IN UNFURNISHED (assembly labour in · solar labour TBD · no battery)
+                  ALL-IN UNFURNISHED (this playground · solar labour ESTIMATED · no battery)
                 </td>
                 {ids.map((id) => (
                   <td key={id} className="px-3 py-3 tabular font-medium">
@@ -572,12 +591,11 @@ function BoqPage() {
         </div>
 
         <p className="mt-4 max-w-3xl text-xs text-muted">
-          Status key: QUOTED = list price, freight formula, or supplier assembly hours. EST. =
-          campaign estimate. INCL. = already inside the module (kitchen, toilet, shower). EXCL. =
-          battery storage — not in this proposal. TBD = solar install hours and remaining duration.
-          labour, man-hours, duration — 11.01 pad install and 11.02 solar install held for rates next
-          week. HS 9406.20 steel modular; Belize duty to be confirmed with broker. Working draft — not a
-          client contract.
+          Status key: QUOTED = KDK list, freight, or pad assembly hours. EST. = campaign estimate
+          (solar hours labelled ESTIMATED pending a local quote). INCL. = already inside the module
+          or a parent lump. EXCL. = battery — not in this proposal. Div 13 preliminaries are $0 until
+          the Belize subcontractor confirms. HS 9406.20 steel modular. Working draft — not a client
+          contract.
         </p>
       </div>
     </AppShell>

@@ -48,11 +48,11 @@ export function ScopePlayground() {
           <p className="mt-2 text-sm text-kdk-fg/85">
             {totals.savingsVsFull > 0 ? (
               <>
-                {usd(totals.savingsVsFull)} lower than the full unfurnished village (
+                {usd(totals.savingsVsFull)} lower than all optional scopes on (
                 {usd(totals.fullUnfurnishedAllIn)}).
               </>
             ) : (
-              <>Full unfurnished village — {usd(totals.fullUnfurnishedAllIn)}.</>
+              <>All optional scopes on — {usd(totals.fullUnfurnishedAllIn)}.</>
             )}
             {ffeOn ? ` Plus FF&E ${usd(totals.ffe)} → ${usd(totals.furnishedAllIn)} furnished.` : ""}
           </p>
@@ -73,7 +73,7 @@ export function ScopePlayground() {
                     <li key={x.id}>• {x.label}</li>
                   ))
                 ) : (
-                  <li>Homes campaign only — no civil, no civic, no furniture</li>
+                  <li>Installed homes only — no civil, no civic, no furniture</li>
                 )}
               </ul>
             </div>
@@ -167,24 +167,23 @@ export function ScopePlayground() {
         {presetId === "village" ? (
           <div className="mt-4 rounded-lg border border-kdk/30 bg-paper-2 px-4 py-4 text-sm">
             <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-kdk">
-              Full village = unfurnished, no extra civil
+              Installed homes = unfurnished, no village civil
             </p>
             <ul className="mt-2 list-disc space-y-1 pl-5 text-ink-soft">
               <li>
                 <strong className="text-ink">In this price:</strong> 100 homes landed, slabs, set,
-                house MEP, split air, rooftop solar equipment, interior make-good, range + fridge.
-                No furniture.
+                house MEP, split air, rooftop solar equipment, estimated solar install, interior
+                make-good, range + fridge. No furniture.
               </li>
               <li>
                 <strong className="text-ink">NOT in this price:</strong> village roads, village
-                power to the lots, potable water mains, WWTP (sewage plant), street trees, plaza,
-                pavilion, or gatehouse.
+                power, potable water, WWTP, street trees, plaza, pavilion, or gatehouse.
               </li>
               <li>
-                To add civil, use <strong className="text-ink">Add village civil</strong>. To add
-                the plaza, use{" "}
+                To add civil, use <strong className="text-ink">Turnkey village</strong>. Plaza stays
+                off. To add the plaza, use{" "}
                 <Link to="/civic" className="text-kdk underline-offset-4 hover:underline">
-                  Village civil + civic extras
+                  Turnkey + civic extras
                 </Link>
                 .
               </li>
@@ -197,8 +196,9 @@ export function ScopePlayground() {
         <p className="text-[11px] uppercase tracking-wide text-muted">Who sells to the Government</p>
         <h2 className="font-display text-2xl font-semibold">Hong Kong KDK, or a licensed Belizean distributor</h2>
         <p className="mt-1 max-w-3xl text-sm text-ink-soft">
-          Default is 10% of the shell list on a 100-home order. Officials can change that rate on
-          the calculator. The set-aside is on the homes only, not on slabs, MEP, or village works.
+          Default is 10% of the shell list on a 100-home order. Pricing-desk rate lives on the
+          calculator below (internal). The volume discount / distributor margin is on the homes
+          only, not on slabs, MEP, or village works.
         </p>
         <div className="mt-4">
           <CommissionCalculator />
@@ -229,7 +229,7 @@ export function ScopePlayground() {
           <Stat k="List price (homes)" v={usd(totals.factoryList)} />
           <Stat k="KDK invoices (net)" v={usd(totals.kdkNetHomes)} />
           <Stat
-            k={`Belize set-aside ${Math.round(commissionRate * 100)}%`}
+            k={`${Math.round(commissionRate * 100)}% volume discount / margin`}
             v={usd(totals.partnerMargin)}
           />
           <Stat
@@ -247,14 +247,14 @@ export function ScopePlayground() {
             the distributor {usd(totals.kdkInvoice)} (homes at net, same switched-on scopes). The
             Government pays the Belizean seller {usd(totals.govPay)}. The difference{" "}
             {usd(totals.govPay - totals.kdkInvoice)} is the {Math.round(commissionRate * 100)}%
-            set-aside on the homes.
+            licensed distributor margin on the homes.
           </p>
         ) : (
           <p className="mt-3 rounded-md bg-paper-2 px-4 py-3 text-sm text-ink-soft">
             Contract path: Government ↔ KDK Technology Ltd (Hong Kong). The Government pays KDK the
             distributor net. No Belizean seller is in the chain, so that{" "}
-            {Math.round(commissionRate * 100)}% is a campaign discount rather than a local
-            set-aside.
+            {Math.round(commissionRate * 100)}% is a Government volume discount rather than a local
+            distributor margin.
           </p>
         )}
       </section>
@@ -264,7 +264,7 @@ export function ScopePlayground() {
         <h2 className="font-display text-2xl font-semibold">Tap a scope to hide it</h2>
         <p className="mt-1 max-w-3xl text-sm text-ink-soft">
           Off = that package is not in KDK’s price. The all-in above drops by that amount (plus
-          on-costs if they are on). Solar install hours stay TBD.
+          on-costs if they are on). Solar install hours are estimated.
         </p>
         {SCOPE_GROUPS.map((group) => (
           <div key={group.id} className="mt-6">
@@ -283,13 +283,13 @@ export function ScopePlayground() {
                   <li>
                     <strong className="text-ink">Roads, village power, water, WWTP, trees, plaza,
                     gate</strong>{" "}
-                    are <em>not</em> in Full village. The Full village price is the homes campaign
-                    only.
+                    are <em>not</em> in Installed homes. Turnkey village adds roads, village power,
+                    water and WWTP — not plaza, trees or gate.
                   </li>
                   <li>
-                    Turn civil on with <strong className="text-ink">Add village civil</strong>. Add
+                    Turn civil on with <strong className="text-ink">Turnkey village</strong>. Add
                     gate / plaza / trees with{" "}
-                    <strong className="text-ink">Village civil + civic extras</strong>.{" "}
+                    <strong className="text-ink">Turnkey + civic extras</strong>.{" "}
                     <Link to="/civic" className="text-kdk underline-offset-4 hover:underline">
                       Plaza rendering
                     </Link>

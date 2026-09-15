@@ -108,7 +108,7 @@ export const CAMPAIGN_RATES = {
   solarInstall: ALL_IN.electrical.mixed,
 } as const;
 
-/** Supplier assembly: 10-hour days at US$280/day → US$28/hr. */
+/** Pad assembly: 10-hour days at US$280/worker-day → US$28/hr. Conservative if Belizean skilled labour is expensive. */
 export const ASSEMBLY = {
   hoursPerDay: 10,
   dayRate: 280,
@@ -118,7 +118,22 @@ export const ASSEMBLY = {
   cost: { br1: 1_176, br2: 2_240, br3: 2_240 } as const,
 };
 
-/** Recommended crew mix and local-jobs pledge for the Government. */
+/** Estimated solar roof hours — Belize electrician quote due in a few days. */
+export const SOLAR_INSTALL = {
+  hours: { br1: 16, br2: 20, br3: 24 } as const,
+  days: { br1: 1.6, br2: 2, br3: 2.4 } as const,
+  hourly: CAMPAIGN_RATES.solarInstall,
+  estimated: true,
+  note: "Estimated. Local electrician hours in a few days.",
+} as const;
+
+/** Estimated furniture set labour — only if FF&E is taken. */
+export const FFE_INSTALL = {
+  hours: 8,
+  rate: 180,
+  estimated: true,
+} as const;
+
 export const EMPLOYMENT = {
   campaignMonths: 12,
   campaignSpan: "12 months or longer",

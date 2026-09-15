@@ -2,7 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/layout/AppShell";
 import { STYLE_LIST } from "@/lib/data/homes";
 import { computeTotals } from "@/lib/data/boq";
-import { SHELL_BLURB, SHELL_IN, SHELL_OUT } from "@/lib/data/shell";
+import { SHELL_BLURB, SHELL_IN, SHELL_OUT, FACTORY_VS_LOCAL } from "@/lib/data/shell";
+import { offScopesForPreset } from "@/lib/data/scopes";
 import { useVillage } from "@/lib/store";
 import { usd, num } from "@/lib/utils";
 import { FloorPlan } from "@/components/catalog/FloorPlan";
@@ -12,7 +13,10 @@ export const Route = createFileRoute("/catalog")({ component: CatalogPage });
 function CatalogPage() {
   const mix = useVillage((s) => s.mix);
   const commissionRate = useVillage((s) => s.commissionRate);
-  const totals = computeTotals(mix, { commissionRate });
+  const totals = computeTotals(mix, {
+    commissionRate,
+    offScopes: offScopesForPreset("village"),
+  });
 
   return (
     <AppShell>
@@ -58,11 +62,34 @@ function CatalogPage() {
           </div>
         </div>
 
+        <div className="mt-8 grid gap-4 md:grid-cols-2">
+          <div className="rounded-[18px] bg-kdk px-5 py-5 text-kdk-fg shadow-card">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-kdk-fg/70">
+              Factory-finished (in the box)
+            </p>
+            <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-kdk-fg/90">
+              {FACTORY_VS_LOCAL.factory.map((i) => (
+                <li key={i}>{i}</li>
+              ))}
+            </ul>
+          </div>
+          <div className="rounded-[18px] bg-paper-2 px-5 py-5 shadow-card">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-kdk">
+              Completed in Belize (BOQ add-ons)
+            </p>
+            <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-ink-soft">
+              {FACTORY_VS_LOCAL.belize.map((i) => (
+                <li key={i}>{i}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
         <h2 className="mt-12 font-display text-2xl font-semibold">The three styles</h2>
         <p className="mt-2 max-w-2xl text-sm text-ink-soft">
           Same shell kit on every home. Split air, solar equipment, range and fridge are Belize
           lines. Assembly hours (42 / 80 / 80) are quoted if KDK sets the box — not in Homes only.
-          Solar install hours TBD. Battery and furniture are not included.
+          Solar install hours are estimated. Battery and furniture are not included.
         </p>
 
         <div className="mt-8 space-y-14">
@@ -98,7 +125,7 @@ function CatalogPage() {
                     <dl className="mt-5 grid grid-cols-2 gap-3 text-sm">
                       <Row k="Shell list (FOB China)" v={usd(s.factoryList)} />
                       <Row
-                        k={`Net after ${Math.round(commissionRate * 100)}% set-aside`}
+                        k={`Net after ${Math.round(commissionRate * 100)}% volume discount`}
                         v={usd(s.factoryList * (1 - commissionRate))}
                       />
                       <Row k="Kitchen / bath in shell" v="Yes — cabinet, sink, toilet, shower" />

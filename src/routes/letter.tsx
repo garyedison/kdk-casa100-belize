@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell } from "@/components/layout/AppShell";
 import { Button } from "@/components/ui/button";
 import { TRANSMITTAL, mailingBlock, financeMailingBlock } from "@/lib/data/transmittal";
-import { computeTotals } from "@/lib/data/boq";
+import { computeTotals, packageTotals } from "@/lib/data/boq";
 import { DEFAULT_MIX, STYLE_LIST, TOTAL_HOMES } from "@/lib/data/homes";
 import { offScopesForPreset } from "@/lib/data/scopes";
 import { usd } from "@/lib/utils";
@@ -12,6 +12,7 @@ import { useState } from "react";
 export const Route = createFileRoute("/letter")({ component: LetterPage });
 
 const totals = computeTotals(DEFAULT_MIX, { offScopes: offScopesForPreset("village") });
+const packages = packageTotals(DEFAULT_MIX);
 
 function LetterPage() {
   const [copied, setCopied] = useState<"opm" | "mof" | null>(null);
@@ -99,19 +100,20 @@ function LetterPage() {
               net on the 100-home order. The Government may contract KDK Technology Ltd (Hong Kong)
               directly at that net, or contract a licensed Belizean distributor who buys from KDK at
               net and sells to the Government at list — so a Belizean entity is the seller and keeps
-              the 10% on the homes (officials can model 5%, 15% or 20% on the set-aside calculator).
-              Officials can hide scopes on the attached playground to see a
-              homes-only floor, pads-and-set, house MEP, or the full village (unfurnished, no extra
-              civil). Village roads, village power, water, WWTP, trees, plaza and gatehouse are
-              optional add-ons — not in that all-in. Solar kit prices are
-              equipment only. Module assembly (Div 11.01) is the crew on the pad: 42 / 80 / 80 man-hours
-              (4.2 / 8 / 8 days) at US$280 per worker-day. A 2-bed home is four workers, two days
-              (Div 11.01). Round-trip for four is a one-time US$43,520; at 20 homes labour plus
-              travel is about US$2,736 per home — do not add that on top of Div 11.01. After the
+              the 10% licensed distributor margin on the homes. Officials can hide scopes on the
+              attached playground to see a homes-only floor, pads-and-set, house MEP,{" "}
+              <strong>Installed homes</strong> (unfurnished, no village civil) or{" "}
+              <strong>Turnkey village</strong> (installed homes plus roads, village power, potable
+              water and WWTP — plaza and trees stay optional). Solar kit prices are
+              equipment only; install hours are estimated. Module assembly (Div 11.01) is the crew on the pad: 42 / 80 / 80 man-hours
+              (4.2 / 8 / 8 days) at US$280 per worker-day — conservative if Belizean skilled labour
+              is expensive. A 2-bed home is four workers, two days
+              (Div 11.01). Round-trip for four is a one-time US$43,520 on Div 11.03; at 20 homes labour plus
+              travel is about US$2,736 per home — do not add that table on top of Div 11.01. After the
               first two trainer pads (two Chinese + two Belizean helpers, 7–10 days), Belizeans are
-              the standing workforce (80% Belizean / 20% China tech). Solar install (11.02) is
-              estimated at US$19.40/hr mixed — 70% Belizean electricians; those hours are still
-              blank. KDK recommends Belizean crews as the standing workforce for 12 months or
+              the standing workforce (80% Belizean / 20% China tech). Solar install (Div 11.02) is
+              estimated at US$19.40/hr mixed — 70% Belizean electricians; hours are estimated pending
+              a local quote in a few days. KDK recommends Belizean crews as the standing workforce for 12 months or
               longer; Chinese technicians train the first pads and stand down. This is a working
               draft for review — not a contract.
             </p>
@@ -121,10 +123,10 @@ function LetterPage() {
             {[
               { k: "Homes", v: `${TOTAL_HOMES}` },
               { k: "Submitted mix", v: `${DEFAULT_MIX.br1} / ${DEFAULT_MIX.br2} / ${DEFAULT_MIX.br3}` },
-              { k: "Unfurnished all-in (no extra civil)", v: usd(totals.unfurnishedAllIn) },
-              { k: "Per ¼-acre lot (avg)", v: usd(totals.unfurnishedAllIn / totals.homeCount) },
+              { k: "Installed homes (unfurnished)", v: usd(packages.installed.unfurnishedAllIn) },
+              { k: "Turnkey village (civil on, plaza off)", v: usd(packages.turnkey.unfurnishedAllIn) },
+              { k: "Per ¼-acre lot — installed", v: usd(packages.installed.unfurnishedAllIn / totals.homeCount) },
               { k: "FF&E upgrade (optional)", v: usd(totals.ffe) },
-              { k: "Furnished all-in", v: usd(totals.furnishedAllIn) },
               { k: "Belizean jobs", v: "12 months or longer" },
               { k: "Pad-set mix", v: "80% Belizean / 20% China tech" },
               { k: "Solar-install mix", v: "70% Belizean / 30% China PV" },
@@ -137,9 +139,9 @@ function LetterPage() {
           </dl>
           <p className="mt-2 text-[12px] text-muted">
             Mix = Compact Terrace / Hip Cottage / Family Gable. USD. Contingency 8% and project
-            management 5.5% sit on unfurnished works. This all-in is Full village unfurnished: no
-            extra civil — no roads, village power, water mains, WWTP, trees, plaza, or gatehouse.
-            Those packages are optional on the scope playground.
+            management 5.5% sit on unfurnished works. Installed homes = landed, set, house MEP, solar
+            equipment — no roads, village power, water, WWTP, plaza or furniture. Turnkey village =
+            installed homes plus that civil infrastructure. Plaza stays optional.
           </p>
 
           <table className="mt-8 w-full text-sm">
@@ -172,9 +174,8 @@ function LetterPage() {
 
           <div className="mt-8 space-y-4 text-[15px] leading-relaxed">
             <p>
-              enclosed: an interactive 10 × 10 plat, the home catalog, a priced
-              bill of quantities written as a greenfield village, and a side-by-side against the
-              two-home Moonlight Bay enquiry so the campaign rates are transparent.
+              enclosed: an interactive 10 × 10 plat, the home catalog, and a priced
+              bill of quantities written as a greenfield village.
             </p>
             <p>
               We would welcome the chance to present the package at Sir Edney Cain Building at a time
@@ -198,9 +199,9 @@ function LetterPage() {
               ))}
             </ul>
             <p className="mt-4 text-[12px] text-muted">
-              Enclosures: site plat · catalog · priced BOQ · Moonlight Bay comparison. Labour and
-              duration lines left open. Not an offer capable of acceptance until a purchase order is
-              issued.
+              Enclosures: site plat · catalog · priced BOQ. Solar install hours are estimated.
+              Preliminaries (surveys, design, permits, insurance) are shown at $0 until confirmed.
+              Not an offer capable of acceptance until a purchase order is issued.
             </p>
           </section>
         </article>
