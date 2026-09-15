@@ -165,3 +165,104 @@ export const LABOUR_NOTES = {
   chinaOnSite:
     "A Chinese crew in Guangdong is cheap. The same person on a Belmopan pad carries airfare, work permit, lodging and per diem — typically 6–8× the domestic rate.",
 } as const;
+
+/**
+ * Factory-net Chinese pad crew (no KDK markup).
+ * 4 workers, 2 days per home is the standing method.
+ * Round-trip ~$10,000/worker (tickets, meals, hotel in transit) plus 3–4 days salary.
+ * 4-worker mobilisation given as US$43,520.
+ * First two homes: 2 Chinese + 2 Belizean helpers, 7–10 days, ~US$11,000/home.
+ */
+export const CHINA_CREW = {
+  dayRate: 220,
+  travelPerWorker: 10_000,
+  transitDays: 4,
+  workersTypical: 4,
+  daysPerHome: 2,
+  mobilize4: 43_520,
+  greythonDay: 280,
+  netNote: "Factory-side net. No KDK commission or profit.",
+  firstTwo: {
+    chinaWorkers: 2,
+    belizeHelpers: 2,
+    daysLow: 7,
+    daysHigh: 10,
+    perHomeUser: 11_000,
+  },
+} as const;
+
+function mobilize(workers: number) {
+  if (workers === 4) return CHINA_CREW.mobilize4;
+  return workers * (CHINA_CREW.travelPerWorker + CHINA_CREW.transitDays * CHINA_CREW.dayRate);
+}
+
+/** Factory campaign sheet: travel + (homes/2)×4×$220. */
+export function chinaQuotedCampaign(homes: number) {
+  const n = Math.max(0, homes);
+  const travel = CHINA_CREW.mobilize4;
+  const labor = (n / 2) * CHINA_CREW.workersTypical * CHINA_CREW.dayRate;
+  const total = travel + labor;
+  return { homes: n, travel, labor, total, perHome: n ? total / n : 0 };
+}
+
+/** Literal 4 workers × 2 days × $220, plus the same $43,520 travel. */
+export function chinaCrewDaysCampaign(homes: number, workers = CHINA_CREW.workersTypical) {
+  const n = Math.max(0, homes);
+  const travel = mobilize(workers);
+  const labor = n * workers * CHINA_CREW.daysPerHome * CHINA_CREW.dayRate;
+  const total = travel + labor;
+  return { homes: n, workers, travel, labor, total, perHome: n ? total / n : 0 };
+}
+
+/** First two homes: 2 Chinese + 2 Belizean helpers, 7–10 days. */
+export function chinaFirstTwo() {
+  const { chinaWorkers, belizeHelpers, daysLow, daysHigh, perHomeUser } = CHINA_CREW.firstTwo;
+  const travel = chinaWorkers * CHINA_CREW.travelPerWorker;
+  const siteLow = daysLow * chinaWorkers * CHINA_CREW.dayRate;
+  const siteHigh = daysHigh * chinaWorkers * CHINA_CREW.dayRate;
+  const chinaLow = travel + siteLow;
+  const chinaHigh = travel + siteHigh;
+  const belizeDay = ALL_IN.structure.belizeAllIn * 8;
+  const belizeLow = daysLow * belizeHelpers * belizeDay;
+  const belizeHigh = daysHigh * belizeHelpers * belizeDay;
+  return {
+    chinaWorkers,
+    belizeHelpers,
+    daysLow,
+    daysHigh,
+    travel,
+    chinaLow,
+    chinaHigh,
+    chinaPerHomeLow: chinaLow / 2,
+    chinaPerHomeHigh: chinaHigh / 2,
+    perHomeUser,
+    belizeLow,
+    belizeHigh,
+  };
+}
+
+/**
+ * CASA 100 recommended ramp: first 2 homes with 2 Chinese trainers,
+ * remaining homes Belizean-majority at the mixed pad rate × supplier hours.
+ */
+export function casa100Ramp(homes: number, avgHours: number) {
+  const trained = Math.max(0, homes - 2);
+  const first = chinaFirstTwo();
+  const firstChina = first.perHomeUser * 2;
+  const firstBelize = (first.belizeLow + first.belizeHigh) / 2;
+  const restLabor = trained * avgHours * CAMPAIGN_RATES.padInstall;
+  const total = firstChina + firstBelize + restLabor;
+  return {
+    firstChina,
+    firstBelize,
+    restHomes: trained,
+    restLabor,
+    total,
+    perHome: homes ? total / homes : 0,
+    vsAllChinaQuoted: chinaQuotedCampaign(homes).total - total,
+    vsAllChinaCrewDays: chinaCrewDaysCampaign(homes).total - total,
+  };
+}
+
+export const CHINA_QUOTE_POINTS = [10, 20, 50, 100] as const;
+
