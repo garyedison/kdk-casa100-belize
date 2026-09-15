@@ -35,9 +35,15 @@ export type HomeStyle = {
   assembleDays: number;
 };
 
-/** 10% KDK distributor net on factory list for a 100-home government order. */
+/** 10% KDK selling list above supplier, so a 10% campaign/distributor discount still leaves KDK whole. Not shown as a markup on customer pages. */
+export const SHELL_MARKUP = 0.1;
+/** 10% off KDK list for a 100-home government order (distributor or direct). */
 export const VOLUME_DISCOUNT = 0.1;
 export const FREIGHT_PER_40HQ = 19_000;
+
+function kdkList(supplier: number) {
+  return Math.round(supplier * (1 + SHELL_MARKUP));
+}
 
 export const STYLES: Record<StyleId, HomeStyle> = {
   br1: {
@@ -52,10 +58,10 @@ export const STYLES: Record<StyleId, HomeStyle> = {
     areaSf: 312,
     story: "Single",
     look: "Skillion roof + terrace",
-    factoryList: 15_850,
+    factoryList: kdkList(15_850),
     unitsPer40hq: 3,
     freightPerHome: FREIGHT_PER_40HQ / 3,
-    volumeRate: 15_850 * (1 - VOLUME_DISCOUNT),
+    volumeRate: kdkList(15_850) * (1 - VOLUME_DISCOUNT),
     image: "/homes/1bed.jpg",
     color: "#5C7A62",
     colorMuted: "#C5D4C4",
@@ -85,10 +91,10 @@ export const STYLES: Record<StyleId, HomeStyle> = {
     areaSf: 581,
     story: "Single",
     look: "Hip roof — premium look",
-    factoryList: 23_100,
+    factoryList: kdkList(23_100),
     unitsPer40hq: 2,
     freightPerHome: FREIGHT_PER_40HQ / 2,
-    volumeRate: 23_100 * (1 - VOLUME_DISCOUNT),
+    volumeRate: kdkList(23_100) * (1 - VOLUME_DISCOUNT),
     image: "/homes/2bed.jpg",
     color: "#2F6B5C",
     colorMuted: "#D7E2DA",
@@ -118,10 +124,10 @@ export const STYLES: Record<StyleId, HomeStyle> = {
     areaSf: 581,
     story: "Single",
     look: "Gable, wood clad, porch",
-    factoryList: 23_500,
+    factoryList: kdkList(23_500),
     unitsPer40hq: 1.82,
     freightPerHome: FREIGHT_PER_40HQ / 1.82,
-    volumeRate: 23_500 * (1 - VOLUME_DISCOUNT),
+    volumeRate: kdkList(23_500) * (1 - VOLUME_DISCOUNT),
     image: "/homes/3bed.jpg",
     color: "#1F4A3A",
     colorMuted: "#B7C7B4",

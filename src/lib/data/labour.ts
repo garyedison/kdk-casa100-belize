@@ -163,25 +163,22 @@ export const LABOUR_NOTES = {
   burden:
     "All-in = gross + SSB 8.13% + tools/PPE + site transport + contractor OH&P. Not take-home.",
   chinaOnSite:
-    "A Chinese crew in Guangdong is cheap. The same person on a Belmopan pad carries airfare, work permit, lodging and per diem — typically 6–8× the domestic rate.",
+    "Crew travel, lodging and permits are in the one-time mobilisation, not in the Belizean standing wage.",
 } as const;
 
 /**
- * Factory-net Chinese pad crew (no KDK markup).
- * 4 workers, 2 days per home is the standing method.
- * Round-trip ~$10,000/worker (tickets, meals, hotel in transit) plus 3–4 days salary.
- * 4-worker mobilisation given as US$43,520.
- * First two homes: 2 Chinese + 2 Belizean helpers, 7–10 days, ~US$11,000/home.
+ * Pad-assembly crew priced for the Government (KDK selling rate).
+ * 4 workers, 2 days per 2-bed home at US$280/worker-day = Div 11.01.
+ * Round-trip for four: US$43,520 once. Do not add that table on top of Div 11.01.
  */
 export const CHINA_CREW = {
-  dayRate: 220,
+  dayRate: 280,
   travelPerWorker: 10_000,
   transitDays: 4,
   workersTypical: 4,
   daysPerHome: 2,
   mobilize4: 43_520,
-  greythonDay: 280,
-  netNote: "Factory-side net. No KDK commission or profit.",
+  netNote: "KDK campaign price. Travel is a one-time crew mobilisation.",
   firstTwo: {
     chinaWorkers: 2,
     belizeHelpers: 2,
@@ -196,7 +193,7 @@ function mobilize(workers: number) {
   return workers * (CHINA_CREW.travelPerWorker + CHINA_CREW.transitDays * CHINA_CREW.dayRate);
 }
 
-/** Factory campaign sheet: travel + (homes/2)×4×$220. */
+/** Campaign sheet: travel + (homes/2)×4×$280. Same shape as the 10/20/50/100 table. */
 export function chinaQuotedCampaign(homes: number) {
   const n = Math.max(0, homes);
   const travel = CHINA_CREW.mobilize4;
@@ -205,7 +202,7 @@ export function chinaQuotedCampaign(homes: number) {
   return { homes: n, travel, labor, total, perHome: n ? total / n : 0 };
 }
 
-/** Literal 4 workers × 2 days × $220, plus the same $43,520 travel. */
+/** 4 workers × 2 days × $280, plus the same $43,520 travel. */
 export function chinaCrewDaysCampaign(homes: number, workers = CHINA_CREW.workersTypical) {
   const n = Math.max(0, homes);
   const travel = mobilize(workers);

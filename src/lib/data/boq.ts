@@ -62,7 +62,7 @@ export const LINES: BoqLine[] = [
     item: "01.01",
     division: "Container homes",
     divisionNo: "01",
-    description: "Basic shell module — list price, unfurnished (FOB China port)",
+    description: "Basic shell module — KDK list, unfurnished (FOB China port)",
     unit: "home",
     perHome: per(1),
     rate: rates(
@@ -71,7 +71,7 @@ export const LINES: BoqLine[] = [
       STYLES.br3.factoryList,
     ),
     status: "QUOTED",
-    note: "Basic SHELL: steel frames, walls, insulated roof, doors, windows, house lights/sockets/DB, kitchen cabinet + sink + faucet, ceramic toilet, wash-basin, glass shower, bathroom pipework. Unfurnished. FOB China — no ocean, no inland. NOT in the shell: split air, solar, range, fridge, furniture, gas stove, pads, village works.",
+    note: "KDK list for the basic SHELL (FOB China). 10% campaign/distributor discount is 01.02. Kitchen, toilet, shower and house electrics are in the box. Split air, solar, range, fridge, furniture, pads and village works are not.",
   },
   {
     item: "01.02",
@@ -145,7 +145,7 @@ export const LINES: BoqLine[] = [
     perHome: per(1),
     rate: 800,
     status: "EST.",
-    note: "Shared crawler plant hire only. Crew to assemble the module on the pad is 11.01 — supplier hours at US$28/hr. Mix 80% Belizean / 20% China tech.",
+    note: "Shared crawler plant hire only. Crew to assemble the module on the pad is Div 11.01 — US$28/hr. Mix 80% Belizean / 20% China tech.",
   },
   {
     item: "04.01",
@@ -644,7 +644,7 @@ export function priceLines(mix: Mix, options: PriceOptions = {}): PricedLine[] {
               -STYLES.br2.factoryList * commission,
               -STYLES.br3.factoryList * commission,
             ),
-            note: `On the shell list only. ${pctLabel(commission)} of factory list. KDK Hong Kong path = discount to the Government. Licensed Belizean distributor path = set-aside / seller margin. Not on slabs, solar, or village works.`,
+            note: `On the shell list only. ${pctLabel(commission)} of KDK list. KDK Hong Kong path = discount to the Government. Licensed Belizean distributor path = set-aside / seller margin. Not on slabs, solar, or village works.`,
           }
         : raw;
     const qty = { br1: 0, br2: 0, br3: 0 } as Record<StyleId, number>;

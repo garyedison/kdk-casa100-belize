@@ -97,7 +97,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <footer className="border-t border-line px-4 py-8 text-center text-xs text-muted print:hidden">
         Prepared by KDK Technology Ltd for Mr. Ian Courtenay, Senior Investment & E-Governance
         Officer, Office of the Prime Minister, Sir Edney Cain Building, Belmopan. Working draft for
-        government review — not a contract. USD. Factory list 7 Sep 2026. Distributor net is 10% off
+        government review — not a contract. USD. KDK list. Distributor net is 10% off
         the three models on a 100-home order. Assembly 42 / 80 / 80 hrs by style. Solar install hours TBD.
       </footer>
     </div>

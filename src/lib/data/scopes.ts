@@ -334,7 +334,7 @@ export function pricingCopy(mode: PricingMode, commissionRate = 0.1) {
   const pct = `${Math.round(commissionRate * 100)}%`;
   if (mode === "list") {
     return {
-      label: "Factory list (no set-aside)",
+      label: "List (no set-aside)",
       blurb: "Diagnostic only — neither KDK nor a Belizean distributor takes a set-aside.",
     };
   }

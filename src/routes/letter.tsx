@@ -104,12 +104,12 @@ function LetterPage() {
               homes-only floor, pads-and-set, house MEP, or the full village (unfurnished, no extra
               civil). Village roads, village power, water, WWTP, trees, plaza and gatehouse are
               optional add-ons — not in that all-in. Solar kit prices are
-              equipment only. Module assembly (11.01) uses supplier hours: 42 / 80 / 80 man-hours
-              (4.2 / 8 / 8 days) at US$28/hr (US$280 per 10-hour day). A four-worker Chinese crew at
-              factory-net US$220/day is in the same band: at 20 homes about US$2,620 per home
-              including travel — do not add that on top of 11.01. After the first two trainer pads
-              (two Chinese + two Belizean helpers, 7–10 days), Belizeans are the standing workforce
-              (80% Belizean / 20% China tech). Solar install (11.02) is
+              equipment only. Module assembly (Div 11.01) is the crew on the pad: 42 / 80 / 80 man-hours
+              (4.2 / 8 / 8 days) at US$280 per worker-day. A 2-bed home is four workers, two days
+              (Div 11.01). Round-trip for four is a one-time US$43,520; at 20 homes labour plus
+              travel is about US$2,736 per home — do not add that on top of Div 11.01. After the
+              first two trainer pads (two Chinese + two Belizean helpers, 7–10 days), Belizeans are
+              the standing workforce (80% Belizean / 20% China tech). Solar install (11.02) is
               estimated at US$19.40/hr mixed — 70% Belizean electricians; those hours are still
               blank. KDK recommends Belizean crews as the standing workforce for 12 months or
               longer; Chinese technicians train the first pads and stand down. This is a working

@@ -259,10 +259,8 @@ function BoqPage() {
                   <td className="px-3 py-2">
                     <span className="font-medium">{EMPLOYMENT.pad.title}</span>
                     <span className="mt-1 block text-[11px] text-muted">
-                      Supplier assembly hours. Belizean structure {usd(EMPLOYMENT.pad.belizeRate, 2)}
-                      /hr payroll · China tech {usd(EMPLOYMENT.pad.chinaRate, 2)}/hr on-site. Line is
-                      priced at {usd(ASSEMBLY.hourly)}/hr. {EMPLOYMENT.pad.belizeCrew} standing;{" "}
-                      {EMPLOYMENT.pad.chinaCrew}.
+                      Supplier assembly hours. Line is priced at {usd(ASSEMBLY.hourly)}/hr.{" "}
+                      {EMPLOYMENT.pad.belizeCrew} standing; {EMPLOYMENT.pad.chinaCrew}.
                     </span>
                   </td>
                   <td className="px-3 py-2 tabular font-medium">{usd(ASSEMBLY.hourly)}/hr</td>
@@ -376,10 +374,7 @@ function BoqPage() {
               <thead className="bg-kdk text-kdk-fg">
                 <tr className="text-[11px] uppercase tracking-wide">
                   <th className="px-3 py-3 font-medium">Trade</th>
-                  <th className="px-3 py-3 font-medium">Belize gross</th>
                   <th className="px-3 py-3 font-medium">Belize all-in</th>
-                  <th className="px-3 py-3 font-medium">China (at home)</th>
-                  <th className="px-3 py-3 font-medium">China on Belize pad</th>
                   <th className="px-3 py-3 font-medium">Mixed crew</th>
                 </tr>
               </thead>
@@ -390,22 +385,15 @@ function BoqPage() {
                       {g.label}
                       <span className="block text-[11px] text-muted">{g.mixNote}</span>
                     </td>
-                    <td className="px-3 py-2 tabular">{usd(g.belizeGross, 2)}</td>
                     <td className="px-3 py-2 tabular font-medium">{usd(g.belizeAllIn, 2)}</td>
-                    <td className="px-3 py-2 tabular">{usd(g.chinaDomestic, 2)}</td>
-                    <td className="px-3 py-2 tabular">{usd(g.chinaOnSite, 2)}</td>
                     <td className="px-3 py-2 tabular font-medium">{usd(g.mixed, 2)}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
             <p className="border-t border-line px-3 py-2 text-[11px] text-muted">
-              USD per hour. Belize min wage US$2.50 (BZ$5.00, 2026). Electrical and plumbing run
-              about 50–80% above framing and concrete. A Chinese crew is cheaper in Guangdong than a
-              Belize mason; the same person on a Belmopan pad is 2–3× a Belize electrician once
-              airfare, permit, lodging and per diem are in. {LABOUR_NOTES.shortage} Sources: Ministry
-              of Labour; SIB; WorldSalaries 2026; China NBS 2025 migrant-worker monitor (CNY 5,880/mo
-              construction); SalaryExpert Aug 2026 electrician.
+              USD per hour, contractor all-in. Electrical and plumbing run above framing and
+              concrete. {LABOUR_NOTES.shortage}
             </p>
           </div>
         </section>
