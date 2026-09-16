@@ -7,6 +7,7 @@ import { TRANSMITTAL } from "@/lib/data/transmittal";
 import { useVillage } from "@/lib/store";
 import { usd, num } from "@/lib/utils";
 import { offScopesForPreset } from "@/lib/data/scopes";
+import { VolumeDiscountCard } from "@/components/boq/VolumeDiscountCard";
 import { ArrowRight, FileText, FileSpreadsheet, Map, Sun, Wind } from "lucide-react";
 
 export const Route = createFileRoute("/")({ component: Home });
@@ -115,19 +116,16 @@ function Home() {
       </section>
 
       <section className="mx-auto max-w-[1400px] px-4 pb-10 md:px-6">
-        <p className="text-sm text-ink-soft">
+        <p className="mb-6 text-sm text-ink-soft">
           <strong className="text-ink">Shell only</strong> = FOB China port — pickup at the factory
-          port, 100 homes, volume discount on.{" "}
+          port, 100 homes, 10% volume discount on.{" "}
           <strong className="text-ink">Installed homes</strong> = landed in Belize, set, house MEP,
           solar equipment, interior make-good. No village roads, power, water or WWTP.{" "}
           <strong className="text-ink">Turnkey village</strong> = installed homes plus that civil
-          infrastructure. Plaza, trees and furniture stay optional. All three totals are{" "}
-          <strong className="text-ink">USD</strong>, not BZ$. Scope playground is on{" "}
-          <Link to="/scopes" className="text-kdk underline-offset-4 hover:underline">
-            Scopes
-          </Link>
-          .
+          infrastructure. Plaza, trees and furniture stay optional. All totals are{" "}
+          <strong className="text-ink">USD</strong>, not BZ$.
         </p>
+        <VolumeDiscountCard publishedList={packages.shell.factoryList} />
       </section>
 
       <section className="mx-auto grid max-w-[1400px] gap-6 px-4 pb-10 md:grid-cols-3 md:px-6">

@@ -36,9 +36,12 @@ export function CommissionCalculator() {
       </h2>
       <p className="mt-2 max-w-3xl text-sm text-ink-soft">
         Default is 10% of the <strong className="text-ink">shell list only</strong> — not slabs,
-        solar, or village works. If the Government buys through a licensed Belizean distributor,
-        this amount is that seller’s margin. If it buys from KDK Hong Kong, the same percentage is
-        a Government volume discount. Not shown on the Minister letter.
+        solar, or village works. That 10% is KDK’s ceiling without raising the published list. If
+        the Government or a Belizean distributor wants more than 10%, the list on the three models
+        has to rise so KDK still invoices the same net — see the Overview table. This slider at 15%
+        / 20% is diagnostic on today’s list only; it is not a deeper KDK discount. If the Government
+        buys through a licensed Belizean distributor, 10% is that seller’s margin. If it buys from
+        KDK Hong Kong, 10% is a Government volume discount. Not shown on the Minister letter.
       </p>
 
       <div className="mt-5 flex flex-wrap gap-2">
