@@ -59,13 +59,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </nav>
 
           <div className="ml-auto hidden items-baseline gap-3 rounded-[12px] bg-paper-2 px-3 py-2 lg:flex">
-            <span className="text-[11px] uppercase tracking-wide text-muted">Installed homes</span>
+            <span className="text-[11px] uppercase tracking-wide text-muted">Shell only · FOB · USD</span>
+            <span className="font-display text-lg font-semibold tabular leading-none">
+              {usd(packages.shell.unfurnishedAllIn)}
+            </span>
+            <span className="text-[11px] uppercase tracking-wide text-muted">Installed · USD</span>
             <span className="font-display text-lg font-semibold tabular leading-none">
               {usd(packages.installed.unfurnishedAllIn)}
-            </span>
-            <span className="text-[11px] uppercase tracking-wide text-muted">Turnkey village</span>
-            <span className="font-display text-lg font-semibold tabular leading-none">
-              {usd(packages.turnkey.unfurnishedAllIn)}
             </span>
           </div>
         </div>
@@ -96,7 +96,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <footer className="border-t border-line px-4 py-8 text-center text-xs text-muted print:hidden">
         Prepared by KDK Technology Ltd for Mr. Ian Courtenay, Senior Investment & E-Governance
         Officer, Office of the Prime Minister, Sir Edney Cain Building, Belmopan. Working draft for
-        government review — not a contract. USD. KDK list. Distributor net is 10% off
+        government review — not a contract. All prices are United States dollars (USD), not Belize
+        dollars (BZ$). KDK list. Distributor net is 10% off
         the three models on a 100-home order. Assembly 42 / 80 / 80 hrs by style. Solar install hours ESTIMATED.
       </footer>
     </div>

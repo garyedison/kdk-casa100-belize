@@ -54,15 +54,19 @@ function Home() {
         <div className="absolute inset-0 bg-gradient-to-t from-kdk-deep/90 via-kdk-deep/35 to-transparent" />
         <div className="absolute inset-x-0 bottom-0 mx-auto max-w-[1400px] px-4 pb-10 md:px-6 md:pb-14">
           <p className="text-xs uppercase tracking-[0.18em] text-paper/80">
-            KDK Technology Ltd · prepared for the Office of the Prime Minister, Belize
+            KDK Technology Ltd · Office of the Prime Minister, Belize · prices in USD
           </p>
           <h1 className="mt-2 max-w-3xl font-display text-4xl font-semibold tracking-tight text-paper md:text-6xl">
             CASA 100
           </h1>
           <p className="mt-3 max-w-xl text-base text-paper/85 md:text-lg">
-            One hundred finished-ready container homes on a square ¼-acre plat. One-bed, two-bed
-            and three-bed — all under 100 m² — with kitchen, toilet, shower, split air and solar
-            on every pad.
+            One hundred finished-ready container homes. Start with the shell only — FOB China port —
+            then add Belize works if the Government wants them. All figures are United States
+            dollars (USD), not Belize dollars (BZ$).
+          </p>
+          <p className="mt-4 font-display text-3xl font-semibold tabular text-paper md:text-4xl">
+            {usd(packages.shell.unfurnishedAllIn)}{" "}
+            <span className="text-lg font-normal text-paper/75">USD · shell only · FOB China</span>
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
             <Button asChild size="lg">
@@ -80,12 +84,28 @@ function Home() {
         </div>
       </section>
 
+      <section className="border-b border-line bg-kdk px-4 py-2 text-center text-sm text-kdk-fg md:px-6">
+        All prices are <strong>United States dollars (USD)</strong>. Not Belize dollars (BZ$). USD 1
+        ≈ BZ$ 2 — do not read these figures as Belize dollars.
+      </section>
+
       <section className="mx-auto grid max-w-[1400px] gap-3 px-4 py-8 md:grid-cols-4 md:px-6">
+        <div className="rounded-[18px] bg-kdk px-4 py-4 text-kdk-fg shadow-card md:col-span-1">
+          <p className="text-[11px] uppercase tracking-wide text-kdk-fg/70">
+            Shell only · FOB China · USD
+          </p>
+          <p className="mt-1 font-display text-2xl font-semibold tabular">
+            {usd(packages.shell.unfurnishedAllIn)}
+          </p>
+          <p className="mt-1 text-[11px] text-kdk-fg/75">
+            100 boxes at the China port. Kitchen, toilet, shower in the module. No ocean, no pads,
+            no village civil.
+          </p>
+        </div>
         {[
-          { k: "Homes", v: `${totals.homeCount}` },
-          { k: "Installed homes", v: usd(packages.installed.unfurnishedAllIn) },
-          { k: "Turnkey village", v: usd(packages.turnkey.unfurnishedAllIn) },
-          { k: "FF&E upgrade", v: usd(totals.ffe) },
+          { k: "Installed homes · USD", v: usd(packages.installed.unfurnishedAllIn) },
+          { k: "Turnkey village · USD", v: usd(packages.turnkey.unfurnishedAllIn) },
+          { k: "FF&E upgrade · USD", v: usd(totals.ffe) },
         ].map((s) => (
           <div key={s.k} className="rounded-[18px] bg-paper-2 px-4 py-4 shadow-card">
             <p className="text-[11px] uppercase tracking-wide text-muted">{s.k}</p>
@@ -96,10 +116,13 @@ function Home() {
 
       <section className="mx-auto max-w-[1400px] px-4 pb-10 md:px-6">
         <p className="text-sm text-ink-soft">
-          <strong className="text-ink">Installed homes</strong> = landed, set, house MEP, solar
-          equipment, interior make-good. No village roads, power, water or WWTP.{" "}
+          <strong className="text-ink">Shell only</strong> = FOB China port — pickup at the factory
+          port, 100 homes, volume discount on.{" "}
+          <strong className="text-ink">Installed homes</strong> = landed in Belize, set, house MEP,
+          solar equipment, interior make-good. No village roads, power, water or WWTP.{" "}
           <strong className="text-ink">Turnkey village</strong> = installed homes plus that civil
-          infrastructure. Plaza, trees and furniture stay optional. Scope playground is on{" "}
+          infrastructure. Plaza, trees and furniture stay optional. All three totals are{" "}
+          <strong className="text-ink">USD</strong>, not BZ$. Scope playground is on{" "}
           <Link to="/scopes" className="text-kdk underline-offset-4 hover:underline">
             Scopes
           </Link>
@@ -164,9 +187,9 @@ function Home() {
           </div>
           <h3 className="mt-3 font-display text-xl font-semibold">On every home</h3>
           <p className="mt-1 text-sm text-ink-soft">
-            Split air, rooftop PV modules and a grid-tie inverter, toilet, shower and kitchen are
-            in the unfurnished price. Battery storage is not included. Furniture is a separate FF&E
-            line. Module assembly is 42 / 80 / 80 man-hours by style. Solar install hours are TBD.
+            Split air, rooftop PV modules and a grid-tie inverter, toilet, shower and kitchen.
+            Battery storage is not included. Furniture is a separate FF&E line. Solar install hours
+            are estimated. Prices in USD.
           </p>
         </div>
       </section>

@@ -1046,9 +1046,10 @@ export const PM_RATE = PM;
 /** Fixed package totals for the header — not the live playground. */
 export function packageTotals(mix: Mix, commissionRate?: number) {
   const opts = { commissionRate };
+  const shell = computeTotals(mix, { ...opts, offScopes: offScopesForPreset("homes") });
   const installed = computeTotals(mix, { ...opts, offScopes: offScopesForPreset("village") });
   const turnkey = computeTotals(mix, { ...opts, offScopes: offScopesForPreset("utilities") });
-  return { installed, turnkey };
+  return { shell, installed, turnkey };
 }
 
 /** Moonlight Bay 2-home PT211222 working figures — for the comparison view. */
