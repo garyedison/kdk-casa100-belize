@@ -15,9 +15,9 @@ export function pctLabel(rate: number) {
 
 /**
  * KDK’s campaign net is 90% of the published shell list (the 10% default).
- * ≤10%: the share comes out of that list. KDK invoices less if the rate is higher, down to 90%.
- * >10%: the list has to rise so KDK still invoices the 90% net. Government / distributor
- * extra is not a deeper KDK discount.
+ * ≤10%: the share comes out of that list. A smaller rate means KDK invoices more.
+ * >10%: the list the Government pays has to rise so KDK still invoices the 90% net.
+ * A higher percentage is never a deeper cut to KDK.
  */
 export function heldNetShare(publishedList: number, wantedRate: number) {
   const rate = clampCommission(wantedRate);

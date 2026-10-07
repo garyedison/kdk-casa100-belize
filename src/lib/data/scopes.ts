@@ -342,6 +342,7 @@ export function offScopesForPreset(presetId: string): ScopeId[] {
 
 export function pricingCopy(mode: PricingMode, commissionRate = 0.1) {
   const pct = `${Math.round(commissionRate * 100)}%`;
+  const over = commissionRate > 0.1 + 1e-9;
   if (mode === "list") {
     return {
       label: "List (no volume discount)",
@@ -351,11 +352,15 @@ export function pricingCopy(mode: PricingMode, commissionRate = 0.1) {
   if (mode === "gov_via_partner") {
     return {
       label: "Buy from a licensed Belizean distributor",
-      blurb: `The Government contracts a Belizean company, not KDK Hong Kong. That distributor buys from KDK at net (−${pct}) and sells to the Government at shell list. The ${pct} is the licensed Belizean distributor’s margin on the homes only — not on slabs, MEP, or village works.`,
+      blurb: over
+        ? `The Government pays a higher shell price so the Belizean distributor can keep ${pct}. KDK still invoices the 10% net — not less. The extra is margin on the homes only, not on slabs, MEP, or village works.`
+        : `The Government contracts a Belizean company, not KDK Hong Kong. That distributor buys from KDK at net (−${pct}) and sells to the Government at shell list. The ${pct} is the licensed Belizean distributor’s margin on the homes only — not on slabs, MEP, or village works.`,
     };
   }
   return {
     label: "Buy from KDK Hong Kong",
-    blurb: `The Government contracts KDK Technology Ltd directly. KDK invoices at shell list less ${pct} on the three models. That ${pct} is a Government volume discount. 100-home campaign only.`,
+    blurb: over
+      ? `KDK will not invoice below the 10% net. A ${pct} figure raises the published shell price; the Government still pays KDK the same net, not a deeper discount.`
+      : `The Government contracts KDK Technology Ltd directly. KDK invoices at shell list less ${pct} on the three models. That ${pct} is a Government volume discount. 100-home campaign only.`,
   };
 }

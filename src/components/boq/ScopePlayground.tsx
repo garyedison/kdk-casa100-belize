@@ -226,11 +226,11 @@ export function ScopePlayground() {
           })}
         </div>
         <dl className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          <Stat k="List price (homes)" v={usd(totals.factoryList)} />
-          <Stat k="KDK invoices (net)" v={usd(totals.kdkNetHomes)} />
+          <Stat k="Published shell list" v={usd(totals.factoryList)} />
+          <Stat k="KDK net (held)" v={usd(totals.kdkNetHomes)} />
           <Stat
-            k={`${Math.round(commissionRate * 100)}% volume discount / margin`}
-            v={usd(totals.partnerMargin)}
+            k={`${Math.round(commissionRate * 100)}% — Gov. pays for shells`}
+            v={usd(totals.sellingList)}
           />
           <Stat
             k={
@@ -238,23 +238,23 @@ export function ScopePlayground() {
                 ? "Government pays the Belizean seller"
                 : "Government pays KDK Hong Kong"
             }
-            v={usd(totals.unfurnishedAllIn)}
+            v={usd(pricingMode === "gov_via_partner" ? totals.govPay : totals.unfurnishedAllIn)}
           />
         </dl>
         {pricingMode === "gov_via_partner" ? (
           <p className="mt-3 rounded-md bg-paper-2 px-4 py-3 text-sm text-ink-soft">
             Contract path: Government ↔ licensed Belizean distributor ↔ KDK Hong Kong. KDK invoices
-            the distributor {usd(totals.kdkInvoice)} (homes at net, same switched-on scopes). The
-            Government pays the Belizean seller {usd(totals.govPay)}. The difference{" "}
+            the distributor {usd(totals.kdkInvoice)} (shells at the held net). The Government pays
+            the Belizean seller {usd(totals.govPay)}. The difference{" "}
             {usd(totals.govPay - totals.kdkInvoice)} is the {Math.round(commissionRate * 100)}%
-            licensed distributor margin on the homes.
+            margin on the shells only. Above 10%, that Government price rises — KDK’s invoice does
+            not fall.
           </p>
         ) : (
           <p className="mt-3 rounded-md bg-paper-2 px-4 py-3 text-sm text-ink-soft">
-            Contract path: Government ↔ KDK Technology Ltd (Hong Kong). The Government pays KDK the
-            distributor net. No Belizean seller is in the chain, so that{" "}
-            {Math.round(commissionRate * 100)}% is a Government volume discount rather than a local
-            distributor margin.
+            Contract path: Government ↔ KDK Technology Ltd (Hong Kong). The Government pays KDK{" "}
+            {usd(totals.kdkNetHomes)} for the shells (held at the 10% net once the share is 10% or
+            more). A higher percentage does not make this invoice smaller.
           </p>
         )}
       </section>

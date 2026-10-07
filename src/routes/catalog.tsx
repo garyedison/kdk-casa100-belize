@@ -6,6 +6,7 @@ import { SHELL_BLURB, SHELL_IN, SHELL_OUT, FACTORY_VS_LOCAL } from "@/lib/data/s
 import { offScopesForPreset } from "@/lib/data/scopes";
 import { useVillage } from "@/lib/store";
 import { usd, num } from "@/lib/utils";
+import { heldNetShare } from "@/lib/data/commission";
 import { FloorPlan } from "@/components/catalog/FloorPlan";
 
 export const Route = createFileRoute("/catalog")({ component: CatalogPage });
@@ -123,10 +124,14 @@ function CatalogPage() {
                       ))}
                     </ul>
                     <dl className="mt-5 grid grid-cols-2 gap-3 text-sm">
-                      <Row k="Shell list (FOB China)" v={usd(s.factoryList)} />
+                      <Row k="Published shell list (FOB)" v={usd(s.factoryList)} />
                       <Row
-                        k={`Net after ${Math.round(commissionRate * 100)}% volume discount`}
-                        v={usd(s.factoryList * (1 - commissionRate))}
+                        k="KDK net (held)"
+                        v={usd(heldNetShare(s.factoryList, commissionRate).kdkNet)}
+                      />
+                      <Row
+                        k="Government pays / home"
+                        v={usd(heldNetShare(s.factoryList, commissionRate).sellingList)}
                       />
                       <Row k="Kitchen / bath in shell" v="Yes — cabinet, sink, toilet, shower" />
                       <Row k="Range / fridge in shell" v="No — Belize add-on" />

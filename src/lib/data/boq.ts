@@ -8,7 +8,7 @@ import {
 } from "./homes";
 import { ASSEMBLY, CHINA_CREW, FFE_INSTALL, SOLAR_INSTALL } from "./labour";
 import { ITEM_SCOPE, SCOPE_IDS, offScopesForPreset, type PricingMode, type ScopeId } from "./scopes";
-import { clampCommission, DEFAULT_COMMISSION, pctLabel } from "./commission";
+import { clampCommission, DEFAULT_COMMISSION, heldNetShare, pctLabel } from "./commission";
 
 export type Status = "QUOTED" | "EST." | "TBD" | "INCL." | "EXCL.";
 
@@ -770,6 +770,7 @@ export function priceLines(mix: Mix, options: PriceOptions = {}): PricedLine[] {
   const offItems = asSet(options.offItems);
   const pricingMode: PricingMode = options.pricingMode ?? "kdk_net";
   const commission = clampCommission(options.commissionRate ?? DEFAULT_COMMISSION);
+  const creditRate = Math.min(commission, DEFAULT_COMMISSION);
   const flags = { offScopes, offItems, pricingMode };
 
   return LINES.map((raw) => {
@@ -777,13 +778,16 @@ export function priceLines(mix: Mix, options: PriceOptions = {}): PricedLine[] {
       raw.item === "01.02"
         ? {
             ...raw,
-            description: `Government volume discount / distributor margin — ${pctLabel(commission)} of shell list`,
+            description: `Government volume discount — ${pctLabel(creditRate)} of published shell list (KDK net floor)`,
             rate: rates(
-              -STYLES.br1.factoryList * commission,
-              -STYLES.br2.factoryList * commission,
-              -STYLES.br3.factoryList * commission,
+              -STYLES.br1.factoryList * creditRate,
+              -STYLES.br2.factoryList * creditRate,
+              -STYLES.br3.factoryList * creditRate,
             ),
-            note: `On the shell list only. ${pctLabel(commission)} of KDK list. KDK Hong Kong path = Government volume discount. Licensed Belizean distributor path = that company’s margin on the homes. Not on slabs, solar, or village works.`,
+            note:
+              commission > DEFAULT_COMMISSION
+                ? `Capped at 10% of the published shell list. A ${pctLabel(commission)} share does not cut KDK below this net — it raises the price the Government pays (see the pricing desk). Not on slabs, solar, or village works.`
+                : `On the shell list only. ${pctLabel(commission)} of the published KDK list. KDK Hong Kong path = Government volume discount. Licensed Belizean distributor path = that company’s margin on the homes. Not on slabs, solar, or village works.`,
           }
         : raw;
     const qty = { br1: 0, br2: 0, br3: 0 } as Record<StyleId, number>;
@@ -862,6 +866,7 @@ export type Totals = {
   fullUnfurnishedAllIn: number;
   savingsVsFull: number;
   factoryList: number;
+  sellingList: number;
   distributorCredit: number;
   kdkNetHomes: number;
   partnerMargin: number;
@@ -912,16 +917,23 @@ export function computeTotals(mix: Mix, options: PriceOptions = {}): Totals {
   const factoryLine = lines.find((l) => l.item === "01.01");
   const factoryList = factoryLine?.fullAmount ?? 0;
   const homesOn = Boolean(factoryLine?.included);
-  const distributorCredit = homesOn ? factoryList * commission : 0;
-  const kdkNetHomes = homesOn ? factoryList - distributorCredit : 0;
-  const partnerMargin = homesOn ? factoryList * commission : 0;
+  const shell = heldNetShare(factoryList, commission);
+  const kdkNetHomes = homesOn ? shell.kdkNet : 0;
+  const partnerMargin = homesOn ? shell.share : 0;
+  const distributorCredit = homesOn ? Math.max(0, factoryList - shell.kdkNet) : 0;
+  const sellingList = homesOn ? shell.sellingList : 0;
 
   const otherWorks = lines
     .filter((l) => !l.ffe && !l.tbd && l.item !== "01.01" && l.item !== "01.02")
     .reduce((s, l) => s + l.projectAmount, 0);
 
   const kdkInvoice = oncostsOf(kdkNetHomes + otherWorks, oncostsOn).allIn;
-  const govPay = oncostsOf((homesOn ? factoryList : 0) + otherWorks, oncostsOn).allIn;
+  const govPay =
+    pricingMode === "list"
+      ? oncostsOf((homesOn ? factoryList : 0) + otherWorks, oncostsOn).allIn
+      : pricingMode === "gov_via_partner"
+        ? kdkInvoice + partnerMargin
+        : kdkInvoice;
 
   const byDivision = DIVISIONS.map((d) => {
     const subset = lines.filter((l) => l.divisionNo === d.no);
@@ -1030,6 +1042,7 @@ export function computeTotals(mix: Mix, options: PriceOptions = {}): Totals {
     fullUnfurnishedAllIn,
     savingsVsFull,
     factoryList,
+    sellingList,
     distributorCredit,
     kdkNetHomes,
     partnerMargin,
