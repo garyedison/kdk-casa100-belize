@@ -1,9 +1,8 @@
 /** Formal addressee for the CASA 100 government submission. */
 export const TRANSMITTAL = {
-  date: "12 September 2026",
-  ref: "KDK-CASA-100 / BEL-OPM-2026-09",
-  subject:
-    "CASA 100 — Proposal to supply and install one hundred finished-ready modular homes",
+  date: "8 October 2026",
+  ref: "KDK-CASA-100 / BEL-OPM-2026-10",
+  subject: "CASA 100 — 100 container homes. Shell price, FOB China.",
   from: {
     company: "KDK Technology Ltd",
     principal: "Gary Kellmann",

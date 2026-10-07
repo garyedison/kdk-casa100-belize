@@ -15,18 +15,9 @@ function ScopesPage() {
           Build the price the Government wants
         </h1>
         <p className="mt-2 max-w-3xl text-ink-soft">
-          Reviewers can hide a package — or a single BOQ line — and watch the all-in fall. Homes
-          only is FOB China port: pickup at the port, no ocean, no inland. Kitchen, toilet and
-          shower are in the module. Split air is house MEP, not Homes only. Village roads, village
-          power, potable water and the WWTP (wastewater treatment plant — shared sewage plant) are
-          not in Homes only and <strong>not in Installed homes</strong>. Installed homes is
-          unfurnished houses with <strong>no village civil</strong>.{" "}
-          <strong>Turnkey village</strong> adds roads, village power, water and WWTP — not the plaza.
-          Plaza, trees and gate stay optional civic extras.{" "}
-          <Link to="/civic" className="text-kdk underline-offset-4 hover:underline">
-            Plaza rendering
-          </Link>
-          . Working draft, not a contract.
+          The green number is only what is switched on. Read the lines under it. They say whether
+          ocean freight and Belize duties are in that figure. The letter price is shell only, FOB
+          China — no shipping and no duties.
         </p>
         <p className="mt-3 text-sm">
           <Link to="/boq" className="text-kdk underline-offset-4 hover:underline">

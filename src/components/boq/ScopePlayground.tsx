@@ -33,6 +33,13 @@ export function ScopePlayground() {
 
   const totals = computeTotals(mix, { offScopes, offItems, pinnedOn, pricingMode, commissionRate });
   const ffeOn = !offScopes.includes("ffe");
+  const scopeAmt = (id: ScopeId) => totals.byScope.find((s) => s.id === id);
+  const homes = scopeAmt("homes");
+  const distributor = scopeAmt("distributor");
+  const ocean = scopeAmt("ocean");
+  const inland = scopeAmt("inland");
+  const oncosts = scopeAmt("oncosts");
+  const shellNet = (homes?.on ? homes.amount : 0) + (distributor?.on ? distributor.amount : 0);
 
   return (
     <div className="space-y-8">
@@ -40,20 +47,38 @@ export function ScopePlayground() {
         <div className="rounded-xl bg-kdk px-5 py-5 text-kdk-fg shadow-card">
           <p className="text-[11px] uppercase tracking-[0.16em] text-kdk-fg/70">
             {presetId === "homes"
-              ? "Homes only · FOB China port · no ocean · no inland"
-              : "Selected all-in · 100 homes · unfurnished"}
+              ? "Shell only · FOB China · no ocean freight · no duties"
+              : "Selected price · 100 homes · USD"}
           </p>
           <p className="mt-1 font-display text-4xl font-semibold tabular tracking-tight md:text-5xl">
             {usd(totals.unfurnishedAllIn)}
           </p>
+          <ul className="mt-3 space-y-1 text-sm text-kdk-fg/90">
+            <li>
+              Shell, FOB China: {homes?.on ? usd(shellNet) : "not in this number"}. No shipping in
+              the shell.
+            </li>
+            <li>
+              Ocean freight: {ocean?.on ? `included ${usd(ocean.amount)}` : "not included"}.
+            </li>
+            <li>
+              Inland delivery and Belize duties/taxes:{" "}
+              {inland?.on ? `included ${usd(inland.amount)}` : "not included"}.
+            </li>
+            <li>
+              Contingency 8% and project management 5.5%:{" "}
+              {oncosts?.on ? `included ${usd(oncosts.amount)}` : "not included"}.
+            </li>
+          </ul>
           <p className="mt-2 text-sm text-kdk-fg/85">
             {totals.savingsVsFull > 0 ? (
               <>
-                {usd(totals.savingsVsFull)} lower than all optional scopes on (
-                {usd(totals.fullUnfurnishedAllIn)}).
+                {usd(totals.savingsVsFull)} lower than every optional scope switched on (
+                {usd(totals.fullUnfurnishedAllIn)}). That higher figure adds shipping, duties, pads,
+                solar, and village civil.
               </>
             ) : (
-              <>All optional scopes on — {usd(totals.fullUnfurnishedAllIn)}.</>
+              <>Every optional scope is on — {usd(totals.fullUnfurnishedAllIn)}.</>
             )}
             {ffeOn ? ` Plus FF&E ${usd(totals.ffe)} → ${usd(totals.furnishedAllIn)} furnished.` : ""}
           </p>
@@ -74,7 +99,7 @@ export function ScopePlayground() {
                     <li key={x.id}>• {x.label}</li>
                   ))
                 ) : (
-                  <li>Installed homes only — no civil, no civic, no furniture</li>
+                  <li>No village roads, power, water, sewage plant, plaza, or furniture in this number.</li>
                 )}
               </ul>
             </div>

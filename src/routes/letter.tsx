@@ -2,16 +2,14 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell } from "@/components/layout/AppShell";
 import { Button } from "@/components/ui/button";
 import { TRANSMITTAL, mailingBlock, financeMailingBlock } from "@/lib/data/transmittal";
-import { computeTotals, packageTotals } from "@/lib/data/boq";
-import { DEFAULT_MIX, STYLE_LIST, TOTAL_HOMES } from "@/lib/data/homes";
-import { offScopesForPreset } from "@/lib/data/scopes";
+import { packageTotals } from "@/lib/data/boq";
+import { DEFAULT_MIX } from "@/lib/data/homes";
 import { usd } from "@/lib/utils";
 import { ArrowRight, Copy, Printer } from "lucide-react";
 import { useState } from "react";
 
 export const Route = createFileRoute("/letter")({ component: LetterPage });
 
-const totals = computeTotals(DEFAULT_MIX, { offScopes: offScopesForPreset("village") });
 const packages = packageTotals(DEFAULT_MIX);
 
 function LetterPage() {
@@ -85,101 +83,80 @@ function LetterPage() {
             </div>
           </section>
 
-          <div className="prose-letter mt-8 space-y-4 text-[15px] leading-relaxed text-ink">
+          <div className="mt-8 space-y-4 text-[15px] leading-relaxed text-ink">
             <p>Dear Mr. Courtenay,</p>
             <p>
-              KDK Technology Ltd submits this working proposal to the Office of the Prime Minister for a
-              one-hundred-home modular village — CASA 100 — basic-shell container dwellings on a
-              square ¼-acre plat. The shell includes kitchen cabinet and sink, toilet, shower and
-              house electrics. Split air and rooftop solar (PV modules and a grid-tie inverter — no
-              battery storage) are Belize add-ons, not in the FOB shell.
+              KDK offers the Government of Belize one hundred steel container homes. The price to
+              start from is the shell only, at the China port.
+            </p>
+            <p className="rounded-[16px] bg-kdk px-5 py-5 text-kdk-fg">
+              <span className="block text-[11px] uppercase tracking-[0.16em] text-kdk-fg/70">
+                Shell only · FOB China · 100 homes · USD
+              </span>
+              <span className="mt-1 block font-display text-4xl font-semibold tabular">
+                {usd(packages.shell.unfurnishedAllIn)}
+              </span>
+              <span className="mt-2 block text-sm text-kdk-fg/85">
+                Pickup at the China port. No ocean freight, no inland trucking, and no Belize
+                duties. Kitchen cabinet and sink, toilet, and shower are in the module. Split air,
+                solar, pads, and the village are not.
+              </span>
             </p>
             <p>
-              The package is sized for a government campaign, not a two-home waterfront enquiry. List
-              is dated 7 September 2026. Each of the three models is offered at a 10% distributor
-              net on the 100-home order. The Government may contract KDK Technology Ltd (Hong Kong)
-              directly at that net, or contract a licensed Belizean distributor who buys from KDK at
-              net and sells to the Government at list — so a Belizean entity is the seller and keeps
-              the 10% licensed distributor margin on the homes. Officials can hide scopes on the
-              attached playground to see a homes-only floor, pads-and-set, house MEP,{" "}
-              <strong>Installed homes</strong> (unfurnished, no village civil) or{" "}
-              <strong>Turnkey village</strong> (installed homes plus roads, village power, potable
-              water and WWTP — plaza and trees stay optional). Solar kit prices are
-              equipment only; install hours are estimated. Module assembly (Div 11.01) is the crew on the pad: 42 / 80 / 80 man-hours
-              (4.2 / 8 / 8 days) at US$280 per worker-day — conservative if Belizean skilled labour
-              is expensive. A 2-bed home is four workers, two days
-              (Div 11.01). Round-trip for four is a one-time US$43,520 on Div 11.03; at 20 homes labour plus
-              travel is about US$2,736 per home — do not add that table on top of Div 11.01. After the
-              first two trainer pads (two Chinese + two Belizean helpers, 7–10 days), Belizeans are
-              the standing workforce (80% Belizean / 20% China tech). Solar install (Div 11.02) is
-              estimated at US$19.40/hr mixed — 70% Belizean electricians; hours are estimated pending
-              a local quote in a few days. KDK recommends Belizean crews as the standing workforce for 12 months or
-              longer; Chinese technicians train the first pads and stand down. This is a working
-              draft for review — not a contract.
+              Other prices in this proposal are rough estimates for a fully livable, walk-in house
+              — about {usd(packages.installed.unfurnishedAllIn)} unfurnished to land, set, and finish
+              the houses (still no village roads, power, water, or sewage plant). A turnkey village
+              with that civil work is roughly {usd(packages.turnkey.unfurnishedAllIn)}. Those are
+              estimates, not the offer. The live prices are on the Scopes and BOQ tabs.
             </p>
           </div>
 
-          <dl className="mt-8 grid gap-3 sm:grid-cols-2">
-            {[
-              { k: "Homes", v: `${TOTAL_HOMES}` },
-              { k: "Submitted mix", v: `${DEFAULT_MIX.br1} / ${DEFAULT_MIX.br2} / ${DEFAULT_MIX.br3}` },
-              { k: "Installed homes (unfurnished)", v: usd(packages.installed.unfurnishedAllIn) },
-              { k: "Turnkey village (civil on, plaza off)", v: usd(packages.turnkey.unfurnishedAllIn) },
-              { k: "Per ¼-acre lot — installed", v: usd(packages.installed.unfurnishedAllIn / totals.homeCount) },
-              { k: "FF&E upgrade (optional)", v: usd(totals.ffe) },
-              { k: "Belizean jobs", v: "12 months or longer" },
-              { k: "Pad-set mix", v: "80% Belizean / 20% China tech" },
-              { k: "Solar-install mix", v: "70% Belizean / 30% China PV" },
-            ].map((row) => (
-              <div key={row.k} className="rounded-[14px] bg-paper-2 px-4 py-3">
-                <dt className="text-[11px] uppercase tracking-wide text-muted">{row.k}</dt>
-                <dd className="mt-1 font-display text-xl font-semibold tabular">{row.v}</dd>
-              </div>
-            ))}
-          </dl>
-          <p className="mt-2 text-[12px] text-muted">
-            Mix = Compact Terrace / Hip Cottage / Family Gable. USD. Contingency 8% and project
-            management 5.5% sit on unfurnished works. Installed homes = landed, set, house MEP, solar
-            equipment — no roads, village power, water, WWTP, plaza or furniture. Turnkey village =
-            installed homes plus that civil infrastructure. Plaza stays optional.
-          </p>
-
-          <table className="mt-8 w-full text-sm">
-            <thead>
-              <tr className="border-b border-line text-left text-[11px] uppercase tracking-wide text-muted">
-                <th className="py-2 font-medium">Style</th>
-                <th className="py-2 font-medium">Beds</th>
-                <th className="py-2 text-right font-medium">Qty</th>
-                <th className="py-2 text-right font-medium">Village / home</th>
-              </tr>
-            </thead>
-            <tbody>
-              {STYLE_LIST.map((s) => (
-                <tr key={s.id} className="border-b border-line/70">
-                  <td className="py-2.5">
-                    {s.name}{" "}
-                    <span className="text-muted">
-                      {s.beds}-bed · {s.assembleHours} hrs
+          <section className="mt-8">
+            <p className="text-[11px] uppercase tracking-[0.16em] text-muted">
+              Summary of costs · USD, not BZ$
+            </p>
+            <table className="mt-3 w-full text-sm">
+              <tbody>
+                <tr className="border-y border-kdk bg-kdk/10">
+                  <td className="py-3 pr-3 font-medium">
+                    Shell only · FOB China
+                    <span className="mt-0.5 block text-[12px] font-normal text-muted">
+                      The number that matters. 100 homes. No shipping. No duties.
                     </span>
                   </td>
-                  <td className="py-2.5">
-                    {s.beds}BR/{s.baths}BA · {s.areaM2} m²
+                  <td className="py-3 text-right font-display text-2xl font-semibold tabular">
+                    {usd(packages.shell.unfurnishedAllIn)}
                   </td>
-                  <td className="py-2.5 text-right tabular">{DEFAULT_MIX[s.id]}</td>
-                  <td className="py-2.5 text-right tabular">{usd(totals.perStyleVillage[s.id])}</td>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+                <tr className="border-b border-line">
+                  <td className="py-3 pr-3">
+                    Rough estimate · walk-in houses, unfurnished
+                    <span className="mt-0.5 block text-[12px] text-muted">
+                      Landed, set, house services, solar equipment. No village civil. No furniture.
+                    </span>
+                  </td>
+                  <td className="py-3 text-right tabular">{usd(packages.installed.unfurnishedAllIn)}</td>
+                </tr>
+                <tr className="border-b border-line">
+                  <td className="py-3 pr-3">
+                    Rough estimate · turnkey village
+                    <span className="mt-0.5 block text-[12px] text-muted">
+                      Walk-in houses plus roads, village power, water, and the sewage plant. No plaza.
+                    </span>
+                  </td>
+                  <td className="py-3 text-right tabular">{usd(packages.turnkey.unfurnishedAllIn)}</td>
+                </tr>
+              </tbody>
+            </table>
+            <p className="mt-3 text-[12px] text-muted">
+              Hide a package or a single BOQ line on the other tabs and the total changes. This
+              letter does not repeat those lines.
+            </p>
+          </section>
 
           <div className="mt-8 space-y-4 text-[15px] leading-relaxed">
             <p>
-              enclosed: an interactive 10 × 10 plat, the home catalog, and a priced
-              bill of quantities written as a greenfield village.
-            </p>
-            <p>
-              We would welcome the chance to present the package at Sir Edney Cain Building at a time
-              of your choosing.
+              We would welcome the chance to present the package at Sir Edney Cain Building.
             </p>
             <p>Respectfully submitted,</p>
             <p className="pt-4">
