@@ -735,6 +735,8 @@ export type PricedLine = BoqLine & {
 export type PriceOptions = {
   offScopes?: Iterable<ScopeId>;
   offItems?: Iterable<string>;
+  /** Lines forced on even when their division scope is off. */
+  pinnedOn?: Iterable<string>;
   pricingMode?: PricingMode;
   /** Volume discount / licensed distributor margin on shell list. Default 10%. */
   commissionRate?: number;
@@ -746,9 +748,20 @@ function asSet<T extends string>(v?: Iterable<T>): Set<T> {
 
 export function lineIncluded(
   item: string,
-  opts: { offScopes: Set<ScopeId>; offItems: Set<string>; pricingMode: PricingMode },
+  opts: {
+    offScopes: Set<ScopeId>;
+    offItems: Set<string>;
+    pinnedOn: Set<string>;
+    pricingMode: PricingMode;
+  },
 ): boolean {
   if (opts.offItems.has(item)) return false;
+  if (opts.pinnedOn.has(item)) {
+    if (item === "01.02" && (opts.pricingMode === "list" || opts.pricingMode === "gov_via_partner")) {
+      return false;
+    }
+    return true;
+  }
   const scope = ITEM_SCOPE[item];
   if (scope && opts.offScopes.has(scope)) return false;
   if (item === "01.02") {
@@ -768,10 +781,11 @@ export function priceLines(mix: Mix, options: PriceOptions = {}): PricedLine[] {
   const ids: StyleId[] = ["br1", "br2", "br3"];
   const offScopes = asSet(options.offScopes);
   const offItems = asSet(options.offItems);
+  const pinnedOn = asSet(options.pinnedOn);
   const pricingMode: PricingMode = options.pricingMode ?? "kdk_net";
   const commission = clampCommission(options.commissionRate ?? DEFAULT_COMMISSION);
   const creditRate = Math.min(commission, DEFAULT_COMMISSION);
-  const flags = { offScopes, offItems, pricingMode };
+  const flags = { offScopes, offItems, pinnedOn, pricingMode };
 
   return LINES.map((raw) => {
     const line =

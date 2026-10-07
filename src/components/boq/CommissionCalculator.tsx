@@ -15,6 +15,7 @@ export function CommissionCalculator() {
   const mix = useVillage((s) => s.mix);
   const offScopes = useVillage((s) => s.offScopes);
   const offItems = useVillage((s) => s.offItems);
+  const pinnedOn = useVillage((s) => s.pinnedOn);
   const pricingMode = useVillage((s) => s.pricingMode);
   const commissionRate = useVillage((s) => s.commissionRate);
   const setCommissionRate = useVillage((s) => s.setCommissionRate);
@@ -22,6 +23,7 @@ export function CommissionCalculator() {
   const totals = computeTotals(mix, {
     offScopes,
     offItems,
+    pinnedOn,
     pricingMode,
     commissionRate,
   });

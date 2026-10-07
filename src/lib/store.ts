@@ -8,6 +8,7 @@ import {
   type ScopeId,
 } from "./data/scopes";
 import type { PriceOptions } from "./data/boq";
+import { lineIncluded } from "./data/boq";
 import { clampCommission, DEFAULT_COMMISSION } from "./data/commission";
 
 const IDS: StyleId[] = ["br1", "br2", "br3"];
@@ -38,6 +39,7 @@ type VillageState = {
   selected: number | null;
   offScopes: ScopeId[];
   offItems: string[];
+  pinnedOn: string[];
   pricingMode: PricingMode;
   commissionRate: number;
   presetId: string;
@@ -63,6 +65,7 @@ export const useVillage = create<VillageState>()(
       selected: null,
       offScopes: offScopesForPreset("village"),
       offItems: [],
+      pinnedOn: [],
       pricingMode: "kdk_net",
       commissionRate: DEFAULT_COMMISSION,
       presetId: "village",
@@ -80,16 +83,33 @@ export const useVillage = create<VillageState>()(
         set({ offScopes: [...cur], presetId: "custom" });
       },
       toggleItem: (item) => {
-        const cur = new Set(get().offItems);
-        if (cur.has(item)) cur.delete(item);
-        else cur.add(item);
-        set({ offItems: [...cur], presetId: "custom" });
+        const s = get();
+        const included = lineIncluded(item, {
+          offScopes: new Set(s.offScopes),
+          offItems: new Set(s.offItems),
+          pinnedOn: new Set(s.pinnedOn ?? []),
+          pricingMode: s.pricingMode,
+        });
+        if (included) {
+          set({
+            offItems: [...new Set([...s.offItems, item])],
+            pinnedOn: (s.pinnedOn ?? []).filter((i) => i !== item),
+            presetId: "custom",
+          });
+        } else {
+          set({
+            offItems: s.offItems.filter((i) => i !== item),
+            pinnedOn: [...new Set([...(s.pinnedOn ?? []), item])],
+            presetId: "custom",
+          });
+        }
       },
       applyPreset: (id) =>
         set({
           presetId: id,
           offScopes: offScopesForPreset(id),
           offItems: [],
+          pinnedOn: [],
         }),
       setPricingMode: (mode) => set({ pricingMode: mode }),
       setCommissionRate: (rate) => set({ commissionRate: clampCommission(rate) }),
@@ -98,6 +118,7 @@ export const useVillage = create<VillageState>()(
         return {
           offScopes: s.offScopes,
           offItems: s.offItems,
+          pinnedOn: s.pinnedOn,
           pricingMode: s.pricingMode,
           commissionRate: s.commissionRate,
         };
@@ -110,6 +131,7 @@ export const useVillage = create<VillageState>()(
           selected: null,
           offScopes: offScopesForPreset("village"),
           offItems: [],
+          pinnedOn: [],
           pricingMode: "kdk_net",
           commissionRate: DEFAULT_COMMISSION,
           presetId: "village",
@@ -121,12 +143,14 @@ export const useVillage = create<VillageState>()(
         mix: s.mix,
         offScopes: s.offScopes,
         offItems: s.offItems,
+        pinnedOn: s.pinnedOn,
         pricingMode: s.pricingMode,
         commissionRate: s.commissionRate,
         presetId: s.presetId,
       }),
       onRehydrateStorage: () => (state) => {
         if (state?.mix) state.lots = buildLots(state.mix);
+        if (state && !state.pinnedOn) state.pinnedOn = [];
         if (state && (state.commissionRate == null || !Number.isFinite(state.commissionRate))) {
           state.commissionRate = DEFAULT_COMMISSION;
         }

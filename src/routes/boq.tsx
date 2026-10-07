@@ -41,13 +41,15 @@ function BoqPage() {
   const mix = useVillage((s) => s.mix);
   const offScopes = useVillage((s) => s.offScopes);
   const offItems = useVillage((s) => s.offItems);
+  const pinnedOn = useVillage((s) => s.pinnedOn);
   const pricingMode = useVillage((s) => s.pricingMode);
   const commissionRate = useVillage((s) => s.commissionRate);
   const toggleItem = useVillage((s) => s.toggleItem);
   const presetId = useVillage((s) => s.presetId);
-  const totals = computeTotals(mix, { offScopes, offItems, pricingMode, commissionRate });
+  const totals = computeTotals(mix, { offScopes, offItems, pinnedOn, pricingMode, commissionRate });
   const ids: StyleId[] = ["br1", "br2", "br3"];
-  const solarOff = offScopes.includes("solar") || offItems.includes("04.02");
+  const solarOff =
+    (offScopes.includes("solar") && !pinnedOn.includes("04.02")) || offItems.includes("04.02");
   const assemblyTotal =
     mix.br1 * ASSEMBLY.cost.br1 + mix.br2 * ASSEMBLY.cost.br2 + mix.br3 * ASSEMBLY.cost.br3;
   const solarLabourTotal =
@@ -82,6 +84,19 @@ function BoqPage() {
           Solar install hours are estimated. Government volume discount (default 10% of shell list)
           can be modelled on Scopes.
         </p>
+        <div className="sticky top-[4.5rem] z-30 mt-6 rounded-[18px] bg-kdk px-5 py-4 text-kdk-fg shadow-card">
+          <p className="text-[11px] uppercase tracking-[0.16em] text-kdk-fg/70">
+            Live all-in · this BOQ · USD · not BZ$
+          </p>
+          <p className="mt-1 font-display text-4xl font-semibold tabular tracking-tight">
+            {usd(totals.unfurnishedAllIn)}
+          </p>
+          <p className="mt-2 max-w-3xl text-sm text-kdk-fg/85">
+            Hide or Show a line in Divisions 03 through 13 and this number moves with the division
+            totals. Show turns a line on even if its package was off. A $0 line (Division 13) does
+            not change the total. Contingency and project management, when on, move with the works.
+          </p>
+        </div>
         <p className="mt-3 text-sm">
           <a
             href="/CASA100_BOQ_worksheet.xlsx"
@@ -598,9 +613,15 @@ function BoqPage() {
                             <button
                               type="button"
                               onClick={() => toggleItem(line.item)}
-                              className="min-h-11 rounded-sm px-3 text-sm text-kdk hover:bg-paper-2"
+                              className="min-h-11 rounded-sm px-3 text-left text-sm text-kdk hover:bg-paper-2"
                             >
-                              {line.included ? "Hide" : "Show"}
+                              {line.included
+                                ? line.projectAmount
+                                  ? `Hide · drops ${usd(line.projectAmount)}`
+                                  : "Hide · $0 line"
+                                : line.fullAmount
+                                  ? `Show · adds ${usd(line.fullAmount)}`
+                                  : "Show · $0 line"}
                             </button>
                           )}
                         </td>

@@ -49,7 +49,7 @@ function Home() {
       <section className="relative overflow-hidden">
         <img
           src="/homes/village-aerial.jpg"
-          alt="Aerial of the proposed 100-home village"
+          alt="Aerial of 100 painted steel container homes"
           className="h-[min(72vh,720px)] w-full object-cover outline outline-1 -outline-offset-1 outline-ink/10"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-kdk-deep/90 via-kdk-deep/35 to-transparent" />
@@ -61,9 +61,11 @@ function Home() {
             CASA 100
           </h1>
           <p className="mt-3 max-w-xl text-base text-paper/85 md:text-lg">
-            One hundred finished-ready container homes. Start with the shell only — FOB China port —
-            then add Belize works if the Government wants them. All figures are United States
-            dollars (USD), not Belize dollars (BZ$).
+            One hundred steel container homes. Pictures show factory-painted corrugated steel — not
+            wood houses. Fiber-cement or exterior panels over the steel are an optional finish for a
+            longer weather warranty; they are not in these pictures and not in the shell price. Start
+            with the shell only — FOB China port — then add Belize works if the Government wants
+            them. All figures are United States dollars (USD), not Belize dollars (BZ$).
           </p>
           <p className="mt-4 font-display text-3xl font-semibold tabular text-paper md:text-4xl">
             {usd(packages.shell.unfurnishedAllIn)}{" "}
@@ -150,8 +152,13 @@ function Home() {
                 {s.areaM2} m² / {num(s.areaSf)} sf · {s.look} · {s.unitsPer40hq}/40HQ
               </p>
               <p className="mt-3 text-sm">
-                Mix {mix[s.id]} homes · village all-in{" "}
+                Mix {mix[s.id]} homes · installed-home share{" "}
                 <span className="tabular font-medium">{usd(totals.perStyleVillage[s.id])}</span>
+              </p>
+              <p className="mt-2 text-xs text-muted">
+                Structure is a steel container, factory paint on the corrugation. Not wood. Optional
+                fiber-cement cladding over the steel is a finish upgrade, not shown and not in the
+                shell price.
               </p>
             </div>
           </article>

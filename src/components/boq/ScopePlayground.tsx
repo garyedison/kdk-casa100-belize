@@ -22,6 +22,7 @@ export function ScopePlayground() {
   const mix = useVillage((s) => s.mix);
   const offScopes = useVillage((s) => s.offScopes);
   const offItems = useVillage((s) => s.offItems);
+  const pinnedOn = useVillage((s) => s.pinnedOn);
   const pricingMode = useVillage((s) => s.pricingMode);
   const commissionRate = useVillage((s) => s.commissionRate);
   const presetId = useVillage((s) => s.presetId);
@@ -30,7 +31,7 @@ export function ScopePlayground() {
   const setPricingMode = useVillage((s) => s.setPricingMode);
   const reset = useVillage((s) => s.reset);
 
-  const totals = computeTotals(mix, { offScopes, offItems, pricingMode, commissionRate });
+  const totals = computeTotals(mix, { offScopes, offItems, pinnedOn, pricingMode, commissionRate });
   const ffeOn = !offScopes.includes("ffe");
 
   return (
