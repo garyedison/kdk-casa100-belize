@@ -31,6 +31,12 @@ function amtLabel(line: PricedLine, id: StyleId) {
   return usd(line.amount[id]);
 }
 
+function styleRate(lines: PricedLine[], item: string, id: StyleId) {
+  const line = lines.find((l) => l.item === item);
+  if (!line) return 0;
+  return typeof line.rate === "number" ? line.rate : line.rate[id];
+}
+
 function BoqPage() {
   const mix = useVillage((s) => s.mix);
   const offScopes = useVillage((s) => s.offScopes);
@@ -38,8 +44,28 @@ function BoqPage() {
   const pricingMode = useVillage((s) => s.pricingMode);
   const commissionRate = useVillage((s) => s.commissionRate);
   const toggleItem = useVillage((s) => s.toggleItem);
+  const presetId = useVillage((s) => s.presetId);
   const totals = computeTotals(mix, { offScopes, offItems, pricingMode, commissionRate });
   const ids: StyleId[] = ["br1", "br2", "br3"];
+  const solarOff = offScopes.includes("solar") || offItems.includes("04.02");
+  const assemblyTotal =
+    mix.br1 * ASSEMBLY.cost.br1 + mix.br2 * ASSEMBLY.cost.br2 + mix.br3 * ASSEMBLY.cost.br3;
+  const solarLabourTotal =
+    mix.br1 * SOLAR_INSTALL.hours.br1 * SOLAR_INSTALL.hourly +
+    mix.br2 * SOLAR_INSTALL.hours.br2 * SOLAR_INSTALL.hourly +
+    mix.br3 * SOLAR_INSTALL.hours.br3 * SOLAR_INSTALL.hourly;
+  const viewTitle =
+    presetId === "homes"
+      ? "SHELL ONLY · FOB China — 100 homes"
+      : presetId === "utilities"
+        ? "TURNKEY VILLAGE — unfurnished, 100 homes"
+        : presetId === "village"
+          ? "INSTALLED HOMES — unfurnished, no village civil"
+          : "THIS VIEW — only the lines switched on";
+  const viewNote =
+    presetId === "homes"
+      ? "This total is the basic shell at the China port (KDK net). It is not pads, not solar, not roads, and not furniture. Contingency and project management are off, so they show $0."
+      : "All-in here means the lines switched on in this view, plus contingency and project management when those are on. It is not automatically the full village. Per-home figures are one house. The last column is all 100 homes.";
 
   return (
     <AppShell>
@@ -119,9 +145,10 @@ function BoqPage() {
               <h2 className="font-display text-2xl font-semibold">Panels and inverters, priced apart</h2>
             </div>
             <p className="max-w-xl text-sm text-ink-soft">
-              Equipment only — panels, inverter, rails. No battery. Install labour sits on the line
-              below at {usd(EMPLOYMENT.solar.rate, 2)}/hr EST., {EMPLOYMENT.solar.belizePct}% Belizean
-              electricians.
+              Equipment is priced <strong className="text-ink">per home</strong>. The last column is
+              all {totals.homeCount} homes. {solarOff
+                ? "Solar is switched off in this view, so those project cells say “not in this total.” $0 does not mean the panels are free."
+                : "These equipment dollars are in this view. Install labour is separate."}
             </p>
           </div>
           <div className="overflow-x-auto rounded-[18px] bg-paper shadow-card">
@@ -137,45 +164,91 @@ function BoqPage() {
                       </span>
                     </th>
                   ))}
-                  <th className="px-3 py-3 font-medium">Project</th>
+                  <th className="px-3 py-3 font-medium">100 homes</th>
                 </tr>
               </thead>
               <tbody>
                 <tr className="border-t border-line">
-                  <td className="px-3 py-2">04.02 Solar PV modules</td>
+                  <td className="px-3 py-2">
+                    04.02 Solar PV modules
+                    <span className="block text-[11px] text-muted">per home · equipment only</span>
+                  </td>
                   {ids.map((id) => (
                     <td key={id} className="px-3 py-2 tabular">
-                      {usd(totals.perStyleSolar[id].pv)}
+                      {usd(styleRate(totals.lines, "04.02", id))}
                     </td>
                   ))}
-                  <td className="px-3 py-2 font-medium tabular">{usd(totals.solarProject.pv)}</td>
+                  <td className="px-3 py-2 font-medium tabular">
+                    {solarOff ? (
+                      <span className="text-muted">Not in this total</span>
+                    ) : (
+                      usd(totals.solarProject.pv)
+                    )}
+                  </td>
                 </tr>
                 <tr className="border-t border-line">
-                  <td className="px-3 py-2">04.03 Hybrid inverter (grid-tie)</td>
+                  <td className="px-3 py-2">
+                    04.03 Hybrid inverter (grid-tie)
+                    <span className="block text-[11px] text-muted">per home · equipment only</span>
+                  </td>
                   {ids.map((id) => (
                     <td key={id} className="px-3 py-2 tabular">
-                      {usd(totals.perStyleSolar[id].inverter)}
+                      {usd(styleRate(totals.lines, "04.03", id))}
                     </td>
                   ))}
-                  <td className="px-3 py-2 font-medium tabular">{usd(totals.solarProject.inverter)}</td>
+                  <td className="px-3 py-2 font-medium tabular">
+                    {solarOff ? (
+                      <span className="text-muted">Not in this total</span>
+                    ) : (
+                      usd(totals.solarProject.inverter)
+                    )}
+                  </td>
                 </tr>
                 <tr className="border-t border-line">
-                  <td className="px-3 py-2">04.04 Mounting hardware (materials)</td>
+                  <td className="px-3 py-2">
+                    04.04 Mounting hardware (materials)
+                    <span className="block text-[11px] text-muted">per home · not labour</span>
+                  </td>
                   {ids.map((id) => (
                     <td key={id} className="px-3 py-2 tabular">
-                      {usd(totals.perStyleSolar[id].mount)}
+                      {usd(styleRate(totals.lines, "04.04", id))}
                     </td>
                   ))}
-                  <td className="px-3 py-2 font-medium tabular">{usd(totals.solarProject.mount)}</td>
+                  <td className="px-3 py-2 font-medium tabular">
+                    {solarOff ? (
+                      <span className="text-muted">Not in this total</span>
+                    ) : (
+                      usd(totals.solarProject.mount)
+                    )}
+                  </td>
                 </tr>
                 <tr className="border-t-2 border-kdk bg-paper-2">
-                  <td className="px-3 py-2 font-medium">Solar equipment / home (no battery, no labour)</td>
+                  <td className="px-3 py-2 font-medium">
+                    Solar equipment / home
+                    <span className="block text-[11px] font-normal text-muted">
+                      Panels + inverter + rails. No battery. No install labour.
+                    </span>
+                  </td>
                   {ids.map((id) => (
                     <td key={id} className="px-3 py-2 tabular font-medium">
-                      {usd(totals.perStyleSolar[id].kit)}
+                      {usd(
+                        styleRate(totals.lines, "04.02", id) +
+                          styleRate(totals.lines, "04.03", id) +
+                          styleRate(totals.lines, "04.04", id),
+                      )}
+                      <span className="block text-[11px] font-normal text-muted">one home</span>
                     </td>
                   ))}
-                  <td className="px-3 py-2 font-medium tabular">{usd(totals.solarProject.kit)}</td>
+                  <td className="px-3 py-2 font-medium tabular">
+                    {solarOff ? (
+                      <span className="text-muted">Not in shell-only</span>
+                    ) : (
+                      <>
+                        {usd(totals.solarProject.kit)}
+                        <span className="block text-[11px] font-normal text-muted">100 homes</span>
+                      </>
+                    )}
+                  </td>
                 </tr>
                 <tr className="border-t border-line">
                   <td className="px-3 py-2">
@@ -183,27 +256,26 @@ function BoqPage() {
                       {EMPLOYMENT.solar.item} {EMPLOYMENT.solar.title} — ESTIMATED
                     </span>
                     <span className="mt-1 block text-[11px] text-muted">
-                      Not in the kit. {SOLAR_INSTALL.hours.br1} / {SOLAR_INSTALL.hours.br2} /{" "}
-                      {SOLAR_INSTALL.hours.br3} hrs ESTIMATED. Local quote in a few days. Mixed crew{" "}
-                      {usd(SOLAR_INSTALL.hourly, 2)}/hr. Grid-tie — needs village power (Turnkey
-                      village).
+                      Labour only, not the panels. Hours are per home (1-bed / 2-bed / 3-bed). The
+                      dollar in the last column is all {totals.homeCount} homes. Local quote in a few
+                      days. {usd(SOLAR_INSTALL.hourly, 2)}/hr. Grid-tie — needs village power.
                     </span>
                     <MixBar belize={EMPLOYMENT.solar.belizePct} china={EMPLOYMENT.solar.chinaPct} />
                   </td>
                   {ids.map((id) => (
                     <td key={id} className="px-3 py-2 tabular">
                       <span className="block text-[11px] text-muted">
-                        {SOLAR_INSTALL.hours[id]} hrs EST.
+                        {SOLAR_INSTALL.hours[id]} hrs × {usd(SOLAR_INSTALL.hourly, 2)}
                       </span>
-                      {usd(SOLAR_INSTALL.hourly, 2)}/hr
+                      {usd(SOLAR_INSTALL.hours[id] * SOLAR_INSTALL.hourly)}
+                      <span className="block text-[11px] text-muted">one home</span>
                     </td>
                   ))}
                   <td className="px-3 py-2 font-medium tabular">
-                    {usd(
-                      mix.br1 * SOLAR_INSTALL.hours.br1 * SOLAR_INSTALL.hourly +
-                        mix.br2 * SOLAR_INSTALL.hours.br2 * SOLAR_INSTALL.hourly +
-                        mix.br3 * SOLAR_INSTALL.hours.br3 * SOLAR_INSTALL.hourly,
-                    )}
+                    {usd(solarLabourTotal)}
+                    <span className="block text-[11px] font-normal text-muted">
+                      100 homes{solarOff ? " · not in this total" : ""}
+                    </span>
                   </td>
                 </tr>
                 <tr className="border-t border-line bg-tbd/10">
@@ -253,15 +325,18 @@ function BoqPage() {
                   </td>
                   <td className="px-3 py-2 tabular">{usd(800)} / home</td>
                   <td className="px-3 py-2 text-muted">Plant</td>
-                  <td className="px-3 py-2 font-medium tabular">{usd(800 * totals.homeCount)}</td>
+                  <td className="px-3 py-2 font-medium tabular">
+                    {usd(800 * totals.homeCount)}
+                    <span className="block text-[11px] font-normal text-muted">100 homes</span>
+                  </td>
                 </tr>
                 <tr className="border-t border-line">
                   <td className="px-3 py-2 font-mono text-xs">{EMPLOYMENT.pad.item}</td>
                   <td className="px-3 py-2">
                     <span className="font-medium">{EMPLOYMENT.pad.title}</span>
                     <span className="mt-1 block text-[11px] text-muted">
-                      Supplier assembly hours. Line is priced at {usd(ASSEMBLY.hourly)}/hr.{" "}
-                      {EMPLOYMENT.pad.belizeCrew} standing; {EMPLOYMENT.pad.chinaCrew}.
+                      Per home: 1-bed {usd(ASSEMBLY.cost.br1)} · 2-bed {usd(ASSEMBLY.cost.br2)} ·
+                      3-bed {usd(ASSEMBLY.cost.br3)}. The total is all {totals.homeCount} homes.
                     </span>
                   </td>
                   <td className="px-3 py-2 tabular font-medium">{usd(ASSEMBLY.hourly)}/hr</td>
@@ -269,11 +344,8 @@ function BoqPage() {
                     <MixBar belize={EMPLOYMENT.pad.belizePct} china={EMPLOYMENT.pad.chinaPct} />
                   </td>
                   <td className="px-3 py-2 font-medium tabular">
-                    {usd(
-                      mix.br1 * ASSEMBLY.cost.br1 +
-                        mix.br2 * ASSEMBLY.cost.br2 +
-                        mix.br3 * ASSEMBLY.cost.br3,
-                    )}
+                    {usd(assemblyTotal)}
+                    <span className="block text-[11px] font-normal text-muted">100 homes</span>
                   </td>
                 </tr>
               </tbody>
@@ -289,12 +361,19 @@ function BoqPage() {
           <div className="mb-3">
             <p className="text-[11px] uppercase tracking-wide text-muted">Division 11 · labour</p>
             <h2 className="font-display text-2xl font-semibold">
-              Assembly hours quoted · solar hours ESTIMATED
+              Labour — per home, then the 100-home total
             </h2>
             <p className="mt-1 max-w-3xl text-sm text-ink-soft">
-              Module assembly at US${ASSEMBLY.dayRate}/worker-day — conservative if Belizean skilled
-              labour is expensive. Solar install hours are estimated pending a local quote in a few
-              days. {LABOUR_NOTES.burden} {LABOUR_NOTES.chinaOnSite}
+              Hours are <strong className="text-ink">one home</strong> (1-bed / 2-bed / 3-bed). The
+              Amount column is <strong className="text-ink">all {totals.homeCount} homes</strong> in
+              this mix — not one house. Assembly {usd(assemblyTotal)} = {mix.br1} ×{" "}
+              {usd(ASSEMBLY.cost.br1)} + {mix.br2} × {usd(ASSEMBLY.cost.br2)} + {mix.br3} ×{" "}
+              {usd(ASSEMBLY.cost.br3)}. Solar install {usd(solarLabourTotal)} is estimated labour
+              only (not the panels): {mix.br1} × {usd(SOLAR_INSTALL.hours.br1 * SOLAR_INSTALL.hourly)}{" "}
+              + {mix.br2} × {usd(SOLAR_INSTALL.hours.br2 * SOLAR_INSTALL.hourly)} + {mix.br3} ×{" "}
+              {usd(SOLAR_INSTALL.hours.br3 * SOLAR_INSTALL.hourly)}. A 2-bed is {usd(ASSEMBLY.cost.br2)}{" "}
+              to assemble and about {usd(SOLAR_INSTALL.hours.br2 * SOLAR_INSTALL.hourly)} to hang the
+              solar. {LABOUR_NOTES.burden}
             </p>
           </div>
           <div className="overflow-x-auto rounded-[18px] bg-paper shadow-card">
@@ -304,9 +383,9 @@ function BoqPage() {
                   <th className="px-3 py-3 font-medium">Item</th>
                   <th className="px-3 py-3 font-medium">Scope</th>
                   <th className="px-3 py-3 font-medium">Unit</th>
-                  <th className="px-3 py-3 font-medium">Man-hours</th>
+                  <th className="px-3 py-3 font-medium">Hours per home</th>
                   <th className="px-3 py-3 font-medium">Rate</th>
-                  <th className="px-3 py-3 font-medium">Amount</th>
+                  <th className="px-3 py-3 font-medium">100-home total</th>
                 </tr>
               </thead>
               <tbody>
@@ -319,17 +398,17 @@ function BoqPage() {
                     </span>
                     <MixBar belize={EMPLOYMENT.pad.belizePct} china={EMPLOYMENT.pad.chinaPct} />
                   </td>
-                  <td className="px-3 py-2 text-muted">hr / home</td>
+                  <td className="px-3 py-2 text-muted">per home</td>
                   <td className="px-3 py-2 tabular">
                     {ASSEMBLY.hours.br1} / {ASSEMBLY.hours.br2} / {ASSEMBLY.hours.br3}
+                    <span className="block text-[11px] text-muted">1-bed / 2-bed / 3-bed</span>
                   </td>
-                  <td className="px-3 py-2 tabular font-medium">{usd(ASSEMBLY.hourly)}</td>
+                  <td className="px-3 py-2 tabular font-medium">{usd(ASSEMBLY.hourly)}/hr</td>
                   <td className="px-3 py-2 font-medium tabular">
-                    {usd(
-                      mix.br1 * ASSEMBLY.cost.br1 +
-                        mix.br2 * ASSEMBLY.cost.br2 +
-                        mix.br3 * ASSEMBLY.cost.br3,
-                    )}
+                    {usd(assemblyTotal)}
+                    <span className="block text-[11px] font-normal text-muted">
+                      all {totals.homeCount} homes · a 2-bed is {usd(ASSEMBLY.cost.br2)}
+                    </span>
                   </td>
                 </tr>
                 <tr className="border-t border-line">
@@ -342,19 +421,20 @@ function BoqPage() {
                     </span>
                     <MixBar belize={EMPLOYMENT.solar.belizePct} china={EMPLOYMENT.solar.chinaPct} />
                   </td>
-                  <td className="px-3 py-2 text-muted">hr / home</td>
+                  <td className="px-3 py-2 text-muted">per home</td>
                   <td className="px-3 py-2 tabular">
                     {SOLAR_INSTALL.hours.br1} / {SOLAR_INSTALL.hours.br2} / {SOLAR_INSTALL.hours.br3}
+                    <span className="block text-[11px] text-muted">1-bed / 2-bed / 3-bed · EST.</span>
                   </td>
                   <td className="px-3 py-2 tabular font-medium">
-                    {usd(SOLAR_INSTALL.hourly, 2)} EST.
+                    {usd(SOLAR_INSTALL.hourly, 2)}/hr EST.
                   </td>
                   <td className="px-3 py-2 font-medium tabular">
-                    {usd(
-                      mix.br1 * SOLAR_INSTALL.hours.br1 * SOLAR_INSTALL.hourly +
-                        mix.br2 * SOLAR_INSTALL.hours.br2 * SOLAR_INSTALL.hourly +
-                        mix.br3 * SOLAR_INSTALL.hours.br3 * SOLAR_INSTALL.hourly,
-                    )}
+                    {usd(solarLabourTotal)}
+                    <span className="block text-[11px] font-normal text-muted">
+                      all {totals.homeCount} homes · a 2-bed is{" "}
+                      {usd(SOLAR_INSTALL.hours.br2 * SOLAR_INSTALL.hourly)}
+                    </span>
                   </td>
                 </tr>
                 <tr className="border-t border-line">
@@ -531,7 +611,11 @@ function BoqPage() {
               })}
               <tr className="border-t-2 border-kdk bg-paper-2">
                 <td className="px-3 py-3" colSpan={3}>
-                  Unfurnished works
+                  Works in this view
+                  <span className="block text-[11px] font-normal text-muted">
+                    Per home on the left. Last column is all {totals.homeCount} homes. Before
+                    contingency.
+                  </span>
                 </td>
                 {ids.map((id) => (
                   <td key={id} className="px-3 py-3 tabular font-medium">
@@ -561,15 +645,19 @@ function BoqPage() {
               </tr>
               <tr className="border-t-2 border-kdk bg-kdk text-kdk-fg">
                 <td className="px-3 py-3 font-medium" colSpan={3}>
-                  ALL-IN UNFURNISHED (this playground · solar labour ESTIMATED · no battery)
+                  {viewTitle}
+                  <span className="mt-1 block text-[11px] font-normal opacity-80">{viewNote}</span>
                 </td>
                 {ids.map((id) => (
                   <td key={id} className="px-3 py-3 tabular font-medium">
                     {usd(totals.perStyleVillage[id])}
-                    <span className="block text-[11px] font-normal opacity-80">village / home</span>
+                    <span className="block text-[11px] font-normal opacity-80">one home</span>
                   </td>
                 ))}
-                <td className="px-3 py-3 font-medium tabular">{usd(totals.unfurnishedAllIn)}</td>
+                <td className="px-3 py-3 font-medium tabular">
+                  {usd(totals.unfurnishedAllIn)}
+                  <span className="block text-[11px] font-normal opacity-80">100 homes</span>
+                </td>
                 <td />
                 <td />
               </tr>
